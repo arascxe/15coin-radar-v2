@@ -1,0 +1,47 @@
+name: V2 RPC capability diagnostic (read only)
+on:
+  push:
+    paths: ['.github/workflows/rpc-probe.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  provider-diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify chain id and actual RPC method capability
+        run: |
+          python - <<'PY'
+          import sys,json,concurrent.futures
+          sys.path.insert(0,'v2')
+          from radar_stage1 import HTTPClient
+          from chain_v2 import ENDPOINTS,TRANSFER_TOPIC
+          tok={'bsc':'0x0e4f6209ed984b21edea43ace6e09559ed051d48','base':'0x6cd905df2ed214b22e0d48ff17cd4200c1c6d8a3'}
+          def check(item):
+            chain,url=item;c=HTTPClient(timeout=5);x={'chain':chain,'url':url}
+            try:
+              x['chain_id']=int(c.rpc(url,'eth_chainId',[]),16)
+              x['head']=int(c.rpc(url,'eth_blockNumber',[]),16)
+              height=hex(x['head']-20)
+              try:
+                logs=c.rpc(url,'eth_getLogs',[{'fromBlock':height,'toBlock':height,'address':tok[chain],'topics':[TRANSFER_TOPIC]}])
+                x['get_logs']='OK_'+str(len(logs)) if isinstance(logs,list) else 'BAD_TYPE'
+              except Exception as e:x['get_logs']='ERROR_'+str(e)[:110]
+              try:
+                rec=c.rpc(url,'eth_getBlockReceipts',[height])
+                x['get_receipts']='OK_'+str(len(rec)) if isinstance(rec,list) else 'BAD_TYPE'
+              except Exception as e:x['get_receipts']='ERROR_'+str(e)[:110]
+            except Exception as e:x['error']=str(e)[:140]
+            return x
+          items=[(chain,url) for chain,urls in ENDPOINTS.items() for url in urls]
+          with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
+            data=list(pool.map(check,items))
+          print('RPC_CAPABILITY_DIAGNOSTIC='+json.dumps(data,ensure_ascii=False))
+          assert any(x.get('chain_id')==56 and (x.get('get_logs','').startswith('OK') or x.get('get_receipts','').startswith('OK')) for x in data),'BSC has no event-capable RPC'
+          assert any(x.get('chain_id')==8453 and x.get('get_logs','').startswith('OK') for x in data),'Base has no filtered-log RPC'
+          PY
