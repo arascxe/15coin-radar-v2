@@ -67,17 +67,33 @@ def select_provider(http,chain,token_contract):
     raise RuntimeError('NO_COVERAGE_CAPABLE_RPC '+ ';'.join(errors)[:820])
 
 def scan_logs(http,url,start,end,token_to_coin,deadline,on_complete):
-    span=120;a=start
+    # BSC PublicNode accepts a single contract per filter; multi-contract filters are HTTP 403.
+    # Scan EACH token independently in the same contiguous block page. Only commit
+    # page coverage once every contract has answered that entire page.
+    span=400;a=start
     while a<=end:
-        if time.monotonic()>deadline:raise TimeoutError('BLOCK_SCAN_TIME_BUDGET')
+        if time.monotonic()>deadline:raise TimeoutError('TOKEN_LOG_SCAN_TIME_BUDGET')
         b=min(end,a+span-1)
         try:
-            data=http.rpc(url,'eth_getLogs',[{'fromBlock':hex(a),'toBlock':hex(b),'address':list(token_to_coin),'topics':[TRANSFER_TOPIC]}])
-            if not isinstance(data,list):raise ValueError('LOG_RESPONSE_NOT_ARRAY')
-            batch=[decode_transfer(x,token_to_coin) for x in data]
+            batch=[]
+            for token in token_to_coin:
+                if time.monotonic()>deadline:raise TimeoutError('TOKEN_LOG_SCAN_TIME_BUDGET')
+                data=None
+                for attempt in range(3):
+                    try:
+                        data=http.rpc(url,'eth_getLogs',[{'fromBlock':hex(a),'toBlock':hex(b),'address':token,'topics':[TRANSFER_TOPIC]}])
+                        break
+                    except Exception:
+                        if attempt==2:raise
+                        time.sleep(0.9*(attempt+1))
+                if not isinstance(data,list):raise ValueError('TOKEN_LOG_RESPONSE_NOT_ARRAY')
+                if any(str(z.get('address','')).lower()!=token for z in data):raise ValueError('TOKEN_LOG_WRONG_CONTRACT')
+                batch.extend(decode_transfer(z,token_to_coin) for z in data)
+                # Prevent bursting requests on keyless shared public providers.
+                if len(token_to_coin)>1:time.sleep(0.22)
             on_complete(b,batch)
             a=b+1
-            if span<120:span=min(120,span*2)
+            if span<400:span=min(400,span*2)
         except Exception:
             if span<=1:raise
             span=max(1,span//2)
@@ -121,6 +137,7 @@ def chain_ingest(store,rid,chain,config,http,ts=None,max_span=None,deadline_seco
         nonlocal last
         observed.extend(batch);last=b
     if method=='logs':
+        used='token_separated_logs'
         try:scan_logs(http,url,start,end,token_to_coin,deadline,on_complete)
         except Exception as e:
             err='LOGS_FAILED:'+str(e)[:150]
