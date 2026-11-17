@@ -91,9 +91,16 @@ def propose(conn, config, ts_ms=None, per_coin=MAX_PER_COIN):
               GROUP BY w.address''',(sym,chain)):
             if ts_ms-attempt_ms<RECENT_RETRY_MS:
                 cooldown.add(address)
+        # Once eth_getCode proved a candidate was a contract at a confirmed
+        # block, never waste the constrained EOA-monitor budget on it again.
+        # The evidence remains in wallet_checks rather than a new table.
+        known_contracts={r[0] for r in conn.execute(
+            """SELECT DISTINCT address FROM wallet_checks
+               WHERE coin=? AND chain=? AND status='SKIPPED_CONTRACT' AND detail=?""",
+            (sym,chain,CONTRACT))}
         eligible=[]
         for address,v in flows.items():
-            if address in infra or address==ZERO or v['in']<=v['out'] or v['in']==0:continue
+            if address in infra or address in known_contracts or address==ZERO or v['in']<=v['out'] or v['in']==0:continue
             if len(v['transactions'])<2 or v['recent_in']<=v['recent_out']:continue
             if ZERO in v['all_from']:continue
             net=v['in']-v['out']
@@ -108,7 +115,7 @@ def propose(conn, config, ts_ms=None, per_coin=MAX_PER_COIN):
         sticky=[{'address':a,'already_monitored':True,'previous_seen_ms':seen,
                  'reason':'FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION'}
                 for a,seen in sorted(history.items(),key=lambda x:x[1])
-                if a not in cooldown]
+                if a not in cooldown and a not in known_contracts]
         selected=sticky[:min(2,per_coin)]
         seen={x['address'] for x in selected}
         for x in eligible:
@@ -122,6 +129,7 @@ def propose(conn, config, ts_ms=None, per_coin=MAX_PER_COIN):
         base['address_candidates']=selected
         base['count']=len(selected)
         base['eligible_unlabeled_receivers']=len(eligible)
+        base['historically_rejected_contract_addresses']=len(known_contracts)
         candidates.append(base)
     return {'schema':'radar-v2-dynamic-wallet-followup-1',
         'created_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),

@@ -67,6 +67,19 @@ class DynamicMonitorTests(unittest.TestCase):
             self.assertEqual(st.db.execute('SELECT COUNT(*) FROM wallet_balances WHERE coin=? AND address=?',
                 ('DOS',DEST)).fetchone()[0],0)
             st.close()
+    def test_rejected_contract_not_reselected_after_retry_cooldown(self):
+        with tempfile.TemporaryDirectory() as d:
+            st=setup_db(pathlib.Path(d)/'s.db')
+            monitor(st,CONFIG,FakeHTTP(contract=True),NOW,max_workers=1)
+            rid=st.begin_run(NOW+3700000)
+            st.chain_save(rid,'bsc',1200,1101,1200,[],
+                'OK',observed_ms=NOW+3700000)
+            st.finish_run(rid,NOW+3700000)
+            p=propose(st.db,CONFIG,NOW+3700000)
+            dos=next(x for x in p['coins'] if x['coin']=='DOS')
+            self.assertNotIn(DEST,[a['address'] for a in dos['address_candidates']])
+            self.assertGreaterEqual(dos['historically_rejected_contract_addresses'],1)
+            st.close()
     def test_failed_rpc_does_not_forge_zero_balance(self):
         with tempfile.TemporaryDirectory() as d:
             st=setup_db(pathlib.Path(d)/'s.db')
