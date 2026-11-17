@@ -93,11 +93,25 @@ jobs:
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
           echo "DYNAMIC_EOA_EXIT_CODE=$code"
           exit 0
+      - name: Public spot fill-side and top-of-book sampling, no buy signals
+        id: spot_tape
+        shell: bash
+        run: |
+          set +e
+          timeout --signal=TERM --kill-after=10s 420s \
+            python -u v2/spot_microstructure.py --db v2_runtime/live.sqlite3 \
+              --config v2/config.json --out v2_runtime/spot_microstructure.json \
+              --archive v2_runtime/spot_microstructure.json.gz
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          echo "SPOT_MICRO_EXIT_CODE=$code"
+          exit 0
       - name: Fail-closed health report, preserve partial observations
         env:
           COLLECTOR_EXIT_CODE: ${{ steps.capture.outputs.exit_code }}
           GAP_REPAIR_EXIT_CODE: ${{ steps.repair.outputs.exit_code }}
           DYNAMIC_EOA_EXIT_CODE: ${{ steps.dynamic.outputs.exit_code }}
+          SPOT_MICRO_EXIT_CODE: ${{ steps.spot_tape.outputs.exit_code }}
         run: |
           python - <<'PY'
           import json,sqlite3,os,datetime
@@ -114,6 +128,7 @@ jobs:
              'collector_exit_code':int(os.environ.get('COLLECTOR_EXIT_CODE') or -1),
              'gap_repair_exit_code':int(os.environ.get('GAP_REPAIR_EXIT_CODE') or -1),
              'dynamic_eoa_exit_code':int(os.environ.get('DYNAMIC_EOA_EXIT_CODE') or -1),
+             'spot_micro_exit_code':int(os.environ.get('SPOT_MICRO_EXIT_CODE') or -1),
              'total_dynamic_eoa_balance_observations':n("SELECT COUNT(*) FROM wallet_checks WHERE status='OK' AND detail='DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN'"),
              'total_gap_repair_attempts':n('SELECT COUNT(*) FROM spot_gap_repairs') if c.execute("SELECT 1 FROM sqlite_master WHERE name='spot_gap_repairs'").fetchone() else 0,
              'last_run_id':latest[0] if latest else None,
@@ -174,6 +189,10 @@ jobs:
           cp v2_runtime/flow_discovery.json "$SNAP/flow_discovery.json"
           cp v2_runtime/transfer_trace.json "$SNAP/transfer_trace.json"
           if test -f v2_runtime/dynamic_wallets.json; then cp v2_runtime/dynamic_wallets.json "$SNAP/dynamic_wallets.json"; fi
+          if test -f v2_runtime/spot_microstructure.json && test -f v2_runtime/spot_microstructure.json.gz; then
+            cp v2_runtime/spot_microstructure.json "$SNAP/spot_microstructure.json"
+            cp v2_runtime/spot_microstructure.json.gz "$SNAP/spot_microstructure.json.gz"
+          fi
           if test -f v2_runtime/last_run.json; then
             cp v2_runtime/last_run.json "$SNAP/last_run.json"
           fi
@@ -203,9 +222,24 @@ jobs:
           cp "$SNAP/flow_discovery.json" v2_state/flow_discovery.json
           cp "$SNAP/transfer_trace.json" v2_state/transfer_trace.json
           if test -f "$SNAP/dynamic_wallets.json"; then cp "$SNAP/dynamic_wallets.json" v2_state/dynamic_wallets.json; fi
+          if test -f "$SNAP/spot_microstructure.json"; then
+            cp "$SNAP/spot_microstructure.json" v2_state/spot_microstructure.json
+            SAMPLE_RUN_ID="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["run_id"])' "$SNAP/spot_microstructure.json")"
+            if ! [[ "$SAMPLE_RUN_ID" =~ ^[0-9a-f]{18}$ ]]; then
+              echo 'FAIL_CLOSED: invalid public spot sample run id'; exit 1
+            fi
+            mkdir -p v2_archive/spot_samples
+            DEST="v2_archive/spot_samples/${SAMPLE_RUN_ID}.json.gz"
+            if test -f "$DEST"; then
+              cmp "$DEST" "$SNAP/spot_microstructure.json.gz" || exit 1
+            else
+              cp "$SNAP/spot_microstructure.json.gz" "$DEST"
+            fi
+          fi
           if test -f "$SNAP/last_run.json"; then cp "$SNAP/last_run.json" v2_state/last_run.json; fi
           git add v2_archive v2_state/audit.json v2_state/preparation_research.json v2_state/economic_brain.json v2_state/flow_discovery.json v2_state/transfer_trace.json v2_state/last_run.json
           if test -f v2_state/dynamic_wallets.json; then git add v2_state/dynamic_wallets.json; fi
+          if test -f v2_state/spot_microstructure.json; then git add v2_state/spot_microstructure.json; fi
           # NEVER add or overwrite v2_state/checkpoint.sqlite.gz: old backup remains available.
           git commit -m "V2 verified lossless incremental segment $(date -u +%Y-%m-%dT%H:%MZ)"
           git push origin HEAD:main
