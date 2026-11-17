@@ -80,9 +80,31 @@ jobs:
               print('RESEARCH_COIN',z['coin'],'events',z['transfers']['events'],'verified_cex',z['verified_exchange_addresses'],'candidate_cex',z['unverified_exchange_candidates'])
           PY
 
+      - name: Run economic brain against complete REAL archived SQLite (read-only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python v2/storage_segments.py restore v2_archive /tmp/v2-brain-real.sqlite3
+          python v2/economic_brain.py --db /tmp/v2-brain-real.sqlite3 \
+            --config v2/config.json --out /tmp/v2-economic-brain.json
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/v2-economic-brain.json'))
+          assert len(x['coins'])==15
+          assert x['ready_for_automated_strong_alerts'] is False
+          assert all(not z['strong_signal'] and not z['buy_signal'] for z in x['coins'])
+          for z in x['coins']:
+            print('REAL_DATA_ECONOMIC_BRAIN',z['coin'],'class',z['classification'],
+                  'watched_wallets',len(z['wallet_accumulation_candidates']),
+                  'transfer_events',z['observed_events_last_5000_blocks'],
+                  'verified_cex_wallets',z['verified_cex_wallet_count'])
+          print('ECONOMIC_BRAIN_REAL_15_COIN_CHECK_PASSED')
+          PY
       - name: Publish research-only evidence report as short-lived workflow artifact
         uses: actions/upload-artifact@v4
         with:
           name: v2-preparation-research-dryrun
-          path: /tmp/v2-preparation-research.json
+          path: |
+            /tmp/v2-preparation-research.json
+            /tmp/v2-economic-brain.json
           retention-days: 7
