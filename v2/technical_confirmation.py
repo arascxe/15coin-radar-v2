@@ -40,7 +40,7 @@ def evaluate(rows,expected_end_ms):
     # Both compare equal-duration rate, not mismatched 15m vs 60m totals.
     rvol15=(last15/15)/(prior45/45) if prior45>0 else None
     rvol60=last60/prior60 if prior60>0 else None
-    lows=[min(float(z[3]) for z in bars[-30+i*10:-20+i*10]) for i in (0,1,2)]
+    lows=[min(float(z[3]) for z in window) for window in (bars[-30:-20],bars[-20:-10],bars[-10:])]
     higher_lows=lows[0]<lows[1]<lows[2]
     price_range=lambda data:(max(float(z[2]) for z in data)-min(float(z[3]) for z in data))/float(data[0][1])
     short_range=price_range(bars[-15:])
