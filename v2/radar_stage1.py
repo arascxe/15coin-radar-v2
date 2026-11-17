@@ -341,11 +341,21 @@ def wallet_ingest(store,rid,config,http,ts,max_workers=6):
         if chain_ref[0] is None:return (w,c,None,None,chain_ref[2])
         url,block=chain_ref[:2]
         data='0x70a08231'+w['address'][2:].zfill(64)
-        try:
-            raw=http.rpc(url,'eth_call',[{'to':c['token'],'data':data},hex(block)])
-            if not isinstance(raw,str) or not raw.startswith('0x'):raise ValueError('BAD_BALANCE_RESPONSE')
-            return (w,c,block,int(raw,16),None)
-        except Exception as e:return (w,c,block,None,str(e))
+        errors=[]
+        # Never substitute a different block: same-block balances remain comparable.
+        for provider in (url,)+tuple(u for u in CHAINS[chain]['rpc'] if u!=url):
+            try:
+                if provider!=url:
+                    expected=CHAINS[chain]['id']
+                    if int(http.rpc(provider,'eth_chainId',[]),16)!=expected:raise ValueError('WRONG_CHAIN')
+                    provider_head=int(http.rpc(provider,'eth_blockNumber',[]),16)
+                    if provider_head<block:raise ValueError('PROVIDER_BEHIND_SNAPSHOT_BLOCK')
+                raw=http.rpc(provider,'eth_call',[{'to':c['token'],'data':data},hex(block)])
+                if not isinstance(raw,str) or not raw.startswith('0x'):raise ValueError('BAD_BALANCE_RESPONSE')
+                return (w,c,block,int(raw,16),None)
+            except Exception as e:
+                errors.append(provider+':'+str(e)[:65])
+        return (w,c,block,None,'ALL_VERIFIED_PROVIDERS_FAILED; '+';'.join(errors)[:160])
     # SQLite writes stay single-threaded, while network queries may be parallel.
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as pool:
         for w,c,block,raw,error in pool.map(query,config['wallets']):
