@@ -183,6 +183,19 @@ jobs:
           else
             echo 'SPOT_MICROSTRUCTURE_MISSING_FUSION_UNKNOWN_NOT_ZERO'
           fi
+      - name: Classify all 15 coins with independent research decision pathways
+        shell: bash
+        run: |
+          set -euo pipefail
+          if test -f v2_runtime/economic_fusion.json && test -f v2_runtime/spot_microstructure.json; then
+            python v2/decision_engine.py \
+              --fusion v2_runtime/economic_fusion.json \
+              --spot v2_runtime/spot_microstructure.json \
+              --technical v2_runtime/technical_confirmation.json \
+              --out v2_runtime/decision_engine.json
+          else
+            echo 'DECISION_NOT_EVALUATED_INCOMPLETE_INPUT_NOT_ZERO_SIGNAL'
+          fi
       - name: Build minimal new data segment and verify whole restored history
         run: |
           python v2/storage_segments.py append v2_runtime/segment_store \
@@ -211,6 +224,7 @@ jobs:
           cp v2_runtime/transfer_trace.json "$SNAP/transfer_trace.json"
           if test -f v2_runtime/economic_fusion.json; then cp v2_runtime/economic_fusion.json "$SNAP/economic_fusion.json"; fi
           cp v2_runtime/technical_confirmation.json "$SNAP/technical_confirmation.json"
+          if test -f v2_runtime/decision_engine.json; then cp v2_runtime/decision_engine.json "$SNAP/decision_engine.json"; fi
           if test -f v2_runtime/dynamic_wallets.json; then cp v2_runtime/dynamic_wallets.json "$SNAP/dynamic_wallets.json"; fi
           if test -f v2_runtime/spot_microstructure.json && test -f v2_runtime/spot_microstructure.json.gz; then
             cp v2_runtime/spot_microstructure.json "$SNAP/spot_microstructure.json"
@@ -246,6 +260,7 @@ jobs:
           cp "$SNAP/transfer_trace.json" v2_state/transfer_trace.json
           if test -f "$SNAP/economic_fusion.json"; then cp "$SNAP/economic_fusion.json" v2_state/economic_fusion.json; fi
           cp "$SNAP/technical_confirmation.json" v2_state/technical_confirmation.json
+          if test -f "$SNAP/decision_engine.json"; then cp "$SNAP/decision_engine.json" v2_state/decision_engine.json; fi
           if test -f "$SNAP/dynamic_wallets.json"; then cp "$SNAP/dynamic_wallets.json" v2_state/dynamic_wallets.json; fi
           if test -f "$SNAP/spot_microstructure.json"; then
             cp "$SNAP/spot_microstructure.json" v2_state/spot_microstructure.json
@@ -267,6 +282,7 @@ jobs:
           if test -f v2_state/spot_microstructure.json; then git add v2_state/spot_microstructure.json; fi
           if test -f v2_state/economic_fusion.json; then git add v2_state/economic_fusion.json; fi
           git add v2_state/technical_confirmation.json
+          if test -f v2_state/decision_engine.json; then git add v2_state/decision_engine.json; fi
           # NEVER add or overwrite v2_state/checkpoint.sqlite.gz: old backup remains available.
           git commit -m "V2 verified lossless incremental segment $(date -u +%Y-%m-%dT%H:%MZ)"
           git push origin HEAD:main

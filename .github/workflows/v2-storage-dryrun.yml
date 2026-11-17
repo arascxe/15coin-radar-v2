@@ -19,6 +19,8 @@ on:
       - 'v2/tests/test_economic_fusion.py'
       - 'v2/technical_confirmation.py'
       - 'v2/tests/test_technical_confirmation.py'
+      - 'v2/decision_engine.py'
+      - 'v2/tests/test_decision_engine.py'
       - '.github/workflows/v2-storage-dryrun.yml'
   workflow_dispatch:
 permissions:
@@ -179,6 +181,20 @@ jobs:
                   'eligible_receivers',v.get('eligible_unlabeled_receivers'),
                   'coverage',v['coverage_status'])
           PY
+      - name: Confirm 15-coin decision states from persisted real report set
+        run: |
+          python v2/decision_engine.py \
+            --fusion v2_state/economic_fusion.json \
+            --spot v2_state/spot_microstructure.json \
+            --technical v2_state/technical_confirmation.json \
+            --out /tmp/v2-real-decisions.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/v2-real-decisions.json'))
+          assert len(d['coins'])==15 and d['strong_alerts']==0 and not d['buy_signal']
+          assert all(not x['automatic_delivery_ready'] for x in d['coins'])
+          print('REAL_DECISIONS',d['state_counts'])
+          PY
       - name: Publish research-only evidence report as short-lived workflow artifact
         uses: actions/upload-artifact@v4
         with:
@@ -189,4 +205,5 @@ jobs:
             /tmp/v2-flow-discovery.json
             /tmp/v2-transfer-trace.json
             /tmp/v2-dynamic-proposals.json
+            /tmp/v2-real-decisions.json
           retention-days: 7
