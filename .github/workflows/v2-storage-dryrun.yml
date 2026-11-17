@@ -39,6 +39,34 @@ jobs:
               if got!=d[key]:raise AssertionError(f'ARCHIVE_MIGRATION_ROW_MISMATCH {table}: {got}!={d[key]}')
           print('REAL_CHECKPOINT_RESTORED_AND_VERIFIED',semantic_digest('/tmp/radar-restored.sqlite3'))
           PY
+      - name: Prove full-size historical archive plus real delta reconstruction
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp /tmp/radar-restored.sqlite3 /tmp/radar-before.sqlite3
+          cp /tmp/radar-restored.sqlite3 /tmp/radar-after.sqlite3
+          python - <<'PY'
+          import sys,sqlite3
+          sys.path.insert(0,'v2')
+          from radar_stage1 import Store,MINUTE_MS
+          st=Store('/tmp/radar-after.sqlite3')
+          t=1900000000000;t=(t//60000)*60000
+          rid=st.begin_run(t)
+          bar={'minute_ms':t,'open':1.,'high':1.2,'low':.9,'close':1.1,'quote_vol':123.}
+          st.market_save(rid,'ON','gate','ON_USDT','OK',t,t+MINUTE_MS,[bar],observed_ms=t)
+          st.finish_run(rid,t);st.close()
+          PY
+          python v2/storage_segments.py append /tmp/radar-segments /tmp/radar-before.sqlite3 /tmp/radar-after.sqlite3
+          python v2/storage_segments.py restore /tmp/radar-segments /tmp/radar-confirmed.sqlite3
+          python - <<'PY'
+          import sys
+          sys.path.insert(0,'v2')
+          from storage_segments import semantic_digest
+          b=semantic_digest('/tmp/radar-after.sqlite3')
+          c=semantic_digest('/tmp/radar-confirmed.sqlite3')
+          assert b==c,(b,c)
+          print('FULL_SIZE_REAL_ARCHIVE_PLUS_INCREMENTAL_DELTA_VALIDATED',b['counts'])
+          PY
       - name: Generate evidence-only 15-token preparation report
         run: |
           python v2/preparation_research.py --db /tmp/radar-restored.sqlite3 --config v2/config.json --out /tmp/v2-preparation-research.json
