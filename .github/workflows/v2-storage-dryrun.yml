@@ -117,6 +117,17 @@ jobs:
             print('DISCOVERY_COIN',z['coin'],'events',z['observed_event_count'],
               'positive_addresses',z['observed_net_positive_addresses'],
               'unverified_research_candidates',z['candidate_count'])
+          for z in x['coins']:
+            for v in z['watch_candidates'][:3]:
+              print('UNVERIFIED_WATCH_REVIEW',z['coin'],
+                'address',v['address'],
+                'net_raw',v['net_received_raw'],
+                'net_tokens',v['net_received'],
+                'recent_tokens',v['recent_net_received'],
+                'source_count',v['source_address_count_unverified'],
+                'in_txs',v['distinct_inflow_transactions'],
+                'source_types',v['source_types'],
+                'sample_txs',v['sample_incoming_transactions'])
           print('FLOW_DISCOVERY_REAL_15_COIN_CHECK_PASSED')
           PY
       - name: Publish research-only evidence report as short-lived workflow artifact
