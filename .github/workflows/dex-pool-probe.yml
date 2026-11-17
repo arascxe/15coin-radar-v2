@@ -37,5 +37,12 @@ jobs:
                    'token_in_pair':c['token'].lower() in linked,
                    'api_id':p.get('id')})
               print('DEX_PROBE='+json.dumps({'coin':symbol,'token':c['token'],'pools':pools}),flush=True)
+              if pools and pools[0]['token_in_pair']:
+                addr=pools[0]['pool']
+                try:
+                  bars=client.get(f"https://api.geckoterminal.com/api/v2/networks/{c['chain']}/pools/{addr}/ohlcv/minute",{'aggregate':1,'limit':3})
+                  entries=bars.get('data',{}).get('attributes',{}).get('ohlcv_list',[])
+                  print('DEX_OHLCV='+json.dumps({'coin':symbol,'pool':addr,'bars':len(entries),'first':entries[0] if entries else None}),flush=True)
+                except Exception as e:print('DEX_OHLCV='+json.dumps({'coin':symbol,'pool':addr,'error':str(e)[:130]}),flush=True)
             except Exception as e:print('DEX_PROBE='+json.dumps({'coin':symbol,'error':str(e)[:180]}),flush=True)
           PY
