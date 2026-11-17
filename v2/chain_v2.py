@@ -94,8 +94,10 @@ def scan_receipts(http,url,start,end,token_to_coin,deadline,on_complete):
                 batch.extend(receipt_logs(receipts,token_to_coin))
             on_complete(b,batch)
 
-def chain_ingest(store,rid,chain,config,http,ts=None,max_span=4500,deadline_seconds=750):
+def chain_ingest(store,rid,chain,config,http,ts=None,max_span=None,deadline_seconds=None):
     ts=now_ms() if ts is None else ts
+    if max_span is None:max_span=12000 if chain=='bsc' else 5000
+    if deadline_seconds is None:deadline_seconds=960 if chain=='bsc' else 600
     token_to_coin={x['token'].lower():x['symbol'] for x in config['coins'] if x['chain']==chain}
     try:
         url,head,method=select_provider(http,chain,next(iter(token_to_coin)))
