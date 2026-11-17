@@ -87,13 +87,16 @@ def compare_spot(current,previous):
         details.append(row)
     return details
 
-def build(spot,brain,previous=None):
+def build(spot,brain,previous=None,technical=None):
     if spot.get('schema')!='radar-v2-public-spot-microstructure-1':
         raise ValueError('WRONG_SPOT_REPORT')
     if brain.get('schema')!='radar-v2-economic-brain-1':
         raise ValueError('WRONG_ECONOMIC_BRAIN')
     if spot.get('run_id')!=brain.get('last_run_id'):
         raise ValueError('FAIL_CLOSED_SAME_RUN_ID_MISMATCH')
+    if technical is not None and technical.get('schema')!='radar-v2-technical-confirmation-1':
+        raise ValueError('WRONG_TECHNICAL_REPORT')
+    tech_by_coin={z['coin']:z for z in (technical or {}).get('coins',[])}
     evidence=compare_spot(spot,previous)
     grouped=collections.defaultdict(list)
     for item in evidence:grouped[item['coin']].append(item)
@@ -122,12 +125,14 @@ def build(spot,brain,previous=None):
                 'both_in_same_venue':matching,
                 'independent_research_trigger':tentative_ignition,
                 'status':'EARLY_RESEARCH_ONLY' if tentative_ignition else 'NOT_CORROBORATED_UNKNOWN'},
-            'market_evidence':observed,'classification':status,
+            'market_evidence':observed,
+            'price_volume_confirmation':tech_by_coin.get(sym,{'status':'NOT_COMPUTED_UNKNOWN'}),
+            'classification':status,
             'strong_alert':False,'buy_signal':False,
             'missing_evidence':['NO_VALIDATED_HISTORICAL_FALSE_POSITIVE_RATE',
                 'PUBLIC_TRADE_SAMPLE_IS_NOT_COMPLETE_TAKER_TAPE',
                 'ASK_THINNING_NOT_PROVEN_ORDER_CANCELLATION',
-                'PRICE_VOLUME_FEATURES_NOT_YET_INCLUDED']})
+                'PRICE_VOLUME_FEATURES_MAY_BE_UNKNOWN_OR_UNCALIBRATED']})
     return {'schema':'radar-v2-economic-fusion-research-1',
         'created_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
         'run_id':spot['run_id'],'asof_ms':spot['asof_ms'],
@@ -141,6 +146,7 @@ def main():
     p=argparse.ArgumentParser()
     p.add_argument('--spot',required=True);p.add_argument('--economic',required=True)
     p.add_argument('--history',required=True);p.add_argument('--out',required=True)
+    p.add_argument('--technical')
     args=p.parse_args()
     spot=json.loads(pathlib.Path(args.spot).read_text())
     brain=json.loads(pathlib.Path(args.economic).read_text())
@@ -149,7 +155,8 @@ def main():
     # hourly book-depth change rather than seconds-apart screenshots.
     usable=[x for x in hist if MIN_INTERVAL_MS<=int(spot['asof_ms'])-int(x['asof_ms'])<=MAX_INTERVAL_MS]
     prev=usable[-1] if usable else None
-    d=build(spot,brain,prev)
+    technical=json.loads(pathlib.Path(args.technical).read_text()) if args.technical else None
+    d=build(spot,brain,prev,technical)
     dest=pathlib.Path(args.out);dest.parent.mkdir(parents=True,exist_ok=True)
     tmp=dest.with_suffix(dest.suffix+'.tmp')
     tmp.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n');tmp.replace(dest)
