@@ -71,6 +71,9 @@ CREATE TABLE IF NOT EXISTS market_candles(coin TEXT NOT NULL,venue TEXT NOT NULL
 CREATE TABLE IF NOT EXISTS market_cursor(coin TEXT NOT NULL,venue TEXT NOT NULL,last_queried_end_ms INTEGER NOT NULL,updated_ms INTEGER NOT NULL,
   PRIMARY KEY(coin,venue));
 CREATE TABLE IF NOT EXISTS market_bootstrap(coin TEXT NOT NULL,venue TEXT NOT NULL,first_requested_ms INTEGER NOT NULL, PRIMARY KEY(coin,venue));
+CREATE TABLE IF NOT EXISTS market_missing_minutes(coin TEXT NOT NULL,venue TEXT NOT NULL,minute_ms INTEGER NOT NULL,
+  first_seen_ms INTEGER NOT NULL,last_seen_ms INTEGER NOT NULL,
+  PRIMARY KEY(coin,venue,minute_ms));
 CREATE TABLE IF NOT EXISTS market_checks(run_id TEXT NOT NULL,coin TEXT NOT NULL,venue TEXT NOT NULL,pair TEXT,status TEXT NOT NULL,
   window_start_ms INTEGER,window_end_ms INTEGER,received_bars INTEGER NOT NULL DEFAULT 0,expected_minutes INTEGER NOT NULL DEFAULT 0,
   missing_minutes INTEGER,detail TEXT, PRIMARY KEY(run_id,coin,venue));
