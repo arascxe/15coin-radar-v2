@@ -80,11 +80,25 @@ jobs:
           echo "Collector exit code: $code"
           # Preserve error evidence in the DB, don't let one outage delete history.
           exit 0
+      - name: Bounded repair of historic missing spot minutes
+        if: steps.trial_gate.outputs.allow == 'true'
+        id: gap_repair
+        shell: bash
+        run: |
+          set +e
+          timeout --signal=TERM --kill-after=10s 240s \
+            python -u v2/gap_repair.py --db v2_runtime/live.sqlite3 \
+              --config v2/config.json --report-path v2_runtime/last_run.json
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          echo "SPOT_GAP_REPAIR_EXIT_CODE=$code"
+          exit 0
       - name: Mark interrupted runs and create truthful health report
         if: steps.trial_gate.outputs.allow == 'true'
         shell: bash
         env:
           COLLECTOR_EXIT_CODE: ${{ steps.capture.outputs.collector_exit_code }}
+          GAP_REPAIR_EXIT_CODE: ${{ steps.gap_repair.outputs.exit_code }}
         run: |
           python - <<'PY'
           import json,sqlite3,os,datetime
@@ -100,6 +114,8 @@ jobs:
           def n(sql):return c.execute(sql).fetchone()[0]
           d={'created_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
              'collector_exit_code':int(os.environ.get('COLLECTOR_EXIT_CODE') or -1),
+             'gap_repair_exit_code':int(os.environ.get('GAP_REPAIR_EXIT_CODE') or -1),
+             'total_gap_repair_attempts':n('select count(*) from spot_gap_repairs') if c.execute("select name from sqlite_master where name='spot_gap_repairs'").fetchone() else 0,
              'last_run_id':latest[0] if latest else None,
              'last_run_status':latest[1] if latest else 'NO_RUN',
              'total_runs':n('select count(*) from runs'),
@@ -199,6 +215,10 @@ jobs:
           for table,key in checks.items():
             got=c.execute('select count(*) from '+table).fetchone()[0]
             if got!=d[key]:raise AssertionError(f'Cross-runner {table} {got} != {d[key]}')
+          table='spot_gap_repairs'
+          exists=c.execute("SELECT name FROM sqlite_master WHERE name=?",(table,)).fetchone()
+          got=c.execute('SELECT COUNT(*) FROM '+table).fetchone()[0] if exists else 0
+          if got!=d.get('total_gap_repair_attempts',0):raise AssertionError('Spot gap repair provenance missing')
           if d['last_run_id']:
             if not c.execute('select 1 from runs where run_id=?',(d['last_run_id'],)).fetchone():
               raise AssertionError('Latest run ID absent from newly restored DB')
