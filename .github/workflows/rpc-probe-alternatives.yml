@@ -1,0 +1,57 @@
+name: RPC source selection diagnostic v2
+on:
+  push:
+    paths: ['.github/workflows/rpc-probe-alternatives.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Probe alternative unkeyed BSC and rate-limited Base RPCs
+        run: |
+          python - <<'PY'
+          import sys,time,json,concurrent.futures
+          sys.path.insert(0,'v2')
+          from radar_stage1 import HTTPClient
+          from chain_v2 import TRANSFER_TOPIC
+          urls=['https://bsc-rpc.publicnode.com','https://bsc.drpc.org','https://1rpc.io/bnb',
+            'https://binance.llamarpc.com','https://bsc.meowrpc.com',
+            'https://bnb.rpc.subquery.network/public','https://bsc-pokt.nodies.app',
+            'https://bsc-mainnet.public.blastapi.io','https://bsc-dataseed.bnbchain.org']
+          tok='0x0e4f6209ed984b21edea43ace6e09559ed051d48'
+          def probe(url):
+            x={'url':url};h=HTTPClient(timeout=5)
+            try:
+              x['chain_id']=int(h.rpc(url,'eth_chainId',[]),16)
+              head=int(h.rpc(url,'eth_blockNumber',[]),16);x['head']=head
+              try:
+                y=h.rpc(url,'eth_getLogs',[{'fromBlock':hex(head-30),'toBlock':hex(head-30),
+                  'address':tok,'topics':[TRANSFER_TOPIC]}])
+                x['logs']='OK_'+str(len(y)) if isinstance(y,list) else 'BAD_TYPE'
+              except Exception as e:x['logs']='ERR_'+str(e)[:90]
+            except Exception as e:x['error']=str(e)[:100]
+            return x
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+            for x in pool.map(probe,urls):print('BSC_OPTION='+json.dumps(x),flush=True)
+          url='https://rpc.swiftnodes.io/rpc/base';h=HTTPClient(timeout=6)
+          x={'url':url}
+          try:
+            x['chain_id']=int(h.rpc(url,'eth_chainId',[]),16);time.sleep(.9)
+            head=int(h.rpc(url,'eth_blockNumber',[]),16);x['head']=head;time.sleep(1.1)
+            for span in (1,50):
+              try:
+                y=h.rpc(url,'eth_getLogs',[{'fromBlock':hex(head-100),'toBlock':hex(head-101+span),
+                  'address':'0x6cd905df2ed214b22e0d48ff17cd4200c1c6d8a3','topics':[TRANSFER_TOPIC]}])
+                x['logs_'+str(span)]='OK_'+str(len(y)) if isinstance(y,list) else 'BAD_TYPE'
+              except Exception as e:x['logs_'+str(span)]='ERR_'+str(e)[:110]
+              time.sleep(1.1)
+          except Exception as e:x['error']=str(e)[:130]
+          print('BASE_SLOW_PROBE='+json.dumps(x),flush=True)
+          PY
