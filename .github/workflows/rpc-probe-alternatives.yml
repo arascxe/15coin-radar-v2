@@ -54,6 +54,21 @@ jobs:
             for k in range(5):pieces.update(logs(start+100*k,start+100*k+99))
             print('BSC_PAGE_EQUIVALENCE='+json.dumps({'one':len(one),'pieces':len(pieces),'equal':one==pieces,'positive_events':bool(one)}),flush=True)
           except Exception as e:print('BSC_PAGE_EQUIVALENCE='+json.dumps({'error':str(e)[:200]}),flush=True)
+          # Identify whether BSC publicnode rejects multi-address filters, long ranges or older blocks.
+          c=HTTPClient(timeout=7);url='https://bsc-rpc.publicnode.com'
+          head=int(c.rpc(url,'eth_blockNumber',[]),16)
+          toks=[x['token'] for x in json.load(open('v2/config.json'))['coins'] if x['chain']=='bsc']
+          samples=[('single_1_recent',toks[0],1,50),('single_50_recent',toks[0],50,50),
+                   ('single_500_recent',toks[0],500,50),('multi_1_recent',toks,1,50),
+                   ('multi_50_recent',toks,50,50),('single_1_old',toks[0],1,9500),
+                   ('multi_1_old',toks,1,9500)]
+          for label,address,blocks,lag in samples:
+            try:
+              a=head-lag-blocks;b=head-lag-1
+              y=c.rpc(url,'eth_getLogs',[{'fromBlock':hex(a),'toBlock':hex(b),'address':address,'topics':[TRANSFER_TOPIC]}])
+              result='OK_'+str(len(y)) if isinstance(y,list) else 'BAD_TYPE'
+            except Exception as e:result='ERROR_'+str(e)[:120]
+            print('BSC_FILTER_MATRIX='+json.dumps({'test':label,'result':result}),flush=True)
           url='https://rpc.swiftnodes.io/rpc/base';h=HTTPClient(timeout=6)
           x={'url':url}
           try:
