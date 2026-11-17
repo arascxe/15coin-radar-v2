@@ -51,3 +51,10 @@ jobs:
           for z in x['coins']:
               print('RESEARCH_COIN',z['coin'],'events',z['transfers']['events'],'verified_cex',z['verified_exchange_addresses'],'candidate_cex',z['unverified_exchange_candidates'])
           PY
+
+      - name: Publish research-only evidence report as short-lived workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: v2-preparation-research-dryrun
+          path: /tmp/v2-preparation-research.json
+          retention-days: 7
