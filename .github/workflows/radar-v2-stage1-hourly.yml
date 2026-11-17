@@ -5,6 +5,8 @@ on:
     - cron: '19 * * * *'
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
       - 'v2/**'
       - '.github/workflows/radar-v2-stage1-hourly.yml'
@@ -196,6 +198,29 @@ jobs:
           else
             echo 'DECISION_NOT_EVALUATED_INCOMPLETE_INPUT_NOT_ZERO_SIGNAL'
           fi
+      - name: Evaluate only matured forward price outcomes, without future-data leakage
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p v2_runtime/spot_history
+          cp v2_archive/spot_samples/*.json.gz v2_runtime/spot_history/ 2>/dev/null || true
+          if test -f v2_runtime/spot_microstructure.json.gz; then
+            cp v2_runtime/spot_microstructure.json.gz v2_runtime/spot_history/current.json.gz
+          fi
+          python v2/prospective_validation.py \
+            --db v2_runtime/live.sqlite3 \
+            --archive v2_runtime/spot_history \
+            --out v2_runtime/prospective_validation.json
+      - name: Create deduplicated research events WITHOUT ChatGPT delivery or trades
+        shell: bash
+        run: |
+          set -euo pipefail
+          if test -f v2_runtime/decision_engine.json; then
+            python v2/research_outbox.py \
+              --decision v2_runtime/decision_engine.json \
+              --prior v2_state/research_outbox.json \
+              --out v2_runtime/research_outbox.json
+          fi
       - name: Build minimal new data segment and verify whole restored history
         run: |
           python v2/storage_segments.py append v2_runtime/segment_store \
@@ -224,6 +249,8 @@ jobs:
           cp v2_runtime/transfer_trace.json "$SNAP/transfer_trace.json"
           if test -f v2_runtime/economic_fusion.json; then cp v2_runtime/economic_fusion.json "$SNAP/economic_fusion.json"; fi
           cp v2_runtime/technical_confirmation.json "$SNAP/technical_confirmation.json"
+          cp v2_runtime/prospective_validation.json "$SNAP/prospective_validation.json"
+          if test -f v2_runtime/research_outbox.json; then cp v2_runtime/research_outbox.json "$SNAP/research_outbox.json"; fi
           if test -f v2_runtime/decision_engine.json; then cp v2_runtime/decision_engine.json "$SNAP/decision_engine.json"; fi
           if test -f v2_runtime/dynamic_wallets.json; then cp v2_runtime/dynamic_wallets.json "$SNAP/dynamic_wallets.json"; fi
           if test -f v2_runtime/spot_microstructure.json && test -f v2_runtime/spot_microstructure.json.gz; then
@@ -260,6 +287,31 @@ jobs:
           cp "$SNAP/transfer_trace.json" v2_state/transfer_trace.json
           if test -f "$SNAP/economic_fusion.json"; then cp "$SNAP/economic_fusion.json" v2_state/economic_fusion.json; fi
           cp "$SNAP/technical_confirmation.json" v2_state/technical_confirmation.json
+          cp "$SNAP/prospective_validation.json" v2_state/prospective_validation.json
+          if test -f "$SNAP/research_outbox.json"; then
+            cp "$SNAP/research_outbox.json" v2_state/research_outbox.json
+            # Keep an immutable, tiny record of NEW research episodes only.
+            # Never confuse these records with successful ChatGPT notifications.
+            mkdir -p v2_archive/research_events
+            python - "$SNAP/research_outbox.json" v2_archive/research_events <<'PY'
+          import json,pathlib,sys
+          record=json.load(open(sys.argv[1]))
+          events=record.get('new_research_events',[])
+          if events:
+              rid=record['run_id']
+              if len(rid)!=18 or any(c not in '0123456789abcdef' for c in rid):
+                  raise RuntimeError('INVALID_RESEARCH_EVENT_RUN_ID')
+              root=pathlib.Path(sys.argv[2])
+              out=root/(rid+'.json')
+              payload=json.dumps({'schema':'v2-immutable-research-events-1',
+                   'run_id':rid,'asof_ms':record['asof_ms'],
+                   'not_buy_signals':True,'events':events},sort_keys=True,ensure_ascii=False)+'\n'
+              if out.exists() and out.read_text()!=payload:
+                  raise RuntimeError('IMMUTABLE_RESEARCH_EVENT_COLLISION')
+              if not out.exists():out.write_text(payload)
+              print('RESEARCH_EVENT_JOURNAL_RECORDS',len(events))
+          PY
+          fi
           if test -f "$SNAP/decision_engine.json"; then cp "$SNAP/decision_engine.json" v2_state/decision_engine.json; fi
           if test -f "$SNAP/dynamic_wallets.json"; then cp "$SNAP/dynamic_wallets.json" v2_state/dynamic_wallets.json; fi
           if test -f "$SNAP/spot_microstructure.json"; then
@@ -281,7 +333,8 @@ jobs:
           if test -f v2_state/dynamic_wallets.json; then git add v2_state/dynamic_wallets.json; fi
           if test -f v2_state/spot_microstructure.json; then git add v2_state/spot_microstructure.json; fi
           if test -f v2_state/economic_fusion.json; then git add v2_state/economic_fusion.json; fi
-          git add v2_state/technical_confirmation.json
+          git add v2_state/technical_confirmation.json v2_state/prospective_validation.json
+          if test -f v2_state/research_outbox.json; then git add v2_state/research_outbox.json; fi
           if test -f v2_state/decision_engine.json; then git add v2_state/decision_engine.json; fi
           # NEVER add or overwrite v2_state/checkpoint.sqlite.gz: old backup remains available.
           git commit -m "V2 verified lossless incremental segment $(date -u +%Y-%m-%dT%H:%MZ)"
