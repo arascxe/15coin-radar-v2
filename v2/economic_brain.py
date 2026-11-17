@@ -128,6 +128,19 @@ def build(db_path,config):
             sym=conf['symbol'];chain=conf['chain'];decimals=conf['decimals']
             labels={w['address'].lower():w for w in config['wallets']
                     if w['coin']==sym and w['chain']==chain}
+            # Dynamic addresses are monitored only after a same-block eth_getCode
+            # check returned EOA code and a real balanceOf was recorded. This does
+            # NOT prove beneficial owner, independent buyer, or exchange withdrawal.
+            dynamic_addresses=[r[0] for r in c.execute(
+                """SELECT DISTINCT address FROM wallet_checks
+                   WHERE coin=? AND chain=? AND status='OK' AND detail=?
+                   ORDER BY address""",
+                (sym,chain,'DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN'))]
+            for dyn_addr in dynamic_addresses:
+                labels.setdefault(dyn_addr,{'role':'eoa_unverified',
+                    'identity_confidence':'onchain_code_zero_owner_unknown',
+                    'label':'DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN'})
+
             cursor=cursors.get(chain,(None,None))[0]
             ch_status=health.get(chain,(None,None,None))[0]
             last_head=health.get(chain,(None,None,None))[1]
@@ -166,6 +179,7 @@ def build(db_path,config):
                      'balance_increase':as_token(delta,decimals),
                      'relative_increase_pct':str(round(decimal.Decimal(100)*delta/old['raw'],2)) if old['raw']>0 else None,
                      'history_hours':main['observed_hours'],'full_24h_baseline':main['full_window'],
+                     'dynamically_discovered':address in dynamic_addresses,
                      'ownership_verified':False}
                 history={}
                 for hours in HOURS:
@@ -213,6 +227,7 @@ def build(db_path,config):
                 'chain_head':last_head,'chain_currently_complete':chain_data_ok,
                 'verified_cex_wallet_count':sum(kinds(w)=='EXCHANGE_VERIFIED' for w in labels.values()),
                 'exchange_tag_unverified_count':sum(kinds(w)=='EXCHANGE_TAG_UNVERIFIED' for w in labels.values()),
+                'dynamically_monitored_eoa_addresses':len(dynamic_addresses),
                 'observed_events_last_5000_blocks':len(transfers),
                 'flow_event_type_counts':dict(counts),
                 'largest_movements':events[:5],

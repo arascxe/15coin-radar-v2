@@ -10,6 +10,9 @@ on:
       - 'v2/tests/test_flow_discovery.py'
       - 'v2/trace_economic_routes.py'
       - 'v2/tests/test_trace_economic_routes.py'
+      - 'v2/economic_brain.py'
+      - 'v2/dynamic_wallet_monitor.py'
+      - 'v2/tests/test_dynamic_wallet_monitor.py'
       - '.github/workflows/v2-storage-dryrun.yml'
   workflow_dispatch:
 permissions:
@@ -154,6 +157,22 @@ jobs:
                 'class',y['classification'])
           print('ROUTE_REVIEW_COMPLETE_NO_STRONG_ALERTS')
           PY
+      - name: Propose real dynamic-wallet follow-ups WITHOUT network or database writes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python v2/dynamic_wallet_monitor.py --db /tmp/v2-brain-real.sqlite3 \
+            --config v2/config.json --propose-only --out /tmp/v2-dynamic-proposals.json
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/v2-dynamic-proposals.json'))
+          assert len(x['coins'])==15 and x['strong_alert'] is False
+          print('DYNAMIC_EOA_PROPOSAL_SELECTION',sum(v['count'] for v in x['coins']))
+          for v in x['coins']:
+            print('DYNAMIC_RESEARCH',v['coin'],'selected',v['count'],
+                  'eligible_receivers',v.get('eligible_unlabeled_receivers'),
+                  'coverage',v['coverage_status'])
+          PY
       - name: Publish research-only evidence report as short-lived workflow artifact
         uses: actions/upload-artifact@v4
         with:
@@ -163,4 +182,5 @@ jobs:
             /tmp/v2-economic-brain.json
             /tmp/v2-flow-discovery.json
             /tmp/v2-transfer-trace.json
+            /tmp/v2-dynamic-proposals.json
           retention-days: 7
