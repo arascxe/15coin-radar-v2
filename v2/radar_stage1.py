@@ -271,22 +271,27 @@ def get_market_spec(v,t0,t1):
 
 
 def market_ingest(store,rid,v,http,ts,lookback=70,cap=1000):
-    # Two-minute finalization delay reduces exchange-side unfinalized last candles.\n    closed_to=(ts//MINUTE_MS)*MINUTE_MS-2*MINUTE_MS
+    # Two-minute finalization delay reduces exchange-side unfinalized last candles.
+    closed_to=(ts//MINUTE_MS)*MINUTE_MS-2*MINUTE_MS
     old=store.last_market_end(v['coin'],v['venue']);initial=store.market_initial_start(v['coin'],v['venue'])
     t0=(initial if initial is not None else closed_to-lookback*MINUTE_MS) if old is None else old
-    if closed_to<=t0:\n        return store.market_save(rid,v['coin'],v['venue'],v.get('pair'),'NO_NEW_CLOSED_MINUTES',t0,t0,[],detail='SOURCE_ALREADY_AT_CLOSED_TIME',observed_ms=ts)
+    if closed_to<=t0:
+        return store.market_save(rid,v['coin'],v['venue'],v.get('pair'),'NO_NEW_CLOSED_MINUTES',t0,t0,[],detail='SOURCE_ALREADY_AT_CLOSED_TIME',observed_ms=ts)
     page_caps={'okx':90,'gate':900,'kucoin':1200,'bitget':900,'mexc':900,'bybit':900,'binance_alpha':900,'geckoterminal':900}
     venue_cap=min(cap,page_caps.get(v['venue'],900))
     t1=min(closed_to,t0+venue_cap*MINUTE_MS)
     if not v.get('pair') or v.get('identity_status')=='ALPHA_PAIR_NOT_TRADING_AS_OF_PREVIOUS_SCAN':
         return store.market_save(rid,v['coin'],v['venue'],v.get('pair'),'UNSUPPORTED',t0,t1,[],detail='PAIR_UNVERIFIED_OR_NOT_TRADING',observed_ms=ts)
     try:
-        # Re-fetch a short overlap to recover prior missing minutes without rewinding the main cursor.\n        repair_start=max(0,t0-3*MINUTE_MS) if old is not None else t0\n        url,args=get_market_spec(v,repair_start,t1)
+        # Re-fetch a short overlap to recover prior missing minutes without rewinding the main cursor.
+        repair_start=max(0,t0-3*MINUTE_MS) if old is not None else t0
+        url,args=get_market_spec(v,repair_start,t1)
         response=http.get(url,args)
         bars=parse_candles(v['venue'],response)
         observed={b['minute_ms']:b for b in bars if repair_start<=b['minute_ms']<t1};valid=list(observed.values())
         expected=(t1-t0)//MINUTE_MS
-        fresh=[b for b in valid if t0<=b['minute_ms']<t1]\n        if not fresh:status='UNKNOWN';msg='EMPTY_CANDLE_RESULT; NO_TRADE_NOT_PROVEN'
+        fresh=[b for b in valid if t0<=b['minute_ms']<t1]
+        if not fresh:status='UNKNOWN';msg='EMPTY_CANDLE_RESULT; NO_TRADE_NOT_PROVEN'
         elif len(fresh)!=expected:status='PARTIAL';msg=f'MISSING_OR_ZERO_TRADE_CANDLES:{expected-len(fresh)}; NOT_VERIFIED_TAKER_TAPE'
         else:status='OK';msg='COMPLETE_1M_CANDLE_GRID; NOT_VERIFIED_TAKER_TAPE'
         if t1<closed_to:
