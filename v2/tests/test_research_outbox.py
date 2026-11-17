@@ -24,6 +24,7 @@ class OutboxTests(unittest.TestCase):
     def test_disappearance_then_reappearance_is_new_episode(self):
         a=produce(fake());gone=produce(fake(False),a)
         self.assertFalse(gone['active'])
+        self.assertEqual(gone['resolved_event_count'],1)
         b=produce(fake(),gone)
         self.assertEqual(b['new_research_event_count'],1)
     def test_escalation_creates_new_review_event(self):
@@ -32,6 +33,7 @@ class OutboxTests(unittest.TestCase):
         n['coins'][0]['research_dedupe_key']='other'
         b=produce(n,a)
         self.assertEqual(b['new_research_event_count'],1)
+        self.assertEqual(b['resolved_event_count'],1)
     def test_backwards_time_rejected(self):
         a=produce(fake());n=fake();n['asof_ms']=a['asof_ms']-1
         with self.assertRaises(ValueError):produce(n,a)
