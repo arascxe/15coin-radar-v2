@@ -16,6 +16,9 @@ class TestPersistence(unittest.TestCase):
         self.assertEqual(len(c['venues']),60)
         self.assertEqual(len(c['wallets']),239)
         self.assertEqual(len(c['dex_pools']),15)
+        self.assertTrue(all('pool' in x for x in c['dex_pools']))
+        self.assertTrue(all(str(x['pool']).startswith('0x') and len(str(x['pool'])) in (42,66) for x in c['dex_pools']))
+        self.assertEqual(len([x for x in c['dex_pools'] if len(x['pool'])==66]),4)
 
     def test_config_rejects_missing_coin(self):
         c=json.loads((ROOT/'config.json').read_text());c['coins'].pop()
