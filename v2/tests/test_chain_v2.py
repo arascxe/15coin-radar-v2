@@ -111,4 +111,19 @@ class ChainChecks(unittest.TestCase):
             self.assertEqual(int(r.calls[1]['from']),int(r.calls[0]['to'])-3*60)
             store.close()
 
+
+    def test_receipt_count_mismatch_does_not_advance_cursor(self):
+        class DroppedReceiptRPC(MockRPC):
+            def rpc(self,url,method,params):
+                if method=='eth_getBlockByNumber':
+                    return {'transactions':['0x'+'1'*64]}
+                return super().rpc(url,method,params)
+        with tempfile.TemporaryDirectory() as d:
+            store=Store(pathlib.Path(d)/'db')
+            out=chain_ingest(store,store.begin_run(T),'bsc',C,DroppedReceiptRPC(),T,max_span=24)
+            self.assertEqual(out['status'],'ERROR')
+            self.assertIsNone(store.last_chain_block('bsc'))
+            self.assertEqual(store.db.execute('select count(*) from token_transfers').fetchone()[0],0)
+            store.close()
+
 if __name__=='__main__':unittest.main()
