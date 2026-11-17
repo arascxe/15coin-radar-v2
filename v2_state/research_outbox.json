@@ -1,42 +1,62 @@
 {
   "schema": "radar-v2-research-inbox-1",
-  "generated_utc": "2026-11-17T11:26:57.424623+00:00",
-  "run_id": "ffbdaf8f27729ad15d",
-  "asof_ms": 1794914812191,
+  "generated_utc": "2026-11-17T13:20:58.383522+00:00",
+  "run_id": "6258db9a991c878858",
+  "asof_ms": 1794921652976,
   "active": {
-    "LIGHT": {
-      "coin": "LIGHT",
+    "TRUST": {
+      "coin": "TRUST",
       "state": "SPOT_IGNITION_RESEARCH_WATCH",
-      "research_dedupe_key": "f9f257cdb9d1f5bcec24",
-      "first_observed_asof_ms": 1794914812191,
-      "first_observed_run_id": "ffbdaf8f27729ad15d",
+      "research_dedupe_key": "3c85b55c884e162e4e4e",
+      "first_observed_asof_ms": 1794921652976,
+      "first_observed_run_id": "6258db9a991c878858",
       "not_a_trade_signal": true,
       "evidence": {
         "preparation": {
           "active_unverified": false,
           "candidate_count": 0,
-          "chain_scan_complete": true
+          "chain_scan_complete": false
         },
         "spot_ignition": {
           "active_sample_based": true,
           "qualified_buy_sample_venues": [
             {
-              "venue": "gate",
-              "observed_trades": 26,
-              "sample_buy_fraction": 0.9925,
-              "observed_quote_notional": 568.56,
+              "venue": "bitget",
+              "observed_trades": 10,
+              "sample_buy_fraction": 0.8326,
+              "observed_quote_notional": 675.82,
               "direction_semantics": "PUBLIC_EXCHANGE_TRADE_SIDE_NOT_INDEPENDENTLY_VERIFIED_TAKER_AGGRESSOR"
+            },
+            {
+              "venue": "gate",
+              "observed_trades": 22,
+              "sample_buy_fraction": 0.8137,
+              "observed_quote_notional": 797.87,
+              "direction_semantics": "PUBLIC_EXCHANGE_TRADE_SIDE_NOT_INDEPENDENTLY_VERIFIED_TAKER_AGGRESSOR"
+            },
+            {
+              "venue": "mexc",
+              "observed_trades": 6,
+              "sample_buy_fraction": 0.8503,
+              "observed_quote_notional": 135.32,
+              "direction_semantics": "MEXC_BUYER_MAKER_FLAG_INFERRED_TAKER_SIDE"
             }
           ],
           "ask_thinner_snapshot_venues": [
             {
               "venue": "gate",
-              "depth_change_pct": -41.2,
+              "depth_change_pct": -51.02,
+              "withdrawal_proven": false
+            },
+            {
+              "venue": "mexc",
+              "depth_change_pct": -50.72,
               "withdrawal_proven": false
             }
           ],
           "both_buy_and_thinner_in_same_venue": [
-            "gate"
+            "gate",
+            "mexc"
           ],
           "sampled_markets": 3
         }
@@ -52,38 +72,58 @@
   },
   "new_research_events": [
     {
-      "coin": "LIGHT",
+      "coin": "TRUST",
       "state": "SPOT_IGNITION_RESEARCH_WATCH",
-      "research_dedupe_key": "f9f257cdb9d1f5bcec24",
-      "first_observed_asof_ms": 1794914812191,
-      "first_observed_run_id": "ffbdaf8f27729ad15d",
+      "research_dedupe_key": "3c85b55c884e162e4e4e",
+      "first_observed_asof_ms": 1794921652976,
+      "first_observed_run_id": "6258db9a991c878858",
       "not_a_trade_signal": true,
       "evidence": {
         "preparation": {
           "active_unverified": false,
           "candidate_count": 0,
-          "chain_scan_complete": true
+          "chain_scan_complete": false
         },
         "spot_ignition": {
           "active_sample_based": true,
           "qualified_buy_sample_venues": [
             {
-              "venue": "gate",
-              "observed_trades": 26,
-              "sample_buy_fraction": 0.9925,
-              "observed_quote_notional": 568.56,
+              "venue": "bitget",
+              "observed_trades": 10,
+              "sample_buy_fraction": 0.8326,
+              "observed_quote_notional": 675.82,
               "direction_semantics": "PUBLIC_EXCHANGE_TRADE_SIDE_NOT_INDEPENDENTLY_VERIFIED_TAKER_AGGRESSOR"
+            },
+            {
+              "venue": "gate",
+              "observed_trades": 22,
+              "sample_buy_fraction": 0.8137,
+              "observed_quote_notional": 797.87,
+              "direction_semantics": "PUBLIC_EXCHANGE_TRADE_SIDE_NOT_INDEPENDENTLY_VERIFIED_TAKER_AGGRESSOR"
+            },
+            {
+              "venue": "mexc",
+              "observed_trades": 6,
+              "sample_buy_fraction": 0.8503,
+              "observed_quote_notional": 135.32,
+              "direction_semantics": "MEXC_BUYER_MAKER_FLAG_INFERRED_TAKER_SIDE"
             }
           ],
           "ask_thinner_snapshot_venues": [
             {
               "venue": "gate",
-              "depth_change_pct": -41.2,
+              "depth_change_pct": -51.02,
+              "withdrawal_proven": false
+            },
+            {
+              "venue": "mexc",
+              "depth_change_pct": -50.72,
               "withdrawal_proven": false
             }
           ],
           "both_buy_and_thinner_in_same_venue": [
-            "gate"
+            "gate",
+            "mexc"
           ],
           "sampled_markets": 3
         }
@@ -486,10 +526,90 @@
         "VENUE_TOKEN_PAIR_IDENTITY_NOT_INDEPENDENTLY_VERIFIED",
         "NO_HISTORICAL_PRECISION_RECALL_VALIDATION"
       ]
+    },
+    {
+      "coin": "TRUST",
+      "state": "SPOT_IGNITION_RESEARCH_WATCH",
+      "research_dedupe_key": "3c85b55c884e162e4e4e",
+      "first_observed_asof_ms": 1794921652976,
+      "first_observed_run_id": "6258db9a991c878858",
+      "not_a_trade_signal": true,
+      "evidence": {
+        "preparation": {
+          "active_unverified": false,
+          "candidate_count": 0,
+          "chain_scan_complete": false
+        },
+        "spot_ignition": {
+          "active_sample_based": true,
+          "qualified_buy_sample_venues": [
+            {
+              "venue": "bitget",
+              "observed_trades": 10,
+              "sample_buy_fraction": 0.8326,
+              "observed_quote_notional": 675.82,
+              "direction_semantics": "PUBLIC_EXCHANGE_TRADE_SIDE_NOT_INDEPENDENTLY_VERIFIED_TAKER_AGGRESSOR"
+            },
+            {
+              "venue": "gate",
+              "observed_trades": 22,
+              "sample_buy_fraction": 0.8137,
+              "observed_quote_notional": 797.87,
+              "direction_semantics": "PUBLIC_EXCHANGE_TRADE_SIDE_NOT_INDEPENDENTLY_VERIFIED_TAKER_AGGRESSOR"
+            },
+            {
+              "venue": "mexc",
+              "observed_trades": 6,
+              "sample_buy_fraction": 0.8503,
+              "observed_quote_notional": 135.32,
+              "direction_semantics": "MEXC_BUYER_MAKER_FLAG_INFERRED_TAKER_SIDE"
+            }
+          ],
+          "ask_thinner_snapshot_venues": [
+            {
+              "venue": "gate",
+              "depth_change_pct": -51.02,
+              "withdrawal_proven": false
+            },
+            {
+              "venue": "mexc",
+              "depth_change_pct": -50.72,
+              "withdrawal_proven": false
+            }
+          ],
+          "both_buy_and_thinner_in_same_venue": [
+            "gate",
+            "mexc"
+          ],
+          "sampled_markets": 3
+        }
+      },
+      "limitations": [
+        "INDEPENDENT_EOA_PREPARATION_NOT_VERIFIED",
+        "PUBLIC_LAST_100_TRADES_NOT_CONTINUOUS_TAPE",
+        "BOOK_DEPTH_CHANGE_NOT_PROOF_OF_CANCELLED_LIQUIDITY",
+        "VENUE_TOKEN_PAIR_IDENTITY_NOT_INDEPENDENTLY_VERIFIED",
+        "NO_HISTORICAL_PRECISION_RECALL_VALIDATION"
+      ]
+    },
+    {
+      "coin": "LIGHT",
+      "event_type": "RESEARCH_EPISODE_RESOLVED_NOT_TRADE",
+      "previous_key": "f9f257cdb9d1f5bcec24",
+      "resolved_asof_ms": 1794921652976,
+      "reason": "EVIDENCE_NO_LONGER_MEETS_CURRENT_RESEARCH_CRITERIA"
     }
   ],
-  "resolved_research_events": [],
-  "resolved_event_count": 0,
+  "resolved_research_events": [
+    {
+      "coin": "LIGHT",
+      "event_type": "RESEARCH_EPISODE_RESOLVED_NOT_TRADE",
+      "previous_key": "f9f257cdb9d1f5bcec24",
+      "resolved_asof_ms": 1794921652976,
+      "reason": "EVIDENCE_NO_LONGER_MEETS_CURRENT_RESEARCH_CRITERIA"
+    }
+  ],
+  "resolved_event_count": 1,
   "strong_alert_count": 0,
   "buy_signal": false,
   "chatgpt_delivery_status": "NOT_CONFIGURED_NO_DELIVERY_TEST",
