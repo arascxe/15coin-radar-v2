@@ -1,0 +1,822 @@
+{
+  "schema": "radar-v2-economic-fusion-research-1",
+  "created_utc": "2026-11-17T05:24:26.695040+00:00",
+  "run_id": "e68bc0971e58cfab50",
+  "asof_ms": 1794893060504,
+  "previous_sample_ms": 1794891811510,
+  "coin_count": 15,
+  "strong_alert_count": 0,
+  "buy_signal": false,
+  "decision_model_backtested": false,
+  "automatic_notification_authorized": false,
+  "limitation": "Independent preparation and spot ignition research paths; not calibrated alerts or buying guidance.",
+  "coins": [
+    {
+      "coin": "ON",
+      "preparation_path": {
+        "wallet_candidate_count": 0,
+        "chain_currently_complete": true,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "ignition_path": {
+        "sample_buy_dominant_venues": [],
+        "snapshot_ask_thinner_venues": [
+          "mexc"
+        ],
+        "both_in_same_venue": [],
+        "independent_research_trigger": false,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "market_evidence": [
+        {
+          "coin": "ON",
+          "venue": "gate",
+          "trades_recent": "SELL_DOMINANT_SAMPLE",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 4,
+          "observed_buy_fraction": "0.2462",
+          "ask_depth_change_pct": 9.1
+        },
+        {
+          "coin": "ON",
+          "venue": "mexc",
+          "trades_recent": "SELL_DOMINANT_SAMPLE",
+          "ask_depth_change": "ASK_THINNER_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 8,
+          "observed_buy_fraction": "0.0914",
+          "ask_depth_change_pct": -86.32
+        }
+      ],
+      "classification": "INSUFFICIENT_EVIDENCE_UNKNOWN_NOT_NEGATIVE",
+      "strong_alert": false,
+      "buy_signal": false,
+      "missing_evidence": [
+        "NO_VALIDATED_HISTORICAL_FALSE_POSITIVE_RATE",
+        "PUBLIC_TRADE_SAMPLE_IS_NOT_COMPLETE_TAKER_TAPE",
+        "ASK_THINNING_NOT_PROVEN_ORDER_CANCELLATION",
+        "PRICE_VOLUME_FEATURES_NOT_YET_INCLUDED"
+      ]
+    },
+    {
+      "coin": "DOS",
+      "preparation_path": {
+        "wallet_candidate_count": 0,
+        "chain_currently_complete": true,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "ignition_path": {
+        "sample_buy_dominant_venues": [
+          "bitget"
+        ],
+        "snapshot_ask_thinner_venues": [],
+        "both_in_same_venue": [],
+        "independent_research_trigger": false,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "market_evidence": [
+        {
+          "coin": "DOS",
+          "venue": "gate",
+          "trades_recent": "UNKNOWN",
+          "ask_depth_change": "ASK_THICKER_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "ask_depth_change_pct": 99.71
+        },
+        {
+          "coin": "DOS",
+          "venue": "mexc",
+          "trades_recent": "SELL_DOMINANT_SAMPLE",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 16,
+          "observed_buy_fraction": "0.2861",
+          "ask_depth_change_pct": 2.0
+        },
+        {
+          "coin": "DOS",
+          "venue": "bitget",
+          "trades_recent": "BUY_DOMINANT_SAMPLE",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 5,
+          "observed_buy_fraction": "1.0000",
+          "ask_depth_change_pct": -1.33
+        }
+      ],
+      "classification": "INSUFFICIENT_EVIDENCE_UNKNOWN_NOT_NEGATIVE",
+      "strong_alert": false,
+      "buy_signal": false,
+      "missing_evidence": [
+        "NO_VALIDATED_HISTORICAL_FALSE_POSITIVE_RATE",
+        "PUBLIC_TRADE_SAMPLE_IS_NOT_COMPLETE_TAKER_TAPE",
+        "ASK_THINNING_NOT_PROVEN_ORDER_CANCELLATION",
+        "PRICE_VOLUME_FEATURES_NOT_YET_INCLUDED"
+      ]
+    },
+    {
+      "coin": "HANA",
+      "preparation_path": {
+        "wallet_candidate_count": 0,
+        "chain_currently_complete": true,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "ignition_path": {
+        "sample_buy_dominant_venues": [
+          "mexc"
+        ],
+        "snapshot_ask_thinner_venues": [
+          "gate"
+        ],
+        "both_in_same_venue": [],
+        "independent_research_trigger": false,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "market_evidence": [
+        {
+          "coin": "HANA",
+          "venue": "gate",
+          "trades_recent": "UNKNOWN",
+          "ask_depth_change": "ASK_THINNER_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "ask_depth_change_pct": -77.96
+        },
+        {
+          "coin": "HANA",
+          "venue": "mexc",
+          "trades_recent": "BUY_DOMINANT_SAMPLE",
+          "ask_depth_change": "ASK_THICKER_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 6,
+          "observed_buy_fraction": "0.8262",
+          "ask_depth_change_pct": 86.93
+        }
+      ],
+      "classification": "INSUFFICIENT_EVIDENCE_UNKNOWN_NOT_NEGATIVE",
+      "strong_alert": false,
+      "buy_signal": false,
+      "missing_evidence": [
+        "NO_VALIDATED_HISTORICAL_FALSE_POSITIVE_RATE",
+        "PUBLIC_TRADE_SAMPLE_IS_NOT_COMPLETE_TAKER_TAPE",
+        "ASK_THINNING_NOT_PROVEN_ORDER_CANCELLATION",
+        "PRICE_VOLUME_FEATURES_NOT_YET_INCLUDED"
+      ]
+    },
+    {
+      "coin": "COLLECT",
+      "preparation_path": {
+        "wallet_candidate_count": 0,
+        "chain_currently_complete": true,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "ignition_path": {
+        "sample_buy_dominant_venues": [],
+        "snapshot_ask_thinner_venues": [],
+        "both_in_same_venue": [],
+        "independent_research_trigger": false,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "market_evidence": [
+        {
+          "coin": "COLLECT",
+          "venue": "bitget",
+          "trades_recent": "MIXED_SAMPLE",
+          "ask_depth_change": "ASK_THICKER_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 54,
+          "observed_buy_fraction": "0.4180",
+          "ask_depth_change_pct": 43.04
+        }
+      ],
+      "classification": "INSUFFICIENT_EVIDENCE_UNKNOWN_NOT_NEGATIVE",
+      "strong_alert": false,
+      "buy_signal": false,
+      "missing_evidence": [
+        "NO_VALIDATED_HISTORICAL_FALSE_POSITIVE_RATE",
+        "PUBLIC_TRADE_SAMPLE_IS_NOT_COMPLETE_TAKER_TAPE",
+        "ASK_THINNING_NOT_PROVEN_ORDER_CANCELLATION",
+        "PRICE_VOLUME_FEATURES_NOT_YET_INCLUDED"
+      ]
+    },
+    {
+      "coin": "LIGHT",
+      "preparation_path": {
+        "wallet_candidate_count": 0,
+        "chain_currently_complete": true,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "ignition_path": {
+        "sample_buy_dominant_venues": [
+          "mexc",
+          "bitget"
+        ],
+        "snapshot_ask_thinner_venues": [],
+        "both_in_same_venue": [],
+        "independent_research_trigger": true,
+        "status": "EARLY_RESEARCH_ONLY"
+      },
+      "market_evidence": [
+        {
+          "coin": "LIGHT",
+          "venue": "gate",
+          "trades_recent": "MIXED_SAMPLE",
+          "ask_depth_change": "ASK_THICKER_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 4,
+          "observed_buy_fraction": "0.4163",
+          "ask_depth_change_pct": 483.86
+        },
+        {
+          "coin": "LIGHT",
+          "venue": "mexc",
+          "trades_recent": "BUY_DOMINANT_SAMPLE",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 6,
+          "observed_buy_fraction": "0.6525",
+          "ask_depth_change_pct": -18.38
+        },
+        {
+          "coin": "LIGHT",
+          "venue": "bitget",
+          "trades_recent": "BUY_DOMINANT_SAMPLE",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 3,
+          "observed_buy_fraction": "1.0000",
+          "ask_depth_change_pct": 21.64
+        }
+      ],
+      "classification": "SPOT_MICROSTRUCTURE_RESEARCH_WATCH_NOT_BUY",
+      "strong_alert": false,
+      "buy_signal": false,
+      "missing_evidence": [
+        "NO_VALIDATED_HISTORICAL_FALSE_POSITIVE_RATE",
+        "PUBLIC_TRADE_SAMPLE_IS_NOT_COMPLETE_TAKER_TAPE",
+        "ASK_THINNING_NOT_PROVEN_ORDER_CANCELLATION",
+        "PRICE_VOLUME_FEATURES_NOT_YET_INCLUDED"
+      ]
+    },
+    {
+      "coin": "APR",
+      "preparation_path": {
+        "wallet_candidate_count": 0,
+        "chain_currently_complete": true,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "ignition_path": {
+        "sample_buy_dominant_venues": [
+          "bitget"
+        ],
+        "snapshot_ask_thinner_venues": [
+          "mexc"
+        ],
+        "both_in_same_venue": [],
+        "independent_research_trigger": false,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "market_evidence": [
+        {
+          "coin": "APR",
+          "venue": "mexc",
+          "trades_recent": "SELL_DOMINANT_SAMPLE",
+          "ask_depth_change": "ASK_THINNER_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 6,
+          "observed_buy_fraction": "0.2571",
+          "ask_depth_change_pct": -47.07
+        },
+        {
+          "coin": "APR",
+          "venue": "bitget",
+          "trades_recent": "BUY_DOMINANT_SAMPLE",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 11,
+          "observed_buy_fraction": "0.9523",
+          "ask_depth_change_pct": -2.16
+        }
+      ],
+      "classification": "INSUFFICIENT_EVIDENCE_UNKNOWN_NOT_NEGATIVE",
+      "strong_alert": false,
+      "buy_signal": false,
+      "missing_evidence": [
+        "NO_VALIDATED_HISTORICAL_FALSE_POSITIVE_RATE",
+        "PUBLIC_TRADE_SAMPLE_IS_NOT_COMPLETE_TAKER_TAPE",
+        "ASK_THINNING_NOT_PROVEN_ORDER_CANCELLATION",
+        "PRICE_VOLUME_FEATURES_NOT_YET_INCLUDED"
+      ]
+    },
+    {
+      "coin": "IN",
+      "preparation_path": {
+        "wallet_candidate_count": 0,
+        "chain_currently_complete": true,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "ignition_path": {
+        "sample_buy_dominant_venues": [],
+        "snapshot_ask_thinner_venues": [],
+        "both_in_same_venue": [],
+        "independent_research_trigger": false,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "market_evidence": [
+        {
+          "coin": "IN",
+          "venue": "gate",
+          "trades_recent": "UNKNOWN",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "ask_depth_change_pct": -0.12
+        },
+        {
+          "coin": "IN",
+          "venue": "mexc",
+          "trades_recent": "MIXED_SAMPLE",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 6,
+          "observed_buy_fraction": "0.3596",
+          "ask_depth_change_pct": -0.9
+        },
+        {
+          "coin": "IN",
+          "venue": "bitget",
+          "trades_recent": "UNKNOWN",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "ask_depth_change_pct": -4.85
+        }
+      ],
+      "classification": "INSUFFICIENT_EVIDENCE_UNKNOWN_NOT_NEGATIVE",
+      "strong_alert": false,
+      "buy_signal": false,
+      "missing_evidence": [
+        "NO_VALIDATED_HISTORICAL_FALSE_POSITIVE_RATE",
+        "PUBLIC_TRADE_SAMPLE_IS_NOT_COMPLETE_TAKER_TAPE",
+        "ASK_THINNING_NOT_PROVEN_ORDER_CANCELLATION",
+        "PRICE_VOLUME_FEATURES_NOT_YET_INCLUDED"
+      ]
+    },
+    {
+      "coin": "TRUST",
+      "preparation_path": {
+        "wallet_candidate_count": 0,
+        "chain_currently_complete": true,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "ignition_path": {
+        "sample_buy_dominant_venues": [
+          "gate",
+          "mexc"
+        ],
+        "snapshot_ask_thinner_venues": [
+          "mexc"
+        ],
+        "both_in_same_venue": [
+          "mexc"
+        ],
+        "independent_research_trigger": true,
+        "status": "EARLY_RESEARCH_ONLY"
+      },
+      "market_evidence": [
+        {
+          "coin": "TRUST",
+          "venue": "gate",
+          "trades_recent": "BUY_DOMINANT_SAMPLE",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 6,
+          "observed_buy_fraction": "1.0000",
+          "ask_depth_change_pct": 4.48
+        },
+        {
+          "coin": "TRUST",
+          "venue": "mexc",
+          "trades_recent": "BUY_DOMINANT_SAMPLE",
+          "ask_depth_change": "ASK_THINNER_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 6,
+          "observed_buy_fraction": "0.8185",
+          "ask_depth_change_pct": -39.15
+        },
+        {
+          "coin": "TRUST",
+          "venue": "bitget",
+          "trades_recent": "UNKNOWN",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "ask_depth_change_pct": -3.09
+        }
+      ],
+      "classification": "SPOT_MICROSTRUCTURE_RESEARCH_WATCH_NOT_BUY",
+      "strong_alert": false,
+      "buy_signal": false,
+      "missing_evidence": [
+        "NO_VALIDATED_HISTORICAL_FALSE_POSITIVE_RATE",
+        "PUBLIC_TRADE_SAMPLE_IS_NOT_COMPLETE_TAKER_TAPE",
+        "ASK_THINNING_NOT_PROVEN_ORDER_CANCELLATION",
+        "PRICE_VOLUME_FEATURES_NOT_YET_INCLUDED"
+      ]
+    },
+    {
+      "coin": "B2",
+      "preparation_path": {
+        "wallet_candidate_count": 0,
+        "chain_currently_complete": true,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "ignition_path": {
+        "sample_buy_dominant_venues": [],
+        "snapshot_ask_thinner_venues": [
+          "gate",
+          "mexc"
+        ],
+        "both_in_same_venue": [],
+        "independent_research_trigger": false,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "market_evidence": [
+        {
+          "coin": "B2",
+          "venue": "gate",
+          "trades_recent": "UNKNOWN",
+          "ask_depth_change": "ASK_THINNER_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "ask_depth_change_pct": -44.66
+        },
+        {
+          "coin": "B2",
+          "venue": "mexc",
+          "trades_recent": "MIXED_SAMPLE",
+          "ask_depth_change": "ASK_THINNER_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 6,
+          "observed_buy_fraction": "0.3758",
+          "ask_depth_change_pct": -35.2
+        },
+        {
+          "coin": "B2",
+          "venue": "bitget",
+          "trades_recent": "SELL_DOMINANT_SAMPLE",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 3,
+          "observed_buy_fraction": "0.0000",
+          "ask_depth_change_pct": -5.65
+        }
+      ],
+      "classification": "INSUFFICIENT_EVIDENCE_UNKNOWN_NOT_NEGATIVE",
+      "strong_alert": false,
+      "buy_signal": false,
+      "missing_evidence": [
+        "NO_VALIDATED_HISTORICAL_FALSE_POSITIVE_RATE",
+        "PUBLIC_TRADE_SAMPLE_IS_NOT_COMPLETE_TAKER_TAPE",
+        "ASK_THINNING_NOT_PROVEN_ORDER_CANCELLATION",
+        "PRICE_VOLUME_FEATURES_NOT_YET_INCLUDED"
+      ]
+    },
+    {
+      "coin": "CYS",
+      "preparation_path": {
+        "wallet_candidate_count": 0,
+        "chain_currently_complete": true,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "ignition_path": {
+        "sample_buy_dominant_venues": [],
+        "snapshot_ask_thinner_venues": [],
+        "both_in_same_venue": [],
+        "independent_research_trigger": false,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "market_evidence": [
+        {
+          "coin": "CYS",
+          "venue": "gate",
+          "trades_recent": "UNKNOWN",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "ask_depth_change_pct": 29.53
+        },
+        {
+          "coin": "CYS",
+          "venue": "mexc",
+          "trades_recent": "MIXED_SAMPLE",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 6,
+          "observed_buy_fraction": "0.4040",
+          "ask_depth_change_pct": -19.02
+        },
+        {
+          "coin": "CYS",
+          "venue": "bitget",
+          "trades_recent": "SELL_DOMINANT_SAMPLE",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 20,
+          "observed_buy_fraction": "0.3097",
+          "ask_depth_change_pct": 0.76
+        }
+      ],
+      "classification": "INSUFFICIENT_EVIDENCE_UNKNOWN_NOT_NEGATIVE",
+      "strong_alert": false,
+      "buy_signal": false,
+      "missing_evidence": [
+        "NO_VALIDATED_HISTORICAL_FALSE_POSITIVE_RATE",
+        "PUBLIC_TRADE_SAMPLE_IS_NOT_COMPLETE_TAKER_TAPE",
+        "ASK_THINNING_NOT_PROVEN_ORDER_CANCELLATION",
+        "PRICE_VOLUME_FEATURES_NOT_YET_INCLUDED"
+      ]
+    },
+    {
+      "coin": "STBL",
+      "preparation_path": {
+        "wallet_candidate_count": 0,
+        "chain_currently_complete": true,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "ignition_path": {
+        "sample_buy_dominant_venues": [],
+        "snapshot_ask_thinner_venues": [
+          "gate"
+        ],
+        "both_in_same_venue": [],
+        "independent_research_trigger": false,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "market_evidence": [
+        {
+          "coin": "STBL",
+          "venue": "gate",
+          "trades_recent": "UNKNOWN",
+          "ask_depth_change": "ASK_THINNER_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "ask_depth_change_pct": -49.09
+        },
+        {
+          "coin": "STBL",
+          "venue": "mexc",
+          "trades_recent": "MIXED_SAMPLE",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 6,
+          "observed_buy_fraction": "0.4572",
+          "ask_depth_change_pct": 3.84
+        }
+      ],
+      "classification": "INSUFFICIENT_EVIDENCE_UNKNOWN_NOT_NEGATIVE",
+      "strong_alert": false,
+      "buy_signal": false,
+      "missing_evidence": [
+        "NO_VALIDATED_HISTORICAL_FALSE_POSITIVE_RATE",
+        "PUBLIC_TRADE_SAMPLE_IS_NOT_COMPLETE_TAKER_TAPE",
+        "ASK_THINNING_NOT_PROVEN_ORDER_CANCELLATION",
+        "PRICE_VOLUME_FEATURES_NOT_YET_INCLUDED"
+      ]
+    },
+    {
+      "coin": "BSB",
+      "preparation_path": {
+        "wallet_candidate_count": 0,
+        "chain_currently_complete": true,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "ignition_path": {
+        "sample_buy_dominant_venues": [],
+        "snapshot_ask_thinner_venues": [],
+        "both_in_same_venue": [],
+        "independent_research_trigger": false,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "market_evidence": [
+        {
+          "coin": "BSB",
+          "venue": "mexc",
+          "trades_recent": "SELL_DOMINANT_SAMPLE",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 6,
+          "observed_buy_fraction": "0.2916",
+          "ask_depth_change_pct": 5.9
+        },
+        {
+          "coin": "BSB",
+          "venue": "bitget",
+          "trades_recent": "UNKNOWN",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "ask_depth_change_pct": -13.36
+        }
+      ],
+      "classification": "INSUFFICIENT_EVIDENCE_UNKNOWN_NOT_NEGATIVE",
+      "strong_alert": false,
+      "buy_signal": false,
+      "missing_evidence": [
+        "NO_VALIDATED_HISTORICAL_FALSE_POSITIVE_RATE",
+        "PUBLIC_TRADE_SAMPLE_IS_NOT_COMPLETE_TAKER_TAPE",
+        "ASK_THINNING_NOT_PROVEN_ORDER_CANCELLATION",
+        "PRICE_VOLUME_FEATURES_NOT_YET_INCLUDED"
+      ]
+    },
+    {
+      "coin": "AIO",
+      "preparation_path": {
+        "wallet_candidate_count": 0,
+        "chain_currently_complete": true,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "ignition_path": {
+        "sample_buy_dominant_venues": [
+          "gate"
+        ],
+        "snapshot_ask_thinner_venues": [],
+        "both_in_same_venue": [],
+        "independent_research_trigger": false,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "market_evidence": [
+        {
+          "coin": "AIO",
+          "venue": "gate",
+          "trades_recent": "BUY_DOMINANT_SAMPLE",
+          "ask_depth_change": "ASK_THICKER_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 8,
+          "observed_buy_fraction": "0.6543",
+          "ask_depth_change_pct": 78.77
+        },
+        {
+          "coin": "AIO",
+          "venue": "mexc",
+          "trades_recent": "MIXED_SAMPLE",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 7,
+          "observed_buy_fraction": "0.4463",
+          "ask_depth_change_pct": -4.49
+        },
+        {
+          "coin": "AIO",
+          "venue": "bitget",
+          "trades_recent": "SELL_DOMINANT_SAMPLE",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 18,
+          "observed_buy_fraction": "0.2405",
+          "ask_depth_change_pct": 4.19
+        }
+      ],
+      "classification": "INSUFFICIENT_EVIDENCE_UNKNOWN_NOT_NEGATIVE",
+      "strong_alert": false,
+      "buy_signal": false,
+      "missing_evidence": [
+        "NO_VALIDATED_HISTORICAL_FALSE_POSITIVE_RATE",
+        "PUBLIC_TRADE_SAMPLE_IS_NOT_COMPLETE_TAKER_TAPE",
+        "ASK_THINNING_NOT_PROVEN_ORDER_CANCELLATION",
+        "PRICE_VOLUME_FEATURES_NOT_YET_INCLUDED"
+      ]
+    },
+    {
+      "coin": "STAR",
+      "preparation_path": {
+        "wallet_candidate_count": 0,
+        "chain_currently_complete": true,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "ignition_path": {
+        "sample_buy_dominant_venues": [],
+        "snapshot_ask_thinner_venues": [],
+        "both_in_same_venue": [],
+        "independent_research_trigger": false,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "market_evidence": [
+        {
+          "coin": "STAR",
+          "venue": "mexc",
+          "trades_recent": "UNKNOWN",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "ask_depth_change_pct": -3.98
+        }
+      ],
+      "classification": "INSUFFICIENT_EVIDENCE_UNKNOWN_NOT_NEGATIVE",
+      "strong_alert": false,
+      "buy_signal": false,
+      "missing_evidence": [
+        "NO_VALIDATED_HISTORICAL_FALSE_POSITIVE_RATE",
+        "PUBLIC_TRADE_SAMPLE_IS_NOT_COMPLETE_TAKER_TAPE",
+        "ASK_THINNING_NOT_PROVEN_ORDER_CANCELLATION",
+        "PRICE_VOLUME_FEATURES_NOT_YET_INCLUDED"
+      ]
+    },
+    {
+      "coin": "LYN",
+      "preparation_path": {
+        "wallet_candidate_count": 0,
+        "chain_currently_complete": true,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "ignition_path": {
+        "sample_buy_dominant_venues": [],
+        "snapshot_ask_thinner_venues": [],
+        "both_in_same_venue": [],
+        "independent_research_trigger": false,
+        "status": "NOT_CORROBORATED_UNKNOWN"
+      },
+      "market_evidence": [
+        {
+          "coin": "LYN",
+          "venue": "mexc",
+          "trades_recent": "MIXED_SAMPLE",
+          "ask_depth_change": "ASK_LITTLE_CHANGE_TWO_SNAPSHOTS",
+          "liquidity_not_proven_withdrawn": true,
+          "trade_tape_incomplete": true,
+          "book_snapshot_interval_minutes": 20.82,
+          "observed_trades": 6,
+          "observed_buy_fraction": "0.4985",
+          "ask_depth_change_pct": -7.25
+        }
+      ],
+      "classification": "INSUFFICIENT_EVIDENCE_UNKNOWN_NOT_NEGATIVE",
+      "strong_alert": false,
+      "buy_signal": false,
+      "missing_evidence": [
+        "NO_VALIDATED_HISTORICAL_FALSE_POSITIVE_RATE",
+        "PUBLIC_TRADE_SAMPLE_IS_NOT_COMPLETE_TAKER_TAPE",
+        "ASK_THINNING_NOT_PROVEN_ORDER_CANCELLATION",
+        "PRICE_VOLUME_FEATURES_NOT_YET_INCLUDED"
+      ]
+    }
+  ]
+}
