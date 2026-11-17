@@ -1,0 +1,53 @@
+name: Radar V2 segment storage dry run and preparation research
+on:
+  push:
+    paths:
+      - 'v2/storage_segments.py'
+      - 'v2/preparation_research.py'
+      - 'v2/tests/test_storage_segments.py'
+      - 'v2/tests/test_preparation_research.py'
+      - '.github/workflows/v2-storage-dryrun.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dryrun:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run all offline regression tests
+        run: python -m unittest discover -s v2/tests -q
+      - name: Migrate current checkpoint into isolated temporary segment store
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/radar-segments
+          python v2/storage_segments.py migrate v2_state/checkpoint.sqlite.gz /tmp/radar-segments
+          python v2/storage_segments.py restore /tmp/radar-segments /tmp/radar-restored.sqlite3
+          python - <<'PY'
+          import sys,json,sqlite3
+          sys.path.insert(0,'v2')
+          from storage_segments import semantic_digest
+          d=json.load(open('v2_state/audit.json'))
+          c=sqlite3.connect('/tmp/radar-restored.sqlite3')
+          for table,key in [('market_candles','total_spot_bars'),('wallet_balances','total_wallet_balances'),('token_transfers','total_token_transfers'),('runs','total_runs')]:
+              got=c.execute('select count(*) from '+table).fetchone()[0]
+              if got!=d[key]:raise AssertionError(f'ARCHIVE_MIGRATION_ROW_MISMATCH {table}: {got}!={d[key]}')
+          print('REAL_CHECKPOINT_RESTORED_AND_VERIFIED',semantic_digest('/tmp/radar-restored.sqlite3'))
+          PY
+      - name: Generate evidence-only 15-token preparation report
+        run: |
+          python v2/preparation_research.py --db /tmp/radar-restored.sqlite3 --config v2/config.json --out /tmp/v2-preparation-research.json
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/v2-preparation-research.json'))
+          assert len(x['coins'])==15
+          assert all(z['classification']=='RESEARCH_ONLY_NOT_BUY_SIGNAL' for z in x['coins'])
+          print('ALL_15_RESEARCH_REPORT_OK')
+          for z in x['coins']:
+              print('RESEARCH_COIN',z['coin'],'events',z['transfers']['events'],'verified_cex',z['verified_exchange_addresses'],'candidate_cex',z['unverified_exchange_candidates'])
+          PY
