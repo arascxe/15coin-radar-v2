@@ -1,0 +1,41 @@
+name: V2 unmapped DEX pool discovery (read only)
+on:
+  push:
+    paths: ['.github/workflows/dex-pool-probe.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Query candidate pool addresses for four unmapped tokens
+        run: |
+          python - <<'PY'
+          import sys,json
+          sys.path.insert(0,'v2')
+          from radar_stage1 import HTTPClient
+          config=json.load(open('v2/config.json'));coins={c['symbol']:c for c in config['coins']}
+          client=HTTPClient(timeout=12)
+          for symbol in ('COLLECT','APR','CYS','BSB'):
+            c=coins[symbol];url=f"https://api.geckoterminal.com/api/v2/networks/{c['chain']}/tokens/{c['token']}/pools"
+            try:
+              resp=client.get(url,{'page':1,'include':'base_token,quote_token'})
+              pools=[]
+              for p in resp.get('data',[])[:8]:
+                a=p.get('attributes',{});rel=p.get('relationships',{})
+                linked=[rel.get(k,{}).get('data',{}).get('id','') for k in ('base_token','quote_token')]
+                linked=[x.lower().split('_',1)[-1] for x in linked if isinstance(x,str)]
+                addr=a.get('address','')
+                pools.append({'pool':addr,'name':a.get('name'),
+                   'reserve_usd':a.get('reserve_in_usd'),'v24':a.get('volume_usd',{}).get('h24'),
+                   'token_in_pair':c['token'].lower() in linked,
+                   'api_id':p.get('id')})
+              print('DEX_PROBE='+json.dumps({'coin':symbol,'token':c['token'],'pools':pools}),flush=True)
+            except Exception as e:print('DEX_PROBE='+json.dumps({'coin':symbol,'error':str(e)[:180]}),flush=True)
+          PY
