@@ -394,7 +394,8 @@ def chain_ingest(store,rid,chain,config,http,ts,max_span=5000,chunk_blocks=200):
 
 
 def collect_all(config,store,http,ts=None,market=True,wallet=True,chain=True,dex=True):
-    from chain_v2 import chain_ingest as checked_chain_ingest\n    lease=store.acquire_lease()
+    from chain_v2 import chain_ingest as checked_chain_ingest
+    lease=store.acquire_lease()
     rid=None
     try:
         ts=ts if ts is not None else now_ms();validate_config(config);rid=store.begin_run(ts)
