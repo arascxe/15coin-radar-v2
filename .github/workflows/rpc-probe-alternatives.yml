@@ -40,6 +40,20 @@ jobs:
             return x
           with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
             for x in pool.map(probe,urls):print('BSC_OPTION='+json.dumps(x),flush=True)
+          # Compare a 500-block BSC filtered-log page against five 100-block pages.
+          try:
+            c=HTTPClient(timeout=7)
+            url='https://bsc-rpc.publicnode.com'
+            head=int(c.rpc(url,'eth_blockNumber',[]),16)
+            arr=[x['token'] for x in json.load(open('v2/config.json'))['coins'] if x['chain']=='bsc']
+            def logs(a,b):
+              raw=c.rpc(url,'eth_getLogs',[{'fromBlock':hex(a),'toBlock':hex(b),'address':arr,'topics':[TRANSFER_TOPIC]}])
+              if not isinstance(raw,list):raise ValueError('NON_ARRAY')
+              return {(x['transactionHash'],x['logIndex'],x['address']) for x in raw}
+            start=head-650;one=logs(start,start+499);pieces=set()
+            for k in range(5):pieces.update(logs(start+100*k,start+100*k+99))
+            print('BSC_PAGE_EQUIVALENCE='+json.dumps({'one':len(one),'pieces':len(pieces),'equal':one==pieces,'positive_events':bool(one)}),flush=True)
+          except Exception as e:print('BSC_PAGE_EQUIVALENCE='+json.dumps({'error':str(e)[:200]}),flush=True)
           url='https://rpc.swiftnodes.io/rpc/base';h=HTTPClient(timeout=6)
           x={'url':url}
           try:
