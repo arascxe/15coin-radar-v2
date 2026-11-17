@@ -93,7 +93,7 @@ class ChainChecks(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             store=Store(pathlib.Path(d)/'db');r=MockRPC()
             x=chain_ingest(store,store.begin_run(T),'base',C,r,T,max_span=120)
-            self.assertEqual(x['method'],'logs')
+            self.assertEqual(x['method'],'token_separated_logs')
             self.assertEqual(x['observed_events'],1)
             self.assertEqual(store.db.execute('select count(*) from token_transfers').fetchone()[0],1)
             store.close()
