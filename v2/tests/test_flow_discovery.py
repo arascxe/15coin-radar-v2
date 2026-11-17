@@ -31,6 +31,17 @@ class FlowDiscoveryTests(unittest.TestCase):
     def test_router_pass_through_is_not_accumulation(self):
         c=db();add(c,1,9500,A,B,100);add(c,2,9600,D,B,100);add(c,3,9650,B,E,200)
         self.assertNotIn(B,[w['address'] for w in dos(c)['watch_candidates']])
+    def test_many_pool_swaps_do_not_fake_independent_accumulation(self):
+        c=db()
+        pool=next(w['address'] for w in C['wallets']
+                  if w['coin']=='DOS' and w['chain']=='bsc' and w['role']=='dex_pool')
+        for n in range(1,19):
+            add(c,n,9500+n,pool,D,100)
+        add(c,20,9900,A,D,60000)
+        z=dos(c)
+        self.assertEqual(z['candidate_count'],0)
+        self.assertTrue(any(x['address']==D and x['inflow_transactions']==19
+                            for x in z['dex_dominated_receivers']))
     def test_one_sender_two_transfers_is_not_independent(self):
         c=db();add(c,1,9500,A,B,100);add(c,2,9600,A,B,200)
         self.assertEqual(dos(c)['candidate_count'],0)

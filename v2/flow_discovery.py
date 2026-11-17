@@ -56,6 +56,8 @@ def discover(conn,config):
         excluded=collections.Counter()
         flows=collections.defaultdict(lambda:{'in':0,'out':0,'recent_in':0,'recent_out':0,
             'in_txs':set(),'recent_txs':set(),'sources':set(),
+            'noninfra_sources':set(),'noninfra_in_txs':set(),
+            'infra_in_raw':0,'dex_in_raw':0,'infra_in_txs':set(),'dex_in_txs':set(),
             'source_types':collections.Counter(),'blocks':set(),'examples':[],'mint':0})
         event_count=0
         if interval:
@@ -79,7 +81,16 @@ def discover(conn,config):
                     if frm==ZERO:item['mint']+=raw
                     if sender and sender.get('role') in EXCLUDE_ROLES:
                         item['source_types']['KNOWN_INFRASTRUCTURE_TAG_UNVERIFIED']+=1
-                    else:item['source_types']['OWNER_OR_SOURCE_UNKNOWN']+=1
+                        item['infra_in_raw']+=raw
+                        item['infra_in_txs'].add(tx)
+                        if sender.get('role') in {'dex_pool','dex_vault','pool_address_unverified'}:
+                            item['dex_in_raw']+=raw
+                            item['dex_in_txs'].add(tx)
+                    else:
+                        item['source_types']['OWNER_OR_SOURCE_UNKNOWN']+=1
+                        if frm!=ZERO:
+                            item['noninfra_sources'].add(frm)
+                            item['noninfra_in_txs'].add(tx)
                     if len(item['examples'])<6:
                         item['examples'].append({'tx':tx,'block':block,
                                                  'source':frm,'amount_raw':str(raw)})
@@ -101,11 +112,24 @@ def discover(conn,config):
         positive_nets=sorted(x[1] for x in records)
         threshold=positive_nets[(len(positive_nets)*9)//10] if positive_nets else None
         picks=[]
+        dex_dominated=[]
         for address,net,v,w in records:
             recent_net=v['recent_in']-v['recent_out']
+            if v['in'] and len(v['in_txs'])>=2 and (
+                D(v['dex_in_raw'])/D(v['in'])>=D('0.5') or
+                D(len(v['dex_in_txs']))/D(len(v['in_txs']))>=D('0.5')):
+                dex_dominated.append({'address':address,
+                    'known_dex_share_of_inflow_amount':str((D(v['dex_in_raw'])/D(v['in'])).quantize(D('0.0001'))),
+                    'known_dex_share_of_inflow_transactions':str((D(len(v['dex_in_txs']))/D(len(v['in_txs']))).quantize(D('0.0001'))),
+                    'inflow_transactions':len(v['in_txs']),
+                    'net_observed':token_string(net,decimals),
+                    'classification':'DEX_FLOW_NOT_INDEPENDENT_HOLDER_ACCUMULATION'})
             valid=(threshold is not None and net>=threshold and
                    v['in']>0 and D(net)/D(v['in'])>=D('0.7') and
-                   len(v['in_txs'])>=2 and len(v['sources']-{ZERO})>=2 and
+                   len(v['in_txs'])>=2 and len(v['noninfra_sources'])>=2 and
+                   len(v['noninfra_in_txs'])>=2 and
+                   D(v['infra_in_raw'])/D(v['in'])<=D('0.5') and
+                   D(len(v['infra_in_txs']))/D(len(v['in_txs']))<=D('0.5') and
                    len(v['blocks'])>=2 and v['mint']==0 and
                    len(v['recent_txs'])>=2 and recent_net>0)
             if not valid:continue
@@ -121,6 +145,8 @@ def discover(conn,config):
                'source_address_count_unverified':len(v['sources']-{ZERO}),
                'distinct_inflow_transactions':len(v['in_txs']),
                'source_types':dict(v['source_types']),
+               'independent_non_infrastructure_sources_unverified':len(v['noninfra_sources']),
+               'infrastructure_share_of_inflow':str((D(v['infra_in_raw'])/D(v['in'])).quantize(D('0.0001'))),
                'sample_incoming_transactions':v['examples'][:4],
                'status':'DISCOVERY_RESEARCH_CANDIDATE_NOT_SIGNAL',
                'limitations':['OWNER_NOT_VERIFIED','EOA_OR_CONTRACT_NOT_VERIFIED',
@@ -140,6 +166,7 @@ def discover(conn,config):
             'observed_net_positive_addresses':len(records),
             'materiality_threshold_raw':str(threshold) if threshold is not None else None,
             'excluded_infrastructure_addresses':dict(excluded),
+            'dex_dominated_receivers':sorted(dex_dominated,key=lambda x:x['inflow_transactions'],reverse=True)[:5],
             'watch_candidates':picks[:15],
             'candidate_count':len(picks),
             'strong_alert':False,

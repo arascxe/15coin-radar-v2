@@ -128,6 +128,10 @@ jobs:
         run: |
           python v2/flow_discovery.py --db v2_runtime/live.sqlite3 \
             --config v2/config.json --out v2_runtime/flow_discovery.json
+      - name: Trace exact token relays from public-labeled exchange candidates
+        run: |
+          python v2/trace_economic_routes.py --db v2_runtime/live.sqlite3 \
+            --config v2/config.json --out v2_runtime/transfer_trace.json
       - name: Build minimal new data segment and verify whole restored history
         run: |
           python v2/storage_segments.py append v2_runtime/segment_store \
@@ -153,6 +157,7 @@ jobs:
           cp v2_runtime/preparation_research.json "$SNAP/preparation_research.json"
           cp v2_runtime/economic_brain.json "$SNAP/economic_brain.json"
           cp v2_runtime/flow_discovery.json "$SNAP/flow_discovery.json"
+          cp v2_runtime/transfer_trace.json "$SNAP/transfer_trace.json"
           if test -f v2_runtime/last_run.json; then
             cp v2_runtime/last_run.json "$SNAP/last_run.json"
           fi
@@ -180,8 +185,9 @@ jobs:
           cp "$SNAP/preparation_research.json" v2_state/preparation_research.json
           cp "$SNAP/economic_brain.json" v2_state/economic_brain.json
           cp "$SNAP/flow_discovery.json" v2_state/flow_discovery.json
+          cp "$SNAP/transfer_trace.json" v2_state/transfer_trace.json
           if test -f "$SNAP/last_run.json"; then cp "$SNAP/last_run.json" v2_state/last_run.json; fi
-          git add v2_archive v2_state/audit.json v2_state/preparation_research.json v2_state/economic_brain.json v2_state/flow_discovery.json v2_state/last_run.json
+          git add v2_archive v2_state/audit.json v2_state/preparation_research.json v2_state/economic_brain.json v2_state/flow_discovery.json v2_state/transfer_trace.json v2_state/last_run.json
           # NEVER add or overwrite v2_state/checkpoint.sqlite.gz: old backup remains available.
           git commit -m "V2 verified lossless incremental segment $(date -u +%Y-%m-%dT%H:%MZ)"
           git push origin HEAD:main

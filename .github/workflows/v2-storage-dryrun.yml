@@ -8,6 +8,8 @@ on:
       - 'v2/tests/test_preparation_research.py'
       - 'v2/flow_discovery.py'
       - 'v2/tests/test_flow_discovery.py'
+      - 'v2/trace_economic_routes.py'
+      - 'v2/tests/test_trace_economic_routes.py'
       - '.github/workflows/v2-storage-dryrun.yml'
   workflow_dispatch:
 permissions:
@@ -116,7 +118,8 @@ jobs:
             assert z['strong_alert'] is False
             print('DISCOVERY_COIN',z['coin'],'events',z['observed_event_count'],
               'positive_addresses',z['observed_net_positive_addresses'],
-              'unverified_research_candidates',z['candidate_count'])
+              'unverified_research_candidates',z['candidate_count'],
+              'dex_dominated',len(z['dex_dominated_receivers']))
           for z in x['coins']:
             for v in z['watch_candidates'][:3]:
               print('UNVERIFIED_WATCH_REVIEW',z['coin'],
@@ -130,6 +133,27 @@ jobs:
                 'sample_txs',v['sample_incoming_transactions'])
           print('FLOW_DISCOVERY_REAL_15_COIN_CHECK_PASSED')
           PY
+      - name: Trace same-amount pass-through in real 15-token history (no exit claim)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python v2/trace_economic_routes.py --db /tmp/v2-brain-real.sqlite3 \
+            --config v2/config.json --out /tmp/v2-transfer-trace.json
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/v2-transfer-trace.json'))
+          assert len(x['coins'])==15 and x['signal'] is False
+          assert x['no_verified_cex_withdrawal_claim'] is True
+          for z in x['coins']:
+            print('ROUTE_REVIEW',z['coin'],'labeled_cex_events',
+              z.get('observed_from_candidate_cex',0),'exact_relay_hypotheses',
+              z.get('exact_relays',0))
+            for y in z.get('traces',[])[:2]:
+              print('ROUTE_SAMPLE',z['coin'],'token_amount_raw',y['coin_amount_raw'],
+                'path',[(i['block'],i['from'],i['to']) for i in y['path']],
+                'class',y['classification'])
+          print('ROUTE_REVIEW_COMPLETE_NO_STRONG_ALERTS')
+          PY
       - name: Publish research-only evidence report as short-lived workflow artifact
         uses: actions/upload-artifact@v4
         with:
@@ -138,4 +162,5 @@ jobs:
             /tmp/v2-preparation-research.json
             /tmp/v2-economic-brain.json
             /tmp/v2-flow-discovery.json
+            /tmp/v2-transfer-trace.json
           retention-days: 7
