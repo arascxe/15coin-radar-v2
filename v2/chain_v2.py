@@ -66,35 +66,33 @@ def select_provider(http,chain,token_contract):
         except Exception as e:errors.append('head:'+url+':'+str(e)[:85])
     raise RuntimeError('NO_COVERAGE_CAPABLE_RPC '+ ';'.join(errors)[:820])
 
-def scan_logs(http,url,start,end,token_to_coin,deadline):
-    observations=[];last=start-1;span=120
-    a=start
+def scan_logs(http,url,start,end,token_to_coin,deadline,on_complete):
+    span=120;a=start
     while a<=end:
         if time.monotonic()>deadline:raise TimeoutError('BLOCK_SCAN_TIME_BUDGET')
         b=min(end,a+span-1)
         try:
             data=http.rpc(url,'eth_getLogs',[{'fromBlock':hex(a),'toBlock':hex(b),'address':list(token_to_coin),'topics':[TRANSFER_TOPIC]}])
             if not isinstance(data,list):raise ValueError('LOG_RESPONSE_NOT_ARRAY')
-            observations.extend(decode_transfer(x,token_to_coin) for x in data)
-            last=b;a=b+1
+            batch=[decode_transfer(x,token_to_coin) for x in data]
+            on_complete(b,batch)
+            a=b+1
             if span<120:span=min(120,span*2)
         except Exception:
             if span<=1:raise
             span=max(1,span//2)
-    return last,observations
 
-def scan_receipts(http,url,start,end,token_to_coin,deadline):
-    events=[];last=start-1
-    # Ordered futures: a timeout or failed block stops the verified contiguous watermark.
+def scan_receipts(http,url,start,end,token_to_coin,deadline,on_complete):
+    # Commit proof only after an entire ordered receipt batch has passed validation.
     with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
         for a in range(start,end+1,24):
             if time.monotonic()>deadline:raise TimeoutError('BLOCK_RECEIPTS_TIME_BUDGET')
             b=min(end,a+23)
             replies=list(pool.map(lambda n:http.rpc(url,'eth_getBlockReceipts',[hex(n)]),range(a,b+1)))
-            for num,receipts in zip(range(a,b+1),replies):
-                events.extend(receipt_logs(receipts,token_to_coin))
-                last=num
-    return last,events
+            batch=[]
+            for receipts in replies:
+                batch.extend(receipt_logs(receipts,token_to_coin))
+            on_complete(b,batch)
 
 def chain_ingest(store,rid,chain,config,http,ts=None,max_span=4500,deadline_seconds=750):
     ts=now_ms() if ts is None else ts
@@ -117,22 +115,23 @@ def chain_ingest(store,rid,chain,config,http,ts=None,max_span=4500,deadline_seco
         return {'chain':chain,'status':'OK','head':head,'detail':'NO_NEW_FINALIZED_BLOCKS'}
     end=min(head,start+max_span-1)
     observed=[];last=start-1;err=None;used=method;deadline=time.monotonic()+deadline_seconds
-    # If provider can't serve filtered logs despite a successful probe, retry
-    # with full block receipts from the same checked provider, then report gaps.
+    def on_complete(b,batch):
+        nonlocal last
+        observed.extend(batch);last=b
     if method=='logs':
-        try:last,observed=scan_logs(http,url,start,end,token_to_coin,deadline)
+        try:scan_logs(http,url,start,end,token_to_coin,deadline,on_complete)
         except Exception as e:
             err='LOGS_FAILED:'+str(e)[:150]
-            # Do not publish a partial, possibly duplicated scan; retry this window by receipts.
-            last=start-1;observed=[]
-            try:
-                _probe_receipt(http,url,start)
-                used='receipts'
-                last,observed=scan_receipts(http,url,start,end,token_to_coin,deadline)
-                err=None
-            except Exception as e2:err+=';RECEIPTS_FAILED:'+str(e2)[:150]
+            # Preserve all already covered ranges; switch to block receipts only for the unscanned suffix.
+            if last<end:
+                try:
+                    _probe_receipt(http,url,last+1)
+                    used='logs_then_receipts' if last>=start else 'receipts'
+                    scan_receipts(http,url,last+1,end,token_to_coin,deadline,on_complete)
+                    err=None
+                except Exception as e2:err+=';RECEIPTS_FAILED:'+str(e2)[:150]
     else:
-        try:last,observed=scan_receipts(http,url,start,end,token_to_coin,deadline)
+        try:scan_receipts(http,url,start,end,token_to_coin,deadline,on_complete)
         except Exception as e:err='RECEIPTS_FAILED:'+str(e)[:180]
     # Important: no partial receipt batch is committed on failure (fail closed).
     if err and last<start:
