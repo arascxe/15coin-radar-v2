@@ -1,0 +1,29 @@
+{
+  "schema": "radar-v2-wallet-attribution-review-1",
+  "observed_on": "2026-11-17",
+  "rule": "Chain-specific independent source labels are not automatically confirmed exchange custody or proof of withdrawal.",
+  "cases": [
+    {
+      "chain": "bsc",
+      "address": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
+      "candidate_entity": "gate",
+      "source": "BscScan public explorer label Gate 1",
+      "source_url": "https://bscscan.com/address/0x0D0707963952f2fBA59dD06f2b425ace40b492Fe",
+      "chain_specific": true,
+      "evidence_level": "PUBLIC_EXPLORER_TAG_ONLY",
+      "confirmed_exchange_withdrawal": false,
+      "activate_for_strong_alert": false
+    },
+    {
+      "chain": "bsc",
+      "address": "0x1ab4973a48dc892cd9971ece8e01dcc7688f8f23",
+      "candidate_entity": "bitget",
+      "source": "Arkham research identifies EVM address as Bitget hot wallet, but chain-specific BSC usage unverified",
+      "source_url": "https://arkm.com/research/hacker-steals-350m-from-bitget-and-begins-on-chain-laundering",
+      "chain_specific": false,
+      "evidence_level": "CROSS_CHAIN_UNPROVEN",
+      "confirmed_exchange_withdrawal": false,
+      "activate_for_strong_alert": false
+    }
+  ]
+}

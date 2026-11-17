@@ -6,6 +6,8 @@ on:
       - 'v2/preparation_research.py'
       - 'v2/tests/test_storage_segments.py'
       - 'v2/tests/test_preparation_research.py'
+      - 'v2/flow_discovery.py'
+      - 'v2/tests/test_flow_discovery.py'
       - '.github/workflows/v2-storage-dryrun.yml'
   workflow_dispatch:
 permissions:
@@ -99,6 +101,24 @@ jobs:
                   'verified_cex_wallets',z['verified_cex_wallet_count'])
           print('ECONOMIC_BRAIN_REAL_15_COIN_CHECK_PASSED')
           PY
+      - name: Discover new address flow research on REAL archival data (no alerts)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python v2/flow_discovery.py --db /tmp/v2-brain-real.sqlite3 \
+            --config v2/config.json --out /tmp/v2-flow-discovery.json
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/v2-flow-discovery.json'))
+          assert len(x['coins'])==15
+          assert x['strong_alert'] is False and x['buy_signal'] is False
+          for z in x['coins']:
+            assert z['strong_alert'] is False
+            print('DISCOVERY_COIN',z['coin'],'events',z['observed_event_count'],
+              'positive_addresses',z['observed_net_positive_addresses'],
+              'unverified_research_candidates',z['candidate_count'])
+          print('FLOW_DISCOVERY_REAL_15_COIN_CHECK_PASSED')
+          PY
       - name: Publish research-only evidence report as short-lived workflow artifact
         uses: actions/upload-artifact@v4
         with:
@@ -106,4 +126,5 @@ jobs:
           path: |
             /tmp/v2-preparation-research.json
             /tmp/v2-economic-brain.json
+            /tmp/v2-flow-discovery.json
           retention-days: 7
