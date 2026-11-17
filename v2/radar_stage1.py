@@ -415,7 +415,7 @@ def collect_all(config,store,http,ts=None,market=True,wallet=True,chain=True,dex
                 if 'pool' not in x:
                     store.market_save(rid,x['coin'],'geckoterminal',None,'SKIPPED_UNMAPPED',ts-70*MINUTE_MS,ts,[],detail=x.get('status','POOL_UNMAPPED'),observed_ms=ts)
                     continue
-                v={'coin':x['coin'],'chain':x['chain'],'venue':'geckoterminal','pool':x['pool'],'pair':f'{x["pool"]}/USDT','identity_status':'POOL_IDENTITY_UNVERIFIED'}
+                v={'coin':x['coin'],'chain':x['chain'],'venue':'geckoterminal','pool':x['pool'],'pair':x.get('pair_label',f'{x["coin"]}/DEX'),'identity_status':'POOL_IDENTITY_UNVERIFIED'}
                 summary['spot'].append(market_ingest(store,rid,v,http,ts,config['limits']['initial_lookback_minutes'],config['limits']['max_backfill_minutes_per_run']))
         if wallet:summary['wallet_results']=wallet_ingest(store,rid,config,http,ts)
         if chain:
