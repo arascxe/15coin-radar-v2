@@ -28,7 +28,7 @@ TOKEN_RE = re.compile(r'^0x[0-9a-f]{40}$')
 MINUTE_MS = 60000
 BSC_RPC = ('https://bsc.publicnode.com', 'https://bsc-dataseed.bnbchain.org','https://bsc-dataseed-public.bnbchain.org')
 BASE_RPC = ('https://api.zan.top/base-mainnet','https://rpc.swiftnodes.io/rpc/base','https://base-rpc.blockreq.com/v1/rpc/public','https://mainnet.base.org','https://base.publicnode.com')
-CHAINS = {'bsc': {'id':56, 'rpc':BSC_RPC,'block_seconds':1.0},'base': {'id':8453,'rpc':BASE_RPC,'block_seconds':2.0}}
+CHAINS = {'bsc': {'id':56, 'rpc':BSC_RPC,'block_seconds':0.45},'base': {'id':8453,'rpc':BASE_RPC,'block_seconds':2.0}}
 
 
 def utc_ms(ms):
