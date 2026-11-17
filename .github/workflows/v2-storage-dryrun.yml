@@ -21,6 +21,10 @@ on:
       - 'v2/tests/test_technical_confirmation.py'
       - 'v2/decision_engine.py'
       - 'v2/tests/test_decision_engine.py'
+      - 'v2/prospective_validation.py'
+      - 'v2/tests/test_prospective_validation.py'
+      - 'v2/research_outbox.py'
+      - 'v2/tests/test_research_outbox.py'
       - '.github/workflows/v2-storage-dryrun.yml'
   workflow_dispatch:
 permissions:
@@ -195,6 +199,33 @@ jobs:
           assert all(not x['automatic_delivery_ready'] for x in d['coins'])
           print('REAL_DECISIONS',d['state_counts'])
           PY
+      - name: Replay only real archived public spot snapshots against forward stored candles
+        run: |
+          python v2/prospective_validation.py \
+            --db /tmp/v2-brain-real.sqlite3 \
+            --archive v2_archive/spot_samples \
+            --out /tmp/v2-real-forward-replay.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/v2-real-forward-replay.json'))
+          assert d['historical_false_alarm_probability_validated'] is False
+          assert d['reference_exits_backtested'] is False
+          assert all(x['statistically_valid_precision'] is None for x in d['horizon_metrics_exploratory_only'])
+          print('REAL_CAUSAL_REPLAY',d['archive_samples'],d['replayable_snapshot_trials'])
+          PY
+      - name: Verify deduplicated research inbox never claims ChatGPT delivery
+        run: |
+          python v2/research_outbox.py \
+            --decision /tmp/v2-real-decisions.json \
+            --prior /tmp/no-existing-research-outbox.json \
+            --out /tmp/v2-real-research-outbox.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/v2-real-research-outbox.json'))
+          assert d['chatgpt_delivery_status']=='NOT_CONFIGURED_NO_DELIVERY_TEST'
+          assert d['automatic_notifications_sent']==0
+          print('RESEARCH_EVENTS',d['new_research_event_count'])
+          PY
       - name: Publish research-only evidence report as short-lived workflow artifact
         uses: actions/upload-artifact@v4
         with:
@@ -206,4 +237,6 @@ jobs:
             /tmp/v2-transfer-trace.json
             /tmp/v2-dynamic-proposals.json
             /tmp/v2-real-decisions.json
+            /tmp/v2-real-forward-replay.json
+            /tmp/v2-real-research-outbox.json
           retention-days: 7
