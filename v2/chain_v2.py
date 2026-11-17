@@ -46,7 +46,7 @@ def _probe_receipt(http,url,block):
         raise ValueError('INCOMPLETE_BLOCK_RECEIPTS')
     return True
 
-def select_provider(http,chain):
+def select_provider(http,chain,token_contract):
     errors=[]
     for url in ENDPOINTS[chain]:
         try:
@@ -55,7 +55,7 @@ def select_provider(http,chain):
             # Prefer inexpensive filtered log ranges, but official BSC disables eth_getLogs.
             if not ('bsc-dataseed' in url):
                 try:
-                    probe=http.rpc(url,'eth_getLogs',[{'fromBlock':hex(head-2),'toBlock':hex(head-2),'address':[], 'topics':[TRANSFER_TOPIC]}])
+                    probe=http.rpc(url,'eth_getLogs',[{'fromBlock':hex(head-2),'toBlock':hex(head-2),'address':token_contract, 'topics':[TRANSFER_TOPIC]}])
                     if not isinstance(probe,list):raise ValueError('LOGS_PROBE_NOT_ARRAY')
                     return url,head,'logs'
                 except Exception as e:errors.append('logs:'+url+':'+str(e)[:85])
@@ -100,7 +100,7 @@ def chain_ingest(store,rid,chain,config,http,ts=None,max_span=4500,deadline_seco
     ts=now_ms() if ts is None else ts
     token_to_coin={x['token'].lower():x['symbol'] for x in config['coins'] if x['chain']==chain}
     try:
-        url,head,method=select_provider(http,chain)
+        url,head,method=select_provider(http,chain,next(iter(token_to_coin)))
     except Exception as e:
         store.chain_save(rid,chain,None,None,None,[],'ERROR','RPC_NO_VERIFIED_TRANSFER_READ:'+str(e)[:700],ts)
         return {'chain':chain,'status':'ERROR','detail':str(e)[:700]}
