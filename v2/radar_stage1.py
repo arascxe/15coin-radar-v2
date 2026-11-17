@@ -26,8 +26,8 @@ from collections import defaultdict
 ROOT = pathlib.Path(__file__).resolve().parent
 TOKEN_RE = re.compile(r'^0x[0-9a-f]{40}$')
 MINUTE_MS = 60000
-BSC_RPC = ('https://bsc.publicnode.com', 'https://bsc-dataseed.bnbchain.org','https://bsc-dataseed-public.bnbchain.org')
-BASE_RPC = ('https://api.zan.top/base-mainnet','https://rpc.swiftnodes.io/rpc/base','https://base-rpc.blockreq.com/v1/rpc/public','https://mainnet.base.org','https://base.publicnode.com')
+BSC_RPC = ('https://bsc-rpc.publicnode.com', 'https://bsc-dataseed.bnbchain.org','https://bsc-dataseed-public.bnbchain.org')
+BASE_RPC = ('https://rpc.swiftnodes.io/rpc/base','https://api.zan.top/base-mainnet','https://base-rpc.blockreq.com/v1/rpc/public','https://mainnet.base.org','https://base.publicnode.com')
 CHAINS = {'bsc': {'id':56, 'rpc':BSC_RPC,'block_seconds':0.45},'base': {'id':8453,'rpc':BASE_RPC,'block_seconds':2.0}}
 
 
@@ -199,6 +199,8 @@ class HTTPClient:
     def __init__(self,timeout=8):
         self.timeout=timeout
         self._gecko_last=0.0
+        self._rpc_lock=threading.Lock()
+        self._last_swift=0.0
     def get(self,url,params):
         q=urllib.parse.urlencode({k:str(v) for k,v in params.items() if v is not None})
         target=url+('?' +q if q else '')
@@ -222,6 +224,11 @@ class HTTPClient:
                     with urllib.request.urlopen(urllib.request.Request(alt,headers={'Accept':'application/json','User-Agent':'RadarV2-Research/0.2'}),timeout=self.timeout) as r:return json.load(r)
                 raise
     def rpc(self,url,method,params):
+        if 'swiftnodes.io' in url:
+            # Public provider advertises 2 requests/second; enforce global per-run pacing.
+            with self._rpc_lock:
+                time.sleep(max(0.0,0.78-(time.monotonic()-self._last_swift)))
+                self._last_swift=time.monotonic()
         req=urllib.request.Request(url,data=json.dumps({'jsonrpc':'2.0','id':1,'method':method,'params':params}).encode(),headers={'Content-Type':'application/json'},method='POST')
         with urllib.request.urlopen(req,timeout=self.timeout) as r:resp=json.load(r)
         if resp.get('error'):raise RuntimeError(str(resp['error'])[:200])
