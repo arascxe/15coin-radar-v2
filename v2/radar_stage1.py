@@ -144,19 +144,27 @@ class Store:
     def market_initial_start(self,coin,venue):
         x=self.db.execute('SELECT first_requested_ms FROM market_bootstrap WHERE coin=? AND venue=?',(coin,venue)).fetchone()
         return x[0] if x else None
-    def market_save(self,rid,coin,venue,pair,status,t0,t1,bars,detail='',observed_ms=None):
+    def market_save(self,rid,coin,venue,pair,status,t0,t1,bars,detail='',observed_ms=None,backlog_to_ms=None):
         now=observed_ms or now_ms();expected=max(0,(t1-t0)//MINUTE_MS);n=len({b['minute_ms'] for b in bars});missing=max(0,expected-n)
         with self.db:
             self.db.execute('INSERT INTO market_bootstrap VALUES(?,?,?) ON CONFLICT(coin,venue) DO UPDATE SET first_requested_ms=MIN(first_requested_ms,excluded.first_requested_ms)',(coin,venue,t0))
             for b in bars:
                 self.db.execute('INSERT INTO market_candles VALUES(?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(coin,venue,minute_ms) DO UPDATE SET open=excluded.open,high=excluded.high,low=excluded.low,close=excluded.close,quote_vol=excluded.quote_vol,source_timestamp_ms=excluded.source_timestamp_ms,seen_ms=excluded.seen_ms',
                         (coin,venue,pair,b['minute_ms'],b['open'],b['high'],b['low'],b['close'],b['quote_vol'],b['minute_ms'],now))
+            # Missing minute is UNKNOWN, not zero volume. Never silently discard holes.
+            if status in ('OK','BACKLOG','PARTIAL','UNKNOWN'):
+                present={b['minute_ms'] for b in bars}
+                self.db.executemany('DELETE FROM market_missing_minutes WHERE coin=? AND venue=? AND minute_ms=?',((coin,venue,m) for m in present))
+                self.db.executemany('INSERT INTO market_missing_minutes VALUES(?,?,?,?,?) ON CONFLICT(coin,venue,minute_ms) DO UPDATE SET last_seen_ms=excluded.last_seen_ms',((coin,venue,m,now,now) for m in range(t0,t1,MINUTE_MS) if m not in present))
             self.db.execute('INSERT INTO market_checks VALUES(?,?,?,?,?,?,?,?,?,?,?)',(rid,coin,venue,pair,status,t0,t1,n,expected,missing,detail))
-            if status not in ('ERROR','UNSUPPORTED','UNKNOWN','SKIPPED_UNMAPPED'):
+            if status in ('OK','BACKLOG','PARTIAL','UNKNOWN'):
                 self.db.execute('INSERT INTO market_cursor VALUES(?,?,?,?) ON CONFLICT(coin,venue) DO UPDATE SET last_queried_end_ms=MAX(last_queried_end_ms,excluded.last_queried_end_ms),updated_ms=excluded.updated_ms',(coin,venue,t1,now))
             if status!='OK':
-                self.db.execute('INSERT OR REPLACE INTO source_gaps VALUES(?,?,?,?,?,?)',(rid,'spot_1m',f'{coin}:{venue}',str(t0),str(t1),detail or status))
+                gap_start=t1 if status=='BACKLOG' else t0
+                gap_end=backlog_to_ms if status=='BACKLOG' and backlog_to_ms is not None else t1
+                self.db.execute('INSERT OR REPLACE INTO source_gaps VALUES(?,?,?,?,?,?)',(rid,'spot_1m',f'{coin}:{venue}',str(gap_start),str(gap_end),detail or status))
         return {'coin':coin,'venue':venue,'status':status,'bars':n,'expected_minutes':expected,'missing_minutes':missing,'from_utc':utc_ms(t0),'to_utc':utc_ms(t1),'detail':detail}
+
     def wallet_save(self,rid,c,addr,block,raw,err=None,observed_ms=None):
         now=observed_ms or now_ms();status='ERROR' if err is not None else 'OK'
         with self.db:
@@ -181,7 +189,7 @@ class Store:
         chain=list(self.db.execute('SELECT chain,status,from_block,to_block,head_block,detail FROM chain_checks WHERE run_id=? ORDER BY chain',(rid,)))
         wallets=list(self.db.execute('SELECT coin,status,COUNT(*) FROM wallet_checks WHERE run_id=? GROUP BY coin,status ORDER BY coin,status',(rid,)))
         gaps=self.db.execute('SELECT COUNT(*) FROM source_gaps WHERE run_id=?',(rid,)).fetchone()[0]
-        return {'run_id':rid,'market_counts':dict(__import__('collections').Counter(x[2] for x in market)),'market_checks': [{'coin':x[0],'venue':x[1],'status':x[2],'bars':x[3],'expected':x[4],'missing':x[5],'note':x[6]} for x in market], 'chain_checks':[{'chain':x[0],'status':x[1],'from':x[2],'to':x[3],'head':x[4],'detail':x[5]} for x in chain],'wallet_checks':[{'coin':x[0],'status':x[1],'count':x[2]} for x in wallets], 'gap_records':gaps,'total_candles':self.db.execute('SELECT COUNT(*) FROM market_candles').fetchone()[0], 'total_transfers':self.db.execute('SELECT COUNT(*) FROM token_transfers').fetchone()[0]}
+        return {'run_id':rid,'market_counts':dict(__import__('collections').Counter(x[2] for x in market)),'market_checks': [{'coin':x[0],'venue':x[1],'status':x[2],'bars':x[3],'expected':x[4],'missing':x[5],'note':x[6]} for x in market], 'chain_checks':[{'chain':x[0],'status':x[1],'from':x[2],'to':x[3],'head':x[4],'detail':x[5]} for x in chain],'wallet_checks':[{'coin':x[0],'status':x[1],'count':x[2]} for x in wallets], 'gap_records':gaps,'total_candles':self.db.execute('SELECT COUNT(*) FROM market_candles').fetchone()[0], 'total_transfers':self.db.execute('SELECT COUNT(*) FROM token_transfers').fetchone()[0], 'unresolved_spot_minutes':self.db.execute('SELECT COUNT(*) FROM market_missing_minutes').fetchone()[0]}
 
 class HTTPClient:
     def __init__(self,timeout=8):self.timeout=timeout
@@ -241,9 +249,9 @@ def get_market_spec(v,t0,t1):
 
 def market_ingest(store,rid,v,http,ts,lookback=70,cap=1000):
     closed_to=(ts//MINUTE_MS)*MINUTE_MS
-    old=store.last_market_end(v['coin'],v['venue']);initial=store.market_initial_start(v['coin'],v['venue']);t0=(initial if initial is not None else closed_to-lookback*MINUTE_MS) if old is None else old
+    old=store.last_market_end(v['coin'],v['venue']);initial=store.market_initial_start(v['coin'],v['venue'])
+    t0=(initial if initial is not None else closed_to-lookback*MINUTE_MS) if old is None else old
     if closed_to<=t0:t0=closed_to-MINUTE_MS
-    # Never request more than a single venue page can return; otherwise older minutes silently disappear.
     page_caps={'okx':90,'gate':900,'kucoin':1200,'bitget':900,'mexc':900,'bybit':900,'binance_alpha':900,'geckoterminal':900}
     venue_cap=min(cap,page_caps.get(v['venue'],900))
     t1=min(closed_to,t0+venue_cap*MINUTE_MS)
@@ -253,17 +261,17 @@ def market_ingest(store,rid,v,http,ts,lookback=70,cap=1000):
         url,args=get_market_spec(v,t0,t1)
         response=http.get(url,args)
         bars=parse_candles(v['venue'],response)
-        # Quote-volume candles are not directional taker flow; never infer buys from these alone.
         observed={b['minute_ms']:b for b in bars if t0<=b['minute_ms']<t1};valid=list(observed.values())
         expected=(t1-t0)//MINUTE_MS
         if not valid:status='UNKNOWN';msg='EMPTY_CANDLE_RESULT; NO_TRADE_NOT_PROVEN'
         elif len(valid)!=expected:status='PARTIAL';msg=f'MISSING_OR_ZERO_TRADE_CANDLES:{expected-len(valid)}; NOT_VERIFIED_TAKER_TAPE'
         else:status='OK';msg='COMPLETE_1M_CANDLE_GRID; NOT_VERIFIED_TAKER_TAPE'
-        if t1<closed_to:status='PARTIAL';msg+='; BACKLOG_PENDING'
-        return store.market_save(rid,v['coin'],v['venue'],v['pair'],status,t0,t1,valid,detail=msg,observed_ms=ts)
+        if t1<closed_to:
+            if status=='OK':status='BACKLOG'
+            msg+='; BACKLOG_PENDING'
+        return store.market_save(rid,v['coin'],v['venue'],v['pair'],status,t0,t1,valid,detail=msg,observed_ms=ts,backlog_to_ms=closed_to if t1<closed_to else None)
     except Exception as e:
         return store.market_save(rid,v['coin'],v['venue'],v['pair'],'ERROR',t0,t1,[],detail=f'{type(e).__name__}:{str(e)[:180]}',observed_ms=ts)
-
 
 def rpc_first(http,chain,method,params):
     errors=[]
