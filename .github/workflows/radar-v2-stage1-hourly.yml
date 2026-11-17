@@ -1,0 +1,214 @@
+name: Radar V2 public hourly live-source and persistent-db test
+
+on:
+  # GitHub schedule is best-effort; actual UTC start time is logged.
+  schedule:
+    - cron: '19 * * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'v2/**'
+      - '.github/workflows/radar-v2-stage1-hourly.yml'
+
+permissions:
+  contents: write  # only to persist V2 trial state in this PUBLIC repo
+
+concurrency:
+  group: radar-v2-stage1-persistent
+  cancel-in-progress: false
+
+jobs:
+  live-collect-and-save:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    outputs:
+      should_collect: ${{ steps.trial_gate.outputs.allow }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Cap this trial at TWO saved hourly observations
+        id: trial_gate
+        shell: bash
+        run: |
+          if test -f v2_state/audit.json; then
+            prior=$(python -c 'import json;print(json.load(open("v2_state/audit.json")).get("total_runs",0))')
+          else
+            prior=0
+          fi
+          if test "$prior" -ge 2; then
+            echo 'TRIAL_LIMIT_REACHED; no more network calls or database writes'
+            echo 'allow=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'allow=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Run deterministic local tests before touching internet
+        if: steps.trial_gate.outputs.allow == 'true'
+        run: python -m unittest discover -s v2/tests -q
+      - name: Restore previously committed history (fail closed)
+        if: steps.trial_gate.outputs.allow == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p v2_runtime
+          if test -f v2_state/checkpoint.sqlite.gz; then
+            if ! test -f v2_state/checkpoint.sqlite.gz.sha256.json; then
+              echo 'ERROR: Stored checkpoint has no checksum manifest'; exit 1
+            fi
+            python v2/backup_restore.py restore v2_state/checkpoint.sqlite.gz v2_runtime/live.sqlite3
+            python - <<'PY'
+          import json,sqlite3
+          c=sqlite3.connect('v2_runtime/live.sqlite3')
+          print('RESTORED_RUNS',c.execute('select count(*) from runs').fetchone()[0])
+          print('RESTORED_SPOT_ROWS',c.execute('select count(*) from market_candles').fetchone()[0])
+          print('RESTORED_WALLET_ROWS',c.execute('select count(*) from wallet_balances').fetchone()[0])
+          PY
+          elif test -f v2_state/ever_initialized.marker; then
+            echo 'ERROR: Checkpoint vanished after previously initialized history'; exit 1
+          else
+            echo 'FIRST_BOOTSTRAP: No previous history yet, creating fresh SQLite baseline'
+          fi
+      - name: Read all configured live sources (real network)
+        if: steps.trial_gate.outputs.allow == 'true'
+        id: capture
+        shell: bash
+        run: |
+          set +e
+          timeout --signal=TERM --kill-after=15s 1800s \
+            python -u v2/radar_stage1.py \
+              --db v2_runtime/live.sqlite3 \
+              --config v2/config.json \
+              --report-path v2_runtime/last_run.json
+          code=$?
+          echo "collector_exit_code=$code" >> "$GITHUB_OUTPUT"
+          echo "Collector exit code: $code"
+          # Preserve error evidence in the DB, don't let one outage delete history.
+          exit 0
+      - name: Mark interrupted runs and create truthful health report
+        if: steps.trial_gate.outputs.allow == 'true'
+        shell: bash
+        env:
+          COLLECTOR_EXIT_CODE: ${{ steps.capture.outputs.collector_exit_code }}
+        run: |
+          python - <<'PY'
+          import json,sqlite3,os,datetime
+          from pathlib import Path
+          root=Path('v2_runtime');db=root/'live.sqlite3'
+          if not db.exists():raise RuntimeError('COLLECTOR_DID_NOT_CREATE_OR_RESTORE_SQLITE')
+          c=sqlite3.connect(db)
+          status=c.execute('pragma quick_check').fetchone()[0]
+          if status!='ok':raise RuntimeError('CORRUPT_DB:'+status)
+          interrupted=c.execute("update runs set status='INTERRUPTED_NO_COMPLETE_EVIDENCE',finished_ms=cast(strftime('%s','now') as integer)*1000 where status='RUNNING'").rowcount
+          c.commit()
+          latest=c.execute('select run_id,status,started_ms from runs order by started_ms desc limit 1').fetchone()
+          def n(sql):return c.execute(sql).fetchone()[0]
+          d={'created_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+             'collector_exit_code':int(os.environ.get('COLLECTOR_EXIT_CODE') or -1),
+             'last_run_id':latest[0] if latest else None,
+             'last_run_status':latest[1] if latest else 'NO_RUN',
+             'total_runs':n('select count(*) from runs'),
+             'total_spot_bars':n('select count(*) from market_candles'),
+             'total_wallet_balances':n('select count(*) from wallet_balances'),
+             'total_token_transfers':n('select count(*) from token_transfers'),
+             'unknown_market_minutes':n('select count(*) from market_missing_minutes'),
+             'total_source_gap_events':n('select count(*) from source_gaps'),
+             'interrupted_runs_marked':interrupted,
+             'note':'An HTTP success is not proof of complete trading or verified CEX ownership.'}
+          (root/'audit.json').write_text(json.dumps(d,indent=2)+'\n')
+          print(json.dumps(d,indent=2))
+          c.close()
+          PY
+      - name: Create checksum-verified SQLite checkpoint
+        if: steps.trial_gate.outputs.allow == 'true'
+        run: python v2/backup_restore.py backup v2_runtime/live.sqlite3 v2_runtime/checkpoint.sqlite.gz
+      - name: Re-restore freshly written checkpoint into another filesystem path
+        if: steps.trial_gate.outputs.allow == 'true'
+        run: |
+          python v2/backup_restore.py restore v2_runtime/checkpoint.sqlite.gz v2_runtime/test_restored.sqlite3
+          python - <<'PY'
+          import sqlite3
+          a=sqlite3.connect('v2_runtime/live.sqlite3')
+          b=sqlite3.connect('v2_runtime/test_restored.sqlite3')
+          for tab in ('runs','market_candles','market_missing_minutes','wallet_balances','token_transfers','source_gaps'):
+            x=a.execute('select count(*) from '+tab).fetchone()[0]
+            y=b.execute('select count(*) from '+tab).fetchone()[0]
+            if x!=y:raise AssertionError(f'{tab}: source={x}, restored={y}')
+          print('VERIFIED: restored SQLite row counts match original')
+          PY
+      - name: Commit ONLY V2 persistence files with conflict safety
+        if: steps.trial_gate.outputs.allow == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          CODE_SHA="$(git rev-parse HEAD)"
+          SNAP="$(mktemp -d)"
+          trap 'rm -rf "$SNAP"' EXIT
+          cp v2_runtime/checkpoint.sqlite.gz "$SNAP/"
+          cp v2_runtime/checkpoint.sqlite.gz.sha256.json "$SNAP/"
+          cp v2_runtime/audit.json "$SNAP/"
+          if test -f v2_runtime/last_run.json; then cp v2_runtime/last_run.json "$SNAP/"; fi
+          git config user.name 'radar-v2-stage1-bot'
+          git config user.email 'radar-v2-stage1-bot@users.noreply.github.com'
+          for try in 1 2 3 4; do
+            git fetch origin main
+            if ! git diff --quiet "$CODE_SHA" origin/main -- v2/ .github/workflows/radar-v2-stage1-hourly.yml; then
+              echo 'ERROR: V2 collector code changed while this scan was running'; exit 1
+            fi
+            git reset --hard origin/main
+            mkdir -p v2_state
+            cp "$SNAP/checkpoint.sqlite.gz" v2_state/checkpoint.sqlite.gz
+            cp "$SNAP/checkpoint.sqlite.gz.sha256.json" v2_state/checkpoint.sqlite.gz.sha256.json
+            cp "$SNAP/audit.json" v2_state/audit.json
+            if test -f "$SNAP/last_run.json"; then cp "$SNAP/last_run.json" v2_state/last_run.json; fi
+            printf 'initialized by automated verified snapshot\n' > v2_state/ever_initialized.marker
+            git add -f v2_state/
+            if git diff --cached --quiet; then
+              echo 'No V2 checkpoint changes'; exit 0
+            fi
+            git commit -m "V2 stage1 verified SQLite history $(date -u +%Y-%m-%dT%H:%MZ)"
+            if git push origin HEAD:main; then
+              echo 'COMMITTED_CHECKSUM_VERIFIED_V2_STATE'; exit 0
+            fi
+            echo "Concurrent GitHub update; retry $try/4"
+            sleep $((try*2))
+          done
+          echo 'ERROR: Persistence commit failed; no claim of saved history';exit 1
+
+  verify-new-runner:
+    needs: live-collect-and-save
+    if: needs.live-collect-and-save.outputs.should_collect == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify persisted checkpoint from a NEW GitHub runner
+        run: |
+          git pull --ff-only origin main
+          test -f v2_state/ever_initialized.marker
+          test -f v2_state/audit.json
+          python v2/backup_restore.py restore v2_state/checkpoint.sqlite.gz verify_new_runner.sqlite3
+          python - <<'PY'
+          import sqlite3,json
+          d=json.load(open('v2_state/audit.json'))
+          c=sqlite3.connect('verify_new_runner.sqlite3')
+          checks={'runs':'total_runs','market_candles':'total_spot_bars',
+                  'wallet_balances':'total_wallet_balances','token_transfers':'total_token_transfers',
+                  'market_missing_minutes':'unknown_market_minutes'}
+          for table,key in checks.items():
+            got=c.execute('select count(*) from '+table).fetchone()[0]
+            if got!=d[key]:raise AssertionError(f'Cross-runner {table} {got} != {d[key]}')
+          if d['last_run_id']:
+            if not c.execute('select 1 from runs where run_id=?',(d['last_run_id'],)).fetchone():
+              raise AssertionError('Latest run ID absent from newly restored DB')
+          print('CROSS_GITHUB_RUNNER_PERSISTENCE_VERIFIED', d)
+          PY
