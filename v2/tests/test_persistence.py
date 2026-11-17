@@ -83,4 +83,20 @@ class TestPersistence(unittest.TestCase):
             with self.assertRaises(ValueError):restore_backup(archive,root/'new-db')
             self.assertFalse((root/'new-db').exists())
 
+
+    def test_source_failure_never_deletes_existing_market_rows(self):
+        with tempfile.TemporaryDirectory() as d:
+            st=Store(pathlib.Path(d)/'data.db')
+            first=st.begin_run(T)
+            st.market_save(first,'ON','gate','ON_USDT','OK',T,T+MINUTE_MS,[BAR],observed_ms=T)
+            st.finish_run(first,T)
+            second=st.begin_run(T+MINUTE_MS)
+            st.market_save(second,'ON','gate','ON_USDT','ERROR',T+MINUTE_MS,T+2*MINUTE_MS,[],detail='HTTP_503',observed_ms=T+MINUTE_MS)
+            st.finish_run(second,T+MINUTE_MS)
+            self.assertEqual(st.db.execute('select count(*) from market_candles').fetchone()[0],1)
+            self.assertEqual(st.db.execute('select count(*) from runs').fetchone()[0],2)
+            self.assertEqual(st.last_market_end('ON','gate'),T+MINUTE_MS)
+            self.assertEqual(st.db.execute('select count(*) from source_gaps').fetchone()[0],1)
+            st.close()
+
 if __name__=='__main__':unittest.main()
