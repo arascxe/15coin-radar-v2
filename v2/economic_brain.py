@@ -108,6 +108,8 @@ def net_transfers(c,coin,from_block,to_block,address):
         if frm==address:outbound+=raw
         all_tx.add(tx)
     return {'in_raw':inbound,'out_raw':outbound,'net_raw':inbound-outbound,
+            'distinct_incoming_blocks':len({x['block'] for x in incoming}),
+            'distinct_incoming_sources':len({x['from'] for x in incoming}),
             'distinct_transactions':len(all_tx),
             'incoming_transactions':len({x['tx'] for x in incoming}),
             'incoming':incoming}
@@ -200,12 +202,49 @@ def build(db_path,config):
                 row['transfer_net_reconciled']=flow is not None and flow['net_raw']==delta
                 row['incoming_transactions']=flow['incoming_transactions'] if flow else 0
                 row['net_transfer_amount']=as_token(flow['net_raw'],decimals) if flow else None
+                # A balance increase can come wholly from a DEX pool/vault:
+                # this may be normal swap churn, NOT independent market-maker
+                # accumulation or evidence of an exchange withdrawal.
+                all_in=flow['incoming'] if flow is not None else []
+                known_pool_addresses={a for a,x in labels.items() if x.get('role') in POOLS}
+                known_pool_addresses.update(p['pool'].lower() for p in config.get('dex_pools',[])
+                       if p.get('coin')==sym and p.get('chain')==chain and p.get('pool'))
+                dex_in=[x for x in all_in if x['from'] in known_pool_addresses]
+                dex_in_raw=sum(int(x['amount_raw']) for x in dex_in)
+                incoming_raw=sum(int(x['amount_raw']) for x in all_in)
+                dex_txs=len({x['tx'] for x in dex_in})
+                total_txs=len({x['tx'] for x in all_in})
+                dex_dominated=(incoming_raw>0 and dex_in_raw*2>=incoming_raw or
+                               total_txs>0 and dex_txs*2>=total_txs)
+                independent_sources={x['from'] for x in all_in
+                  if x['from']!=ZERO and x['from'] not in known_pool_addresses and
+                  kinds(labels.get(x['from'])) not in
+                    ('EXCHANGE_TAG_UNVERIFIED','CONTRACT_OR_PROXY_NOT_INDEPENDENT')}
+                verified_exchange_sources={x['from'] for x in all_in
+                    if kinds(labels.get(x['from']))=='EXCHANGE_VERIFIED'}
+                source_breadth=(len(independent_sources)>=2 or
+                                len(verified_exchange_sources)>=1 and total_txs>=2)
+                block_breadth=flow is not None and flow['distinct_incoming_blocks']>=2
+                row['inbound_provenance']={
+                    'unique_inflow_sources':flow['distinct_incoming_sources'] if flow else 0,
+                    'unique_inflow_blocks':flow['distinct_incoming_blocks'] if flow else 0,
+                    'known_dex_inflow_transactions':dex_txs,
+                    'known_dex_inflow_share_of_amount':str(round(
+                        decimal.Decimal(dex_in_raw)/decimal.Decimal(incoming_raw),4)) if incoming_raw else None,
+                    'source_breadth_for_research':bool(source_breadth),
+                    'dex_dominated':bool(dex_dominated),
+                    'origin_ownership_still_unverified':True}
+
                 row['evidence_txs']=(flow['incoming'][-4:] if flow else [])
                 change_big=(old['raw']==0 or decimal.Decimal(delta)/old['raw']>=decimal.Decimal('0.20'))
-                valid=proof and flow is not None and flow['net_raw']==delta and flow['incoming_transactions']>=2 and change_big
+                valid=(proof and flow is not None and flow['net_raw']==delta
+                    and flow['incoming_transactions']>=2 and change_big
+                    and block_breadth and source_breadth and not dex_dominated)
                 row['status']='WALLET_ACCUMULATION_WATCH_UNVERIFIED_OWNER' if valid else 'NOT_CORROBORATED'
-                row['reason']=('CHAIN_AND_SNAPSHOTS_CORROBORATE_MULTIPLE_INFLOWS_OWNER_UNVERIFIED'
-                               if valid else 'INSUFFICIENT_CORROBORATION_OR_RELATIVE_CHANGE')
+                row['reason']=('MULTI_SOURCE_MULTI_BLOCK_BALANCE_AND_TRANSFER_RECONCILED_OWNER_UNVERIFIED'
+                    if valid else ('KNOWN_DEX_POOL_OR_VAULT_DOMINATED_NOT_INDEPENDENT_PREPARATION'
+                    if dex_dominated else
+                    'SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION'))
                 if valid:row['dedupe_id']=hashlib.sha256(
                     (sym+':'+address+':'+str(old['block'])+':'+str(new['block'])).encode()).hexdigest()[:20]
                 if valid or len(candidate_wallets)<12:candidate_wallets.append(row)

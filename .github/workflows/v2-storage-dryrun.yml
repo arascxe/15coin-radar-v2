@@ -185,10 +185,16 @@ jobs:
                   'eligible_receivers',v.get('eligible_unlabeled_receivers'),
                   'coverage',v['coverage_status'])
           PY
-      - name: Confirm 15-coin decision states from persisted real report set
+      - name: Recompute full 15-coin decisions with NEW economic code, not stale persisted reports
         run: |
+          python v2/economic_fusion.py \
+            --spot v2_state/spot_microstructure.json \
+            --economic /tmp/v2-economic-brain.json \
+            --history v2_archive/spot_samples \
+            --technical v2_state/technical_confirmation.json \
+            --out /tmp/v2-recomputed-fusion.json
           python v2/decision_engine.py \
-            --fusion v2_state/economic_fusion.json \
+            --fusion /tmp/v2-recomputed-fusion.json \
             --spot v2_state/spot_microstructure.json \
             --technical v2_state/technical_confirmation.json \
             --out /tmp/v2-real-decisions.json

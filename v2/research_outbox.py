@@ -42,12 +42,23 @@ def produce(decision,prior=None):
         events.append(new)
         active[symbol]=new
         hist.append(new)
+    resolved=[]
+    for sym,previous_row in sorted(previous.items()):
+        current=active.get(sym)
+        if current is None or current.get('research_dedupe_key')!=previous_row.get('research_dedupe_key'):
+            closure={'coin':sym,'event_type':'RESEARCH_EPISODE_RESOLVED_NOT_TRADE',
+                'previous_key':previous_row.get('research_dedupe_key'),
+                'resolved_asof_ms':decision['asof_ms'],
+                'reason':'EVIDENCE_NO_LONGER_MEETS_CURRENT_RESEARCH_CRITERIA'}
+            resolved.append(closure)
+            hist.append(closure)
     return {'schema':VERSION,
        'generated_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
        'run_id':decision['run_id'],'asof_ms':decision['asof_ms'],
        'active':active,'new_research_events':events,
        'new_research_event_count':len(events),
        'deduplicated_repeats':repeats,'history':hist[-MAX_HISTORY:],
+       'resolved_research_events':resolved,'resolved_event_count':len(resolved),
        'strong_alert_count':0,'buy_signal':False,
        'chatgpt_delivery_status':'NOT_CONFIGURED_NO_DELIVERY_TEST',
        'automatic_notifications_sent':0,
