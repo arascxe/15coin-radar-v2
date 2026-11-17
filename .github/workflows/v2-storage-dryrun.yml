@@ -21,12 +21,11 @@ jobs:
           python-version: '3.11'
       - name: Run all offline regression tests
         run: python -m unittest discover -s v2/tests -q
-      - name: Migrate current checkpoint into isolated temporary segment store
+      - name: Restore current immutable anchor plus all archived segments in isolation
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p /tmp/radar-segments
-          python v2/storage_segments.py migrate v2_state/checkpoint.sqlite.gz /tmp/radar-segments
+          cp -a v2_archive /tmp/radar-segments
           python v2/storage_segments.py restore /tmp/radar-segments /tmp/radar-restored.sqlite3
           python - <<'PY'
           import sys,json,sqlite3
