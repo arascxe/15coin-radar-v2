@@ -104,9 +104,17 @@ def scan_receipts(http,url,start,end,token_to_coin,deadline,on_complete):
         for a in range(start,end+1,24):
             if time.monotonic()>deadline:raise TimeoutError('BLOCK_RECEIPTS_TIME_BUDGET')
             b=min(end,a+23)
-            replies=list(pool.map(lambda n:http.rpc(url,'eth_getBlockReceipts',[hex(n)]),range(a,b+1)))
+            numbers=list(range(a,b+1))
+            replies=list(pool.map(lambda n:http.rpc(url,'eth_getBlockReceipts',[hex(n)]),numbers))
+            # Every block is verified; one good bootstrap probe is NOT enough.
+            # If the provider silently omits receipts, keep the block cursor unchanged.
+            headers=list(pool.map(lambda n:http.rpc(url,'eth_getBlockByNumber',[hex(n),False]),numbers))
             batch=[]
-            for receipts in replies:
+            for block,receipts,header in zip(numbers,replies,headers):
+                if not isinstance(receipts,list) or not isinstance(header,dict) or not isinstance(header.get('transactions'),list):
+                    raise ValueError('UNVERIFIED_RECEIPTS_OR_HEADER_BLOCK_'+str(block))
+                if len(receipts)!=len(header['transactions']):
+                    raise ValueError('INCOMPLETE_BLOCK_RECEIPTS_'+str(block))
                 batch.extend(receipt_logs(receipts,token_to_coin))
             on_complete(b,batch)
 
