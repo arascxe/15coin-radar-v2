@@ -2,7 +2,7 @@ name: Radar V2 hourly collection with lossless incremental storage
 
 on:
   schedule:
-    - cron: '19 * * * *'
+    - cron: '37 * * * *'
   workflow_dispatch:
   push:
     branches:
@@ -30,6 +30,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Record real GitHub trigger source
+        shell: bash
+        run: |
+          printf 'RADAR_WORKFLOW_TRIGGER=%s\n' "$GITHUB_EVENT_NAME"
+          printf 'RADAR_WORKFLOW_UTC=%s\n' "$(date -u +%FT%TZ)"
       - name: Run offline acceptance tests before network collection
         run: python -m unittest discover -s v2/tests -q
       - name: Restore and independently verify preserved history
@@ -127,6 +132,7 @@ jobs:
           latest=c.execute('SELECT run_id,status FROM runs ORDER BY started_ms DESC LIMIT 1').fetchone()
           def n(q):return c.execute(q).fetchone()[0]
           d={'created_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+             'workflow_trigger_event':os.environ.get('GITHUB_EVENT_NAME','UNKNOWN'),
              'collector_exit_code':int(os.environ.get('COLLECTOR_EXIT_CODE') or -1),
              'gap_repair_exit_code':int(os.environ.get('GAP_REPAIR_EXIT_CODE') or -1),
              'dynamic_eoa_exit_code':int(os.environ.get('DYNAMIC_EOA_EXIT_CODE') or -1),
