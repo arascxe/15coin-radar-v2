@@ -1,8 +1,8 @@
 {
   "schema": "radar-v2-decision-research-1",
-  "created_utc": "2026-11-17T17:10:49.167085+00:00",
-  "run_id": "41f437d3650775190d",
-  "asof_ms": 1794935441808,
+  "created_utc": "2026-11-17T21:19:23.535042+00:00",
+  "run_id": "4d8335a498d2fc6efc",
+  "asof_ms": 1794950356475,
   "method": "OBSERVATIONAL_UNCALIBRATED_RESEARCH_CLASSIFIER",
   "historical_detection_rate": null,
   "false_alert_rate": null,
@@ -11,11 +11,9 @@
   "notification_delivery_validated": false,
   "coin_count": 15,
   "state_counts": {
-    "INSUFFICIENT_EVIDENCE_UNKNOWN": 13,
-    "PREPARATION_RESEARCH_WATCH": 1,
-    "SPOT_IGNITION_RESEARCH_WATCH": 1
+    "INSUFFICIENT_EVIDENCE_UNKNOWN": 15
   },
-  "unverified_watch_count": 2,
+  "unverified_watch_count": 0,
   "important": "Research candidate is not a proven early pump signal or buy recommendation.",
   "coins": [
     {
@@ -29,11 +27,19 @@
         "preparation": {
           "active_unverified": false,
           "candidate_count": 0,
-          "chain_scan_complete": true
+          "chain_scan_complete": false
         },
         "spot_ignition": {
           "active_sample_based": false,
-          "qualified_buy_sample_venues": [],
+          "qualified_buy_sample_venues": [
+            {
+              "venue": "mexc",
+              "observed_trades": 5,
+              "sample_buy_fraction": 0.7827,
+              "observed_quote_notional": 134.72,
+              "direction_semantics": "MEXC_BUYER_MAKER_FLAG_INFERRED_TAKER_SIDE"
+            }
+          ],
           "ask_thinner_snapshot_venues": [],
           "both_buy_and_thinner_in_same_venue": [],
           "sampled_markets": 2
@@ -42,40 +48,40 @@
       "optional_technical_context": [
         {
           "venue": "gate",
-          "rvol_15m": 0.3454,
-          "rvol_1h": 1.1988,
-          "higher_lows": true,
-          "compression_ratio": 0.6555,
-          "return_15m_pct": 0.0402,
-          "volume_price_response": 0.03889,
-          "volatility_expansion_ratio": 0.7739
+          "rvol_15m": 0.0881,
+          "rvol_1h": 1.8627,
+          "higher_lows": false,
+          "compression_ratio": 0.6403,
+          "return_15m_pct": -0.2351,
+          "volume_price_response": -0.768316,
+          "volatility_expansion_ratio": 0.6393
         },
         {
           "venue": "mexc",
-          "rvol_15m": 0.7006,
-          "rvol_1h": 0.9366,
-          "higher_lows": true,
-          "compression_ratio": 0.8299,
-          "return_15m_pct": 0.2012,
-          "volume_price_response": 0.362924,
-          "volatility_expansion_ratio": 0.8664
+          "rvol_15m": 1.1866,
+          "rvol_1h": 0.7995,
+          "higher_lows": false,
+          "compression_ratio": 0.8168,
+          "return_15m_pct": -0.0295,
+          "volume_price_response": -0.051043,
+          "volatility_expansion_ratio": 0.7779
         },
         {
           "venue": "binance_alpha",
-          "rvol_15m": 0.1483,
-          "rvol_1h": 0.165,
-          "higher_lows": true,
-          "compression_ratio": 0.5804,
-          "return_15m_pct": -0.6093,
-          "volume_price_response": -8.808421,
-          "volatility_expansion_ratio": 0.5471
+          "rvol_15m": 0.1068,
+          "rvol_1h": 0.4917,
+          "higher_lows": false,
+          "compression_ratio": 1.2213,
+          "return_15m_pct": 0.5688,
+          "volume_price_response": 21.122242,
+          "volatility_expansion_ratio": 1.0747
         }
       ],
       "cross_venue_dispersion_research_only": {
         "status": "MATCHED_MINUTE_RESEARCH_ONLY",
-        "minute_ms": 1794934680000,
+        "minute_ms": 1794949500000,
         "matched_venues": 3,
-        "max_min_close_difference_pct": 0.0603,
+        "max_min_close_difference_pct": 0.7095,
         "warning": "SYMBOL_IDENTITY_UNVERIFIED; CANDLE_DIFFERENCE_NOT_EXECUTABLE_BID_ASK"
       },
       "evidence_limitations": [
@@ -87,21 +93,21 @@
         "NO_HISTORICAL_PRECISION_RECALL_VALIDATION"
       ],
       "bad_trade_sources": [],
-      "research_dedupe_key": "f508f3baf5791edeed3a",
+      "research_dedupe_key": "dbd831bf0da4ec3f1822",
       "precision_validated": false
     },
     {
       "coin": "DOS",
-      "state": "PREPARATION_RESEARCH_WATCH",
-      "watch_research_only": true,
+      "state": "INSUFFICIENT_EVIDENCE_UNKNOWN",
+      "watch_research_only": false,
       "strong_alert": false,
       "buy_signal": false,
       "automatic_delivery_ready": false,
       "pathways": {
         "preparation": {
-          "active_unverified": true,
+          "active_unverified": false,
           "candidate_count": 1,
-          "chain_scan_complete": true
+          "chain_scan_complete": false
         },
         "spot_ignition": {
           "active_sample_based": false,
@@ -113,64 +119,65 @@
       },
       "optional_technical_context": [
         {
-          "venue": "okx",
-          "rvol_15m": 1.0762,
-          "rvol_1h": 0.5086,
+          "venue": "gate",
+          "rvol_15m": 11.2117,
+          "rvol_1h": 0.4515,
           "higher_lows": false,
-          "compression_ratio": 0.6869,
-          "return_15m_pct": -0.1979,
-          "volume_price_response": -0.086112,
-          "volatility_expansion_ratio": 0.4871
+          "compression_ratio": 0.6676,
+          "return_15m_pct": -0.1318,
+          "volume_price_response": -0.387332,
+          "volatility_expansion_ratio": 1.0966
         },
         {
-          "venue": "gate",
-          "rvol_15m": 0.4345,
-          "rvol_1h": 1.264,
+          "venue": "kucoin",
+          "rvol_15m": 2.0427,
+          "rvol_1h": 1.5467,
           "higher_lows": false,
-          "compression_ratio": 0.7255,
-          "return_15m_pct": 0.0,
-          "volume_price_response": 0.0,
-          "volatility_expansion_ratio": 0.6329
+          "compression_ratio": 0.6653,
+          "return_15m_pct": -0.1974,
+          "volume_price_response": -1.487506,
+          "volatility_expansion_ratio": 0.9795
         },
         {
           "venue": "mexc",
-          "rvol_15m": 0.9491,
-          "rvol_1h": 0.6431,
+          "rvol_15m": 1.6614,
+          "rvol_1h": 0.5476,
           "higher_lows": false,
-          "compression_ratio": 0.3524,
-          "return_15m_pct": 0.0793,
-          "volume_price_response": 0.037529,
-          "volatility_expansion_ratio": 0.3745
+          "compression_ratio": 1.5411,
+          "return_15m_pct": -0.5387,
+          "volume_price_response": -0.438461,
+          "volatility_expansion_ratio": 0.682
         },
         {
           "venue": "bitget",
-          "rvol_15m": 1.0331,
-          "rvol_1h": 0.6212,
+          "rvol_15m": 1.9393,
+          "rvol_1h": 0.2522,
           "higher_lows": false,
-          "compression_ratio": 0.8268,
-          "return_15m_pct": -0.3958,
-          "volume_price_response": -0.173125,
-          "volatility_expansion_ratio": 0.5565
+          "compression_ratio": 1.2865,
+          "return_15m_pct": -0.7199,
+          "volume_price_response": -0.950079,
+          "volatility_expansion_ratio": 1.1916
         },
         {
           "venue": "binance_alpha",
-          "rvol_15m": 1.5654,
-          "rvol_1h": 0.2505,
-          "higher_lows": false,
-          "compression_ratio": 0.6734,
-          "return_15m_pct": -0.1697,
-          "volume_price_response": -0.134244,
-          "volatility_expansion_ratio": 0.7958
+          "rvol_15m": 0.2076,
+          "rvol_1h": 1.0728,
+          "higher_lows": true,
+          "compression_ratio": 1.5183,
+          "return_15m_pct": 0.0659,
+          "volume_price_response": 0.230513,
+          "volatility_expansion_ratio": 0.5336
         }
       ],
       "cross_venue_dispersion_research_only": {
         "status": "MATCHED_MINUTE_RESEARCH_ONLY",
-        "minute_ms": 1794934680000,
+        "minute_ms": 1794949500000,
         "matched_venues": 5,
-        "max_min_close_difference_pct": 0.2649,
+        "max_min_close_difference_pct": 0.2949,
         "warning": "SYMBOL_IDENTITY_UNVERIFIED; CANDLE_DIFFERENCE_NOT_EXECUTABLE_BID_ASK"
       },
       "evidence_limitations": [
+        "INDEPENDENT_EOA_PREPARATION_NOT_VERIFIED",
         "INDEPENDENT_SPOT_IGNITION_NOT_CORROBORATED",
         "PUBLIC_LAST_100_TRADES_NOT_CONTINUOUS_TAPE",
         "BOOK_DEPTH_CHANGE_NOT_PROOF_OF_CANCELLED_LIQUIDITY",
@@ -178,7 +185,7 @@
         "NO_HISTORICAL_PRECISION_RECALL_VALIDATION"
       ],
       "bad_trade_sources": [],
-      "research_dedupe_key": "17f063218c2aee2d5e2f",
+      "research_dedupe_key": "c5072071b174dd904cd0",
       "precision_validated": false
     },
     {
@@ -192,11 +199,19 @@
         "preparation": {
           "active_unverified": false,
           "candidate_count": 0,
-          "chain_scan_complete": true
+          "chain_scan_complete": false
         },
         "spot_ignition": {
           "active_sample_based": false,
-          "qualified_buy_sample_venues": [],
+          "qualified_buy_sample_venues": [
+            {
+              "venue": "gate",
+              "observed_trades": 10,
+              "sample_buy_fraction": 0.9494,
+              "observed_quote_notional": 289.48,
+              "direction_semantics": "PUBLIC_EXCHANGE_TRADE_SIDE_NOT_INDEPENDENTLY_VERIFIED_TAKER_AGGRESSOR"
+            }
+          ],
           "ask_thinner_snapshot_venues": [],
           "both_buy_and_thinner_in_same_venue": [],
           "sampled_markets": 2
@@ -205,40 +220,40 @@
       "optional_technical_context": [
         {
           "venue": "gate",
-          "rvol_15m": 2.694,
-          "rvol_1h": 0.081,
+          "rvol_15m": 0.616,
+          "rvol_1h": 1.1943,
           "higher_lows": false,
-          "compression_ratio": 0.6835,
-          "return_15m_pct": -0.042,
-          "volume_price_response": -0.012679,
-          "volatility_expansion_ratio": 0.2691
+          "compression_ratio": 0.8887,
+          "return_15m_pct": -0.0166,
+          "volume_price_response": -0.012971,
+          "volatility_expansion_ratio": 1.352
         },
         {
           "venue": "mexc",
-          "rvol_15m": 0.5145,
-          "rvol_1h": 0.6901,
-          "higher_lows": false,
-          "compression_ratio": 0.3071,
-          "return_15m_pct": -1.5298,
-          "volume_price_response": -2.219252,
-          "volatility_expansion_ratio": 0.3692
+          "rvol_15m": 0.5857,
+          "rvol_1h": 1.085,
+          "higher_lows": true,
+          "compression_ratio": 0.8086,
+          "return_15m_pct": 0.1327,
+          "volume_price_response": 0.277904,
+          "volatility_expansion_ratio": 0.4399
         },
         {
           "venue": "binance_alpha",
-          "rvol_15m": 0.0278,
-          "rvol_1h": 0.1687,
+          "rvol_15m": 5.314,
+          "rvol_1h": 1.59,
           "higher_lows": false,
-          "compression_ratio": 0.454,
-          "return_15m_pct": -1.5985,
-          "volume_price_response": -13.888573,
-          "volatility_expansion_ratio": 0.3116
+          "compression_ratio": 3.5339,
+          "return_15m_pct": -0.1752,
+          "volume_price_response": -0.085647,
+          "volatility_expansion_ratio": 3.04
         }
       ],
       "cross_venue_dispersion_research_only": {
         "status": "MATCHED_MINUTE_RESEARCH_ONLY",
-        "minute_ms": 1794934680000,
-        "matched_venues": 4,
-        "max_min_close_difference_pct": 1.528,
+        "minute_ms": 1794949500000,
+        "matched_venues": 3,
+        "max_min_close_difference_pct": 0.4667,
         "warning": "SYMBOL_IDENTITY_UNVERIFIED; CANDLE_DIFFERENCE_NOT_EXECUTABLE_BID_ASK"
       },
       "evidence_limitations": [
@@ -250,7 +265,7 @@
         "NO_HISTORICAL_PRECISION_RECALL_VALIDATION"
       ],
       "bad_trade_sources": [],
-      "research_dedupe_key": "7ef9c84ddb2c6baf46ee",
+      "research_dedupe_key": "71cbf0b630dac7264582",
       "precision_validated": false
     },
     {
@@ -264,7 +279,7 @@
         "preparation": {
           "active_unverified": false,
           "candidate_count": 0,
-          "chain_scan_complete": true
+          "chain_scan_complete": false
         },
         "spot_ignition": {
           "active_sample_based": false,
@@ -277,30 +292,30 @@
       "optional_technical_context": [
         {
           "venue": "bitget",
-          "rvol_15m": 1.5781,
-          "rvol_1h": 0.8021,
+          "rvol_15m": 0.797,
+          "rvol_1h": 0.8888,
           "higher_lows": false,
-          "compression_ratio": 2.7782,
-          "return_15m_pct": 2.2715,
-          "volume_price_response": 0.040801,
-          "volatility_expansion_ratio": 2.3705
+          "compression_ratio": 1.3417,
+          "return_15m_pct": 0.3211,
+          "volume_price_response": 0.011934,
+          "volatility_expansion_ratio": 0.5349
         },
         {
           "venue": "binance_alpha",
-          "rvol_15m": 0.2283,
-          "rvol_1h": 0.1062,
+          "rvol_15m": 1.3502,
+          "rvol_1h": 0.6596,
           "higher_lows": false,
-          "compression_ratio": 2.3862,
-          "return_15m_pct": 2.3451,
-          "volume_price_response": 0.038333,
-          "volatility_expansion_ratio": 2.2821
+          "compression_ratio": 1.3264,
+          "return_15m_pct": 0.2943,
+          "volume_price_response": 0.074609,
+          "volatility_expansion_ratio": 1.0479
         }
       ],
       "cross_venue_dispersion_research_only": {
         "status": "MATCHED_MINUTE_RESEARCH_ONLY",
-        "minute_ms": 1794934680000,
+        "minute_ms": 1794949500000,
         "matched_venues": 2,
-        "max_min_close_difference_pct": 0.0352,
+        "max_min_close_difference_pct": 0.0522,
         "warning": "SYMBOL_IDENTITY_UNVERIFIED; CANDLE_DIFFERENCE_NOT_EXECUTABLE_BID_ASK"
       },
       "evidence_limitations": [
@@ -327,19 +342,11 @@
         "preparation": {
           "active_unverified": false,
           "candidate_count": 0,
-          "chain_scan_complete": true
+          "chain_scan_complete": false
         },
         "spot_ignition": {
           "active_sample_based": false,
-          "qualified_buy_sample_venues": [
-            {
-              "venue": "bitget",
-              "observed_trades": 13,
-              "sample_buy_fraction": 0.9482,
-              "observed_quote_notional": 1033.99,
-              "direction_semantics": "PUBLIC_EXCHANGE_TRADE_SIDE_NOT_INDEPENDENTLY_VERIFIED_TAKER_AGGRESSOR"
-            }
-          ],
+          "qualified_buy_sample_venues": [],
           "ask_thinner_snapshot_venues": [],
           "both_buy_and_thinner_in_same_venue": [],
           "sampled_markets": 3
@@ -348,60 +355,60 @@
       "optional_technical_context": [
         {
           "venue": "gate",
-          "rvol_15m": 0.7761,
-          "rvol_1h": 0.0463,
+          "rvol_15m": 0.4712,
+          "rvol_1h": 0.1566,
           "higher_lows": false,
-          "compression_ratio": 0.6822,
-          "return_15m_pct": 0.0853,
-          "volume_price_response": 2.385824,
-          "volatility_expansion_ratio": 0.8402
+          "compression_ratio": 1.1794,
+          "return_15m_pct": 0.62,
+          "volume_price_response": 32.957069,
+          "volatility_expansion_ratio": 1.0246
         },
         {
           "venue": "kucoin",
-          "rvol_15m": 1.3311,
-          "rvol_1h": 0.5287,
+          "rvol_15m": 1.7945,
+          "rvol_1h": 0.1981,
           "higher_lows": false,
-          "compression_ratio": 0.6839,
-          "return_15m_pct": 0.2027,
-          "volume_price_response": 0.753656,
-          "volatility_expansion_ratio": 0.4445
+          "compression_ratio": null,
+          "return_15m_pct": 0.6075,
+          "volume_price_response": 20.442172,
+          "volatility_expansion_ratio": 2.3897
         },
         {
           "venue": "mexc",
-          "rvol_15m": 0.6366,
-          "rvol_1h": 1.7907,
+          "rvol_15m": 0.754,
+          "rvol_1h": 0.7308,
           "higher_lows": false,
-          "compression_ratio": 0.7037,
-          "return_15m_pct": 0.0405,
-          "volume_price_response": 0.051452,
-          "volatility_expansion_ratio": 0.776
+          "compression_ratio": 1.13,
+          "return_15m_pct": 0.2827,
+          "volume_price_response": 0.629282,
+          "volatility_expansion_ratio": 0.9166
         },
         {
           "venue": "bitget",
-          "rvol_15m": 0.3497,
-          "rvol_1h": 0.8898,
+          "rvol_15m": 2.5189,
+          "rvol_1h": 5.1883,
           "higher_lows": false,
-          "compression_ratio": 0.7357,
-          "return_15m_pct": -0.2351,
-          "volume_price_response": -0.206829,
-          "volatility_expansion_ratio": 0.6612
+          "compression_ratio": 1.6667,
+          "return_15m_pct": 0.4277,
+          "volume_price_response": 0.647421,
+          "volatility_expansion_ratio": 1.6619
         },
         {
           "venue": "binance_alpha",
-          "rvol_15m": 0.6354,
-          "rvol_1h": 0.5134,
+          "rvol_15m": 0.1822,
+          "rvol_1h": 81.3247,
           "higher_lows": false,
-          "compression_ratio": 0.6861,
-          "return_15m_pct": -0.2056,
-          "volume_price_response": -0.177317,
-          "volatility_expansion_ratio": 0.8079
+          "compression_ratio": 0.0,
+          "return_15m_pct": -0.4903,
+          "volume_price_response": -2.012752,
+          "volatility_expansion_ratio": 1.1039
         }
       ],
       "cross_venue_dispersion_research_only": {
         "status": "MATCHED_MINUTE_RESEARCH_ONLY",
-        "minute_ms": 1794934680000,
+        "minute_ms": 1794949500000,
         "matched_venues": 5,
-        "max_min_close_difference_pct": 0.4388,
+        "max_min_close_difference_pct": 0.7902,
         "warning": "SYMBOL_IDENTITY_UNVERIFIED; CANDLE_DIFFERENCE_NOT_EXECUTABLE_BID_ASK"
       },
       "evidence_limitations": [
@@ -413,7 +420,7 @@
         "NO_HISTORICAL_PRECISION_RECALL_VALIDATION"
       ],
       "bad_trade_sources": [],
-      "research_dedupe_key": "c8e1755635b7746e3e02",
+      "research_dedupe_key": "d59a3ab3377bd4eae1d1",
       "precision_validated": false
     },
     {
@@ -427,7 +434,7 @@
         "preparation": {
           "active_unverified": false,
           "candidate_count": 0,
-          "chain_scan_complete": true
+          "chain_scan_complete": false
         },
         "spot_ignition": {
           "active_sample_based": false,
@@ -440,40 +447,40 @@
       "optional_technical_context": [
         {
           "venue": "mexc",
-          "rvol_15m": 1.1738,
-          "rvol_1h": 1.0477,
+          "rvol_15m": 1.385,
+          "rvol_1h": 1.5221,
           "higher_lows": false,
-          "compression_ratio": 0.7648,
-          "return_15m_pct": -0.4566,
-          "volume_price_response": -0.670562,
-          "volatility_expansion_ratio": 0.537
+          "compression_ratio": 0.5413,
+          "return_15m_pct": -0.2093,
+          "volume_price_response": -0.240141,
+          "volatility_expansion_ratio": 0.6936
         },
         {
           "venue": "bitget",
-          "rvol_15m": 1.2498,
-          "rvol_1h": 0.2405,
+          "rvol_15m": 1.0627,
+          "rvol_1h": 1.0282,
           "higher_lows": false,
-          "compression_ratio": 1.0057,
-          "return_15m_pct": -0.8738,
-          "volume_price_response": -0.378564,
-          "volatility_expansion_ratio": 0.589
+          "compression_ratio": 0.7348,
+          "return_15m_pct": -0.2089,
+          "volume_price_response": -0.097765,
+          "volatility_expansion_ratio": 0.7885
         },
         {
           "venue": "binance_alpha",
-          "rvol_15m": 1.1692,
-          "rvol_1h": 0.5862,
+          "rvol_15m": 0.4482,
+          "rvol_1h": 1.8862,
           "higher_lows": false,
-          "compression_ratio": 1.0783,
-          "return_15m_pct": -0.9316,
-          "volume_price_response": -0.395189,
-          "volatility_expansion_ratio": 0.6726
+          "compression_ratio": 0.4576,
+          "return_15m_pct": -0.4948,
+          "volume_price_response": -0.463233,
+          "volatility_expansion_ratio": 0.3103
         }
       ],
       "cross_venue_dispersion_research_only": {
         "status": "MATCHED_MINUTE_RESEARCH_ONLY",
-        "minute_ms": 1794934680000,
+        "minute_ms": 1794949500000,
         "matched_venues": 3,
-        "max_min_close_difference_pct": 0.0706,
+        "max_min_close_difference_pct": 0.3193,
         "warning": "SYMBOL_IDENTITY_UNVERIFIED; CANDLE_DIFFERENCE_NOT_EXECUTABLE_BID_ASK"
       },
       "evidence_limitations": [
@@ -499,7 +506,97 @@
         "preparation": {
           "active_unverified": false,
           "candidate_count": 0,
-          "chain_scan_complete": true
+          "chain_scan_complete": false
+        },
+        "spot_ignition": {
+          "active_sample_based": false,
+          "qualified_buy_sample_venues": [
+            {
+              "venue": "mexc",
+              "observed_trades": 7,
+              "sample_buy_fraction": 0.7008,
+              "observed_quote_notional": 180.75,
+              "direction_semantics": "MEXC_BUYER_MAKER_FLAG_INFERRED_TAKER_SIDE"
+            }
+          ],
+          "ask_thinner_snapshot_venues": [],
+          "both_buy_and_thinner_in_same_venue": [],
+          "sampled_markets": 3
+        }
+      },
+      "optional_technical_context": [
+        {
+          "venue": "gate",
+          "rvol_15m": 1.3064,
+          "rvol_1h": 1.048,
+          "higher_lows": false,
+          "compression_ratio": 0.792,
+          "return_15m_pct": 0.5928,
+          "volume_price_response": 2.863274,
+          "volatility_expansion_ratio": 0.9726
+        },
+        {
+          "venue": "mexc",
+          "rvol_15m": 1.1385,
+          "rvol_1h": 0.8726,
+          "higher_lows": false,
+          "compression_ratio": 0.6308,
+          "return_15m_pct": 0.5018,
+          "volume_price_response": 0.94666,
+          "volatility_expansion_ratio": 0.4754
+        },
+        {
+          "venue": "bitget",
+          "rvol_15m": 1.2517,
+          "rvol_1h": 0.5602,
+          "higher_lows": false,
+          "compression_ratio": 0.848,
+          "return_15m_pct": 0.7286,
+          "volume_price_response": 0.800509,
+          "volatility_expansion_ratio": 0.4601
+        },
+        {
+          "venue": "binance_alpha",
+          "rvol_15m": 0.0,
+          "rvol_1h": 57.405,
+          "higher_lows": false,
+          "compression_ratio": 0.0,
+          "return_15m_pct": 0.0,
+          "volume_price_response": null,
+          "volatility_expansion_ratio": 0.0
+        }
+      ],
+      "cross_venue_dispersion_research_only": {
+        "status": "MATCHED_MINUTE_RESEARCH_ONLY",
+        "minute_ms": 1794949500000,
+        "matched_venues": 4,
+        "max_min_close_difference_pct": 0.4795,
+        "warning": "SYMBOL_IDENTITY_UNVERIFIED; CANDLE_DIFFERENCE_NOT_EXECUTABLE_BID_ASK"
+      },
+      "evidence_limitations": [
+        "INDEPENDENT_EOA_PREPARATION_NOT_VERIFIED",
+        "INDEPENDENT_SPOT_IGNITION_NOT_CORROBORATED",
+        "PUBLIC_LAST_100_TRADES_NOT_CONTINUOUS_TAPE",
+        "BOOK_DEPTH_CHANGE_NOT_PROOF_OF_CANCELLED_LIQUIDITY",
+        "VENUE_TOKEN_PAIR_IDENTITY_NOT_INDEPENDENTLY_VERIFIED",
+        "NO_HISTORICAL_PRECISION_RECALL_VALIDATION"
+      ],
+      "bad_trade_sources": [],
+      "research_dedupe_key": "ed2fa1bddbff2b1d5067",
+      "precision_validated": false
+    },
+    {
+      "coin": "TRUST",
+      "state": "INSUFFICIENT_EVIDENCE_UNKNOWN",
+      "watch_research_only": false,
+      "strong_alert": false,
+      "buy_signal": false,
+      "automatic_delivery_ready": false,
+      "pathways": {
+        "preparation": {
+          "active_unverified": false,
+          "candidate_count": 0,
+          "chain_scan_complete": false
         },
         "spot_ignition": {
           "active_sample_based": false,
@@ -512,50 +609,50 @@
       "optional_technical_context": [
         {
           "venue": "gate",
-          "rvol_15m": 0.6639,
-          "rvol_1h": 0.5733,
+          "rvol_15m": 0.369,
+          "rvol_1h": 1.057,
           "higher_lows": false,
-          "compression_ratio": 0.6002,
-          "return_15m_pct": -0.2284,
-          "volume_price_response": -2.247773,
-          "volatility_expansion_ratio": 0.6746
+          "compression_ratio": 0.6627,
+          "return_15m_pct": 0.3891,
+          "volume_price_response": 0.557219,
+          "volatility_expansion_ratio": 0.8487
+        },
+        {
+          "venue": "kucoin",
+          "rvol_15m": 0.8832,
+          "rvol_1h": 1.1279,
+          "higher_lows": false,
+          "compression_ratio": 0.6365,
+          "return_15m_pct": 0.7604,
+          "volume_price_response": 1.004761,
+          "volatility_expansion_ratio": 0.8318
         },
         {
           "venue": "mexc",
-          "rvol_15m": 1.7723,
-          "rvol_1h": 1.056,
+          "rvol_15m": 1.2958,
+          "rvol_1h": 1.1588,
           "higher_lows": false,
-          "compression_ratio": 1.9157,
-          "return_15m_pct": -0.823,
-          "volume_price_response": -0.967775,
-          "volatility_expansion_ratio": 1.0048
+          "compression_ratio": 0.5604,
+          "return_15m_pct": -0.5591,
+          "volume_price_response": -0.686743,
+          "volatility_expansion_ratio": 0.949
         },
         {
           "venue": "bitget",
-          "rvol_15m": 1.209,
-          "rvol_1h": 0.594,
+          "rvol_15m": 0.2285,
+          "rvol_1h": 0.8759,
           "higher_lows": false,
-          "compression_ratio": 0.6685,
-          "return_15m_pct": -0.2282,
-          "volume_price_response": -0.188737,
-          "volatility_expansion_ratio": 0.7491
-        },
-        {
-          "venue": "binance_alpha",
-          "rvol_15m": null,
-          "rvol_1h": 0.0,
-          "higher_lows": false,
-          "compression_ratio": null,
-          "return_15m_pct": 0.0,
-          "volume_price_response": null,
-          "volatility_expansion_ratio": 0.0
+          "compression_ratio": 0.7027,
+          "return_15m_pct": 0.3459,
+          "volume_price_response": 0.257533,
+          "volatility_expansion_ratio": 0.9115
         }
       ],
       "cross_venue_dispersion_research_only": {
         "status": "MATCHED_MINUTE_RESEARCH_ONLY",
-        "minute_ms": 1794934680000,
+        "minute_ms": 1794949500000,
         "matched_venues": 4,
-        "max_min_close_difference_pct": 0.7838,
+        "max_min_close_difference_pct": 0.4325,
         "warning": "SYMBOL_IDENTITY_UNVERIFIED; CANDLE_DIFFERENCE_NOT_EXECUTABLE_BID_ASK"
       },
       "evidence_limitations": [
@@ -567,99 +664,7 @@
         "NO_HISTORICAL_PRECISION_RECALL_VALIDATION"
       ],
       "bad_trade_sources": [],
-      "research_dedupe_key": "4cfca419d5a945d5cfd6",
-      "precision_validated": false
-    },
-    {
-      "coin": "TRUST",
-      "state": "SPOT_IGNITION_RESEARCH_WATCH",
-      "watch_research_only": true,
-      "strong_alert": false,
-      "buy_signal": false,
-      "automatic_delivery_ready": false,
-      "pathways": {
-        "preparation": {
-          "active_unverified": false,
-          "candidate_count": 0,
-          "chain_scan_complete": false
-        },
-        "spot_ignition": {
-          "active_sample_based": true,
-          "qualified_buy_sample_venues": [
-            {
-              "venue": "gate",
-              "observed_trades": 28,
-              "sample_buy_fraction": 0.765,
-              "observed_quote_notional": 296.99,
-              "direction_semantics": "PUBLIC_EXCHANGE_TRADE_SIDE_NOT_INDEPENDENTLY_VERIFIED_TAKER_AGGRESSOR"
-            }
-          ],
-          "ask_thinner_snapshot_venues": [
-            {
-              "venue": "bitget",
-              "depth_change_pct": -38.15,
-              "withdrawal_proven": false
-            },
-            {
-              "venue": "gate",
-              "depth_change_pct": -43.31,
-              "withdrawal_proven": false
-            }
-          ],
-          "both_buy_and_thinner_in_same_venue": [
-            "gate"
-          ],
-          "sampled_markets": 3
-        }
-      },
-      "optional_technical_context": [
-        {
-          "venue": "gate",
-          "rvol_15m": 0.3219,
-          "rvol_1h": 0.4833,
-          "higher_lows": false,
-          "compression_ratio": 0.4128,
-          "return_15m_pct": 0.265,
-          "volume_price_response": 0.089542,
-          "volatility_expansion_ratio": 0.5546
-        },
-        {
-          "venue": "mexc",
-          "rvol_15m": 0.7776,
-          "rvol_1h": 0.6183,
-          "higher_lows": false,
-          "compression_ratio": 0.5609,
-          "return_15m_pct": 0.2429,
-          "volume_price_response": 0.524624,
-          "volatility_expansion_ratio": 0.4433
-        },
-        {
-          "venue": "bitget",
-          "rvol_15m": 0.9646,
-          "rvol_1h": 0.0479,
-          "higher_lows": false,
-          "compression_ratio": 0.3725,
-          "return_15m_pct": 0.2651,
-          "volume_price_response": 0.416111,
-          "volatility_expansion_ratio": 0.472
-        }
-      ],
-      "cross_venue_dispersion_research_only": {
-        "status": "MATCHED_MINUTE_RESEARCH_ONLY",
-        "minute_ms": 1794934680000,
-        "matched_venues": 3,
-        "max_min_close_difference_pct": 0.0441,
-        "warning": "SYMBOL_IDENTITY_UNVERIFIED; CANDLE_DIFFERENCE_NOT_EXECUTABLE_BID_ASK"
-      },
-      "evidence_limitations": [
-        "INDEPENDENT_EOA_PREPARATION_NOT_VERIFIED",
-        "PUBLIC_LAST_100_TRADES_NOT_CONTINUOUS_TAPE",
-        "BOOK_DEPTH_CHANGE_NOT_PROOF_OF_CANCELLED_LIQUIDITY",
-        "VENUE_TOKEN_PAIR_IDENTITY_NOT_INDEPENDENTLY_VERIFIED",
-        "NO_HISTORICAL_PRECISION_RECALL_VALIDATION"
-      ],
-      "bad_trade_sources": [],
-      "research_dedupe_key": "82d70c8ee92752931a6b",
+      "research_dedupe_key": "4fcdb4c74ef8d121c787",
       "precision_validated": false
     },
     {
@@ -673,19 +678,11 @@
         "preparation": {
           "active_unverified": false,
           "candidate_count": 0,
-          "chain_scan_complete": true
+          "chain_scan_complete": false
         },
         "spot_ignition": {
           "active_sample_based": false,
-          "qualified_buy_sample_venues": [
-            {
-              "venue": "mexc",
-              "observed_trades": 9,
-              "sample_buy_fraction": 0.8062,
-              "observed_quote_notional": 174.69,
-              "direction_semantics": "MEXC_BUYER_MAKER_FLAG_INFERRED_TAKER_SIDE"
-            }
-          ],
+          "qualified_buy_sample_venues": [],
           "ask_thinner_snapshot_venues": [],
           "both_buy_and_thinner_in_same_venue": [],
           "sampled_markets": 3
@@ -694,40 +691,40 @@
       "optional_technical_context": [
         {
           "venue": "gate",
-          "rvol_15m": 1.7325,
-          "rvol_1h": 0.6714,
+          "rvol_15m": 1.5714,
+          "rvol_1h": 1.0196,
           "higher_lows": false,
-          "compression_ratio": 0.5941,
-          "return_15m_pct": 0.1883,
-          "volume_price_response": 0.050852,
-          "volatility_expansion_ratio": 0.7019
+          "compression_ratio": 3.6385,
+          "return_15m_pct": 1.2366,
+          "volume_price_response": 1.244284,
+          "volatility_expansion_ratio": 1.1421
         },
         {
           "venue": "mexc",
-          "rvol_15m": 0.9809,
-          "rvol_1h": 0.7989,
-          "higher_lows": false,
-          "compression_ratio": 0.5987,
-          "return_15m_pct": 0.4,
-          "volume_price_response": 0.810788,
-          "volatility_expansion_ratio": 0.8484
+          "rvol_15m": 0.8024,
+          "rvol_1h": 1.0658,
+          "higher_lows": true,
+          "compression_ratio": 2.6807,
+          "return_15m_pct": 1.2403,
+          "volume_price_response": 2.396996,
+          "volatility_expansion_ratio": 1.2746
         },
         {
           "venue": "bitget",
-          "rvol_15m": 1.2698,
-          "rvol_1h": 0.3949,
-          "higher_lows": false,
-          "compression_ratio": 0.5995,
-          "return_15m_pct": 0.0403,
-          "volume_price_response": 0.02953,
-          "volatility_expansion_ratio": 0.4412
+          "rvol_15m": 5.3996,
+          "rvol_1h": 1.2062,
+          "higher_lows": true,
+          "compression_ratio": 4.6163,
+          "return_15m_pct": 1.2968,
+          "volume_price_response": 1.150014,
+          "volatility_expansion_ratio": 1.7305
         }
       ],
       "cross_venue_dispersion_research_only": {
         "status": "MATCHED_MINUTE_RESEARCH_ONLY",
-        "minute_ms": 1794934680000,
+        "minute_ms": 1794949500000,
         "matched_venues": 3,
-        "max_min_close_difference_pct": 0.2477,
+        "max_min_close_difference_pct": 0.301,
         "warning": "SYMBOL_IDENTITY_UNVERIFIED; CANDLE_DIFFERENCE_NOT_EXECUTABLE_BID_ASK"
       },
       "evidence_limitations": [
@@ -739,7 +736,7 @@
         "NO_HISTORICAL_PRECISION_RECALL_VALIDATION"
       ],
       "bad_trade_sources": [],
-      "research_dedupe_key": "bb5a55a5eece459fc914",
+      "research_dedupe_key": "a8d093202aee9459cf50",
       "precision_validated": false
     },
     {
@@ -753,19 +750,11 @@
         "preparation": {
           "active_unverified": false,
           "candidate_count": 0,
-          "chain_scan_complete": true
+          "chain_scan_complete": false
         },
         "spot_ignition": {
           "active_sample_based": false,
-          "qualified_buy_sample_venues": [
-            {
-              "venue": "gate",
-              "observed_trades": 8,
-              "sample_buy_fraction": 1.0,
-              "observed_quote_notional": 277.93,
-              "direction_semantics": "PUBLIC_EXCHANGE_TRADE_SIDE_NOT_INDEPENDENTLY_VERIFIED_TAKER_AGGRESSOR"
-            }
-          ],
+          "qualified_buy_sample_venues": [],
           "ask_thinner_snapshot_venues": [],
           "both_buy_and_thinner_in_same_venue": [],
           "sampled_markets": 3
@@ -774,50 +763,50 @@
       "optional_technical_context": [
         {
           "venue": "gate",
-          "rvol_15m": 0.1909,
-          "rvol_1h": 0.1406,
+          "rvol_15m": 0.1283,
+          "rvol_1h": 0.8307,
           "higher_lows": false,
-          "compression_ratio": 0.456,
-          "return_15m_pct": -0.7348,
-          "volume_price_response": -1.158374,
-          "volatility_expansion_ratio": 0.2127
+          "compression_ratio": 1.5013,
+          "return_15m_pct": 0.349,
+          "volume_price_response": 3.073137,
+          "volatility_expansion_ratio": 1.2021
         },
         {
           "venue": "mexc",
-          "rvol_15m": 0.708,
-          "rvol_1h": 0.9012,
+          "rvol_15m": 0.532,
+          "rvol_1h": 0.8554,
           "higher_lows": false,
-          "compression_ratio": 0.5929,
-          "return_15m_pct": -0.5137,
-          "volume_price_response": -1.113445,
-          "volatility_expansion_ratio": 0.7883
+          "compression_ratio": 1.5647,
+          "return_15m_pct": 0.0,
+          "volume_price_response": 0.0,
+          "volatility_expansion_ratio": 1.1587
         },
         {
           "venue": "bitget",
-          "rvol_15m": 0.3901,
-          "rvol_1h": 0.247,
+          "rvol_15m": 0.8914,
+          "rvol_1h": 1.0716,
           "higher_lows": false,
-          "compression_ratio": 0.5306,
-          "return_15m_pct": -0.5143,
-          "volume_price_response": -0.175014,
-          "volatility_expansion_ratio": 0.3598
+          "compression_ratio": 1.4961,
+          "return_15m_pct": 0.416,
+          "volume_price_response": 0.156707,
+          "volatility_expansion_ratio": 1.1818
         },
         {
           "venue": "binance_alpha",
-          "rvol_15m": 0.1796,
-          "rvol_1h": 0.2548,
+          "rvol_15m": 1.3521,
+          "rvol_1h": 1.5793,
           "higher_lows": false,
-          "compression_ratio": 0.4962,
-          "return_15m_pct": -0.6201,
-          "volume_price_response": -2.709296,
-          "volatility_expansion_ratio": 0.5012
+          "compression_ratio": 1.5566,
+          "return_15m_pct": 0.2535,
+          "volume_price_response": 0.3226,
+          "volatility_expansion_ratio": 0.9757
         }
       ],
       "cross_venue_dispersion_research_only": {
         "status": "MATCHED_MINUTE_RESEARCH_ONLY",
-        "minute_ms": 1794934680000,
+        "minute_ms": 1794949500000,
         "matched_venues": 4,
-        "max_min_close_difference_pct": 0.2422,
+        "max_min_close_difference_pct": 0.4659,
         "warning": "SYMBOL_IDENTITY_UNVERIFIED; CANDLE_DIFFERENCE_NOT_EXECUTABLE_BID_ASK"
       },
       "evidence_limitations": [
@@ -829,7 +818,7 @@
         "NO_HISTORICAL_PRECISION_RECALL_VALIDATION"
       ],
       "bad_trade_sources": [],
-      "research_dedupe_key": "cfe0037dd718a10b1f92",
+      "research_dedupe_key": "78b325793c29329ed390",
       "precision_validated": false
     },
     {
@@ -843,7 +832,7 @@
         "preparation": {
           "active_unverified": false,
           "candidate_count": 0,
-          "chain_scan_complete": true
+          "chain_scan_complete": false
         },
         "spot_ignition": {
           "active_sample_based": false,
@@ -856,40 +845,40 @@
       "optional_technical_context": [
         {
           "venue": "gate",
-          "rvol_15m": 0.0,
-          "rvol_1h": 0.5706,
+          "rvol_15m": 1.0684,
+          "rvol_1h": 4.053,
           "higher_lows": false,
-          "compression_ratio": 0.494,
-          "return_15m_pct": 0.3057,
-          "volume_price_response": null,
-          "volatility_expansion_ratio": 0.4806
+          "compression_ratio": 1.997,
+          "return_15m_pct": 0.4541,
+          "volume_price_response": 0.68774,
+          "volatility_expansion_ratio": 1.2551
         },
         {
           "venue": "mexc",
-          "rvol_15m": 0.9909,
-          "rvol_1h": 1.0804,
+          "rvol_15m": 0.8205,
+          "rvol_1h": 1.1347,
           "higher_lows": false,
-          "compression_ratio": 0.4275,
-          "return_15m_pct": 0.4082,
-          "volume_price_response": 0.676677,
-          "volatility_expansion_ratio": 0.971
+          "compression_ratio": 0.7778,
+          "return_15m_pct": 0.2524,
+          "volume_price_response": 0.439417,
+          "volatility_expansion_ratio": 0.4807
         },
         {
           "venue": "binance_alpha",
-          "rvol_15m": 5.0955,
-          "rvol_1h": 0.9647,
-          "higher_lows": true,
-          "compression_ratio": 0.4209,
-          "return_15m_pct": 0.4976,
-          "volume_price_response": 7.088969,
-          "volatility_expansion_ratio": 0.2413
+          "rvol_15m": 0.0,
+          "rvol_1h": 2.5834,
+          "higher_lows": false,
+          "compression_ratio": 0.0,
+          "return_15m_pct": 0.0,
+          "volume_price_response": null,
+          "volatility_expansion_ratio": 0.0
         }
       ],
       "cross_venue_dispersion_research_only": {
         "status": "MATCHED_MINUTE_RESEARCH_ONLY",
-        "minute_ms": 1794934680000,
-        "matched_venues": 4,
-        "max_min_close_difference_pct": 0.1019,
+        "minute_ms": 1794949500000,
+        "matched_venues": 3,
+        "max_min_close_difference_pct": 0.351,
         "warning": "SYMBOL_IDENTITY_UNVERIFIED; CANDLE_DIFFERENCE_NOT_EXECUTABLE_BID_ASK"
       },
       "evidence_limitations": [
@@ -915,7 +904,7 @@
         "preparation": {
           "active_unverified": false,
           "candidate_count": 0,
-          "chain_scan_complete": true
+          "chain_scan_complete": false
         },
         "spot_ignition": {
           "active_sample_based": false,
@@ -928,40 +917,40 @@
       "optional_technical_context": [
         {
           "venue": "mexc",
-          "rvol_15m": 0.6278,
-          "rvol_1h": 0.4973,
+          "rvol_15m": 1.1586,
+          "rvol_1h": 0.9703,
           "higher_lows": false,
-          "compression_ratio": 0.5525,
-          "return_15m_pct": -0.0277,
-          "volume_price_response": -0.025864,
-          "volatility_expansion_ratio": 0.799
+          "compression_ratio": 1.1209,
+          "return_15m_pct": 0.2897,
+          "volume_price_response": 0.238095,
+          "volatility_expansion_ratio": 1.4775
         },
         {
           "venue": "bitget",
-          "rvol_15m": 0.8792,
-          "rvol_1h": 0.4351,
+          "rvol_15m": 0.137,
+          "rvol_1h": 2.7261,
           "higher_lows": false,
-          "compression_ratio": 0.3658,
-          "return_15m_pct": -0.0691,
-          "volume_price_response": -0.089467,
-          "volatility_expansion_ratio": 0.341
+          "compression_ratio": 1.0427,
+          "return_15m_pct": 0.3592,
+          "volume_price_response": 4.916435,
+          "volatility_expansion_ratio": 0.7905
         },
         {
           "venue": "binance_alpha",
-          "rvol_15m": 0.4617,
-          "rvol_1h": 0.6313,
+          "rvol_15m": 0.8951,
+          "rvol_1h": 0.3143,
           "higher_lows": false,
-          "compression_ratio": 0.3522,
-          "return_15m_pct": -0.239,
-          "volume_price_response": -1.196629,
-          "volatility_expansion_ratio": 0.2521
+          "compression_ratio": 1.8662,
+          "return_15m_pct": 0.4106,
+          "volume_price_response": 4.353991,
+          "volatility_expansion_ratio": 1.0939
         }
       ],
       "cross_venue_dispersion_research_only": {
         "status": "MATCHED_MINUTE_RESEARCH_ONLY",
-        "minute_ms": 1794934680000,
+        "minute_ms": 1794949500000,
         "matched_venues": 3,
-        "max_min_close_difference_pct": 0.2774,
+        "max_min_close_difference_pct": 0.0688,
         "warning": "SYMBOL_IDENTITY_UNVERIFIED; CANDLE_DIFFERENCE_NOT_EXECUTABLE_BID_ASK"
       },
       "evidence_limitations": [
@@ -987,19 +976,11 @@
         "preparation": {
           "active_unverified": false,
           "candidate_count": 0,
-          "chain_scan_complete": true
+          "chain_scan_complete": false
         },
         "spot_ignition": {
           "active_sample_based": false,
-          "qualified_buy_sample_venues": [
-            {
-              "venue": "mexc",
-              "observed_trades": 6,
-              "sample_buy_fraction": 0.7791,
-              "observed_quote_notional": 130.72,
-              "direction_semantics": "MEXC_BUYER_MAKER_FLAG_INFERRED_TAKER_SIDE"
-            }
-          ],
+          "qualified_buy_sample_venues": [],
           "ask_thinner_snapshot_venues": [],
           "both_buy_and_thinner_in_same_venue": [],
           "sampled_markets": 3
@@ -1008,50 +989,40 @@
       "optional_technical_context": [
         {
           "venue": "gate",
-          "rvol_15m": 0.0646,
-          "rvol_1h": 0.1755,
+          "rvol_15m": 3.4805,
+          "rvol_1h": 0.6147,
           "higher_lows": false,
-          "compression_ratio": 0.6981,
-          "return_15m_pct": 0.0,
-          "volume_price_response": 0.0,
-          "volatility_expansion_ratio": 0.9691
-        },
-        {
-          "venue": "kucoin",
-          "rvol_15m": 2.6252,
-          "rvol_1h": 0.1199,
-          "higher_lows": false,
-          "compression_ratio": 0.6845,
-          "return_15m_pct": -0.5417,
-          "volume_price_response": -2.84604,
-          "volatility_expansion_ratio": 0.3639
+          "compression_ratio": 1.0255,
+          "return_15m_pct": 0.0297,
+          "volume_price_response": 0.178907,
+          "volatility_expansion_ratio": 0.8848
         },
         {
           "venue": "mexc",
-          "rvol_15m": 0.9862,
-          "rvol_1h": 0.5664,
-          "higher_lows": false,
-          "compression_ratio": 0.6135,
-          "return_15m_pct": -0.5433,
-          "volume_price_response": -0.957148,
-          "volatility_expansion_ratio": 1.0125
+          "rvol_15m": 0.8724,
+          "rvol_1h": 0.8881,
+          "higher_lows": true,
+          "compression_ratio": 1.153,
+          "return_15m_pct": 0.329,
+          "volume_price_response": 0.686725,
+          "volatility_expansion_ratio": 1.669
         },
         {
           "venue": "bitget",
-          "rvol_15m": 0.8428,
-          "rvol_1h": 0.6913,
+          "rvol_15m": 1.1557,
+          "rvol_1h": 1.2222,
           "higher_lows": false,
-          "compression_ratio": 0.6793,
-          "return_15m_pct": -0.0332,
-          "volume_price_response": -0.035485,
-          "volatility_expansion_ratio": 0.4885
+          "compression_ratio": 1.3542,
+          "return_15m_pct": 0.0685,
+          "volume_price_response": 0.078822,
+          "volatility_expansion_ratio": 1.3314
         }
       ],
       "cross_venue_dispersion_research_only": {
         "status": "MATCHED_MINUTE_RESEARCH_ONLY",
-        "minute_ms": 1794934680000,
+        "minute_ms": 1794949500000,
         "matched_venues": 3,
-        "max_min_close_difference_pct": 0.7891,
+        "max_min_close_difference_pct": 0.328,
         "warning": "SYMBOL_IDENTITY_UNVERIFIED; CANDLE_DIFFERENCE_NOT_EXECUTABLE_BID_ASK"
       },
       "evidence_limitations": [
@@ -1063,7 +1034,7 @@
         "NO_HISTORICAL_PRECISION_RECALL_VALIDATION"
       ],
       "bad_trade_sources": [],
-      "research_dedupe_key": "2c163af67562bf749199",
+      "research_dedupe_key": "0cf7016e8dca72bbc16c",
       "precision_validated": false
     },
     {
@@ -1077,49 +1048,53 @@
         "preparation": {
           "active_unverified": false,
           "candidate_count": 0,
-          "chain_scan_complete": true
+          "chain_scan_complete": false
         },
         "spot_ignition": {
           "active_sample_based": false,
           "qualified_buy_sample_venues": [],
-          "ask_thinner_snapshot_venues": [
-            {
-              "venue": "mexc",
-              "depth_change_pct": -33.24,
-              "withdrawal_proven": false
-            }
-          ],
+          "ask_thinner_snapshot_venues": [],
           "both_buy_and_thinner_in_same_venue": [],
           "sampled_markets": 1
         }
       },
       "optional_technical_context": [
         {
-          "venue": "mexc",
-          "rvol_15m": 0.6973,
-          "rvol_1h": 2.5485,
+          "venue": "kucoin",
+          "rvol_15m": 1.8236,
+          "rvol_1h": 5.2219,
           "higher_lows": false,
-          "compression_ratio": 0.2198,
-          "return_15m_pct": 0.0,
-          "volume_price_response": 0.0,
-          "volatility_expansion_ratio": 0.0
+          "compression_ratio": 5.8723,
+          "return_15m_pct": -0.5319,
+          "volume_price_response": -5.75435,
+          "volatility_expansion_ratio": 0.4255
+        },
+        {
+          "venue": "mexc",
+          "rvol_15m": 5.2154,
+          "rvol_1h": 2.0254,
+          "higher_lows": false,
+          "compression_ratio": 2.9673,
+          "return_15m_pct": -1.6349,
+          "volume_price_response": -2.174887,
+          "volatility_expansion_ratio": 1.2309
         },
         {
           "venue": "binance_alpha",
-          "rvol_15m": 0.4797,
-          "rvol_1h": 2.0767,
+          "rvol_15m": 0.3222,
+          "rvol_1h": 0.4494,
           "higher_lows": false,
-          "compression_ratio": 0.5593,
-          "return_15m_pct": 0.631,
-          "volume_price_response": 0.090752,
-          "volatility_expansion_ratio": 0.8517
+          "compression_ratio": 0.7998,
+          "return_15m_pct": -0.0331,
+          "volume_price_response": -0.071534,
+          "volatility_expansion_ratio": 0.7558
         }
       ],
       "cross_venue_dispersion_research_only": {
         "status": "MATCHED_MINUTE_RESEARCH_ONLY",
-        "minute_ms": 1794934680000,
+        "minute_ms": 1794949500000,
         "matched_venues": 3,
-        "max_min_close_difference_pct": 3.0471,
+        "max_min_close_difference_pct": 3.6011,
         "warning": "SYMBOL_IDENTITY_UNVERIFIED; CANDLE_DIFFERENCE_NOT_EXECUTABLE_BID_ASK"
       },
       "evidence_limitations": [
@@ -1132,7 +1107,7 @@
         "NO_HISTORICAL_PRECISION_RECALL_VALIDATION"
       ],
       "bad_trade_sources": [],
-      "research_dedupe_key": "c4666905dc0ec294fd81",
+      "research_dedupe_key": "c90ed786ce62c73601de",
       "precision_validated": false
     },
     {
@@ -1146,7 +1121,7 @@
         "preparation": {
           "active_unverified": false,
           "candidate_count": 0,
-          "chain_scan_complete": true
+          "chain_scan_complete": false
         },
         "spot_ignition": {
           "active_sample_based": false,
@@ -1159,13 +1134,13 @@
       "optional_technical_context": [
         {
           "venue": "mexc",
-          "rvol_15m": 0.8757,
-          "rvol_1h": 0.6251,
+          "rvol_15m": 0.3603,
+          "rvol_1h": 0.7336,
           "higher_lows": false,
-          "compression_ratio": 0.6634,
-          "return_15m_pct": -0.8866,
-          "volume_price_response": -1.09361,
-          "volatility_expansion_ratio": 0.6561
+          "compression_ratio": 1.4761,
+          "return_15m_pct": -1.085,
+          "volume_price_response": -2.128866,
+          "volatility_expansion_ratio": 1.4743
         }
       ],
       "cross_venue_dispersion_research_only": {
