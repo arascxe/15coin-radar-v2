@@ -1,4 +1,4 @@
-name: Radar V2 public hourly live-source and persistent-db test
+name: Radar V2 hourly read-only accumulation
 
 on:
   # GitHub schedule is best-effort; actual UTC start time is logged.
@@ -31,21 +31,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Cap this trial at TWO saved hourly observations
+      - name: Enable ongoing hourly collection; never reset persisted history
         id: trial_gate
         shell: bash
         run: |
-          if test -f v2_state/audit.json; then
-            prior=$(python -c 'import json;print(json.load(open("v2_state/audit.json")).get("total_runs",0))')
-          else
-            prior=0
-          fi
-          if test "$prior" -ge 2; then
-            echo 'TRIAL_LIMIT_REACHED; no more network calls or database writes'
-            echo 'allow=false' >> "$GITHUB_OUTPUT"
-          else
-            echo 'allow=true' >> "$GITHUB_OUTPUT"
-          fi
+          set -euo pipefail
+          echo 'allow=true' >> "$GITHUB_OUTPUT"
+          echo 'CONTINUOUS_HOURLY_READ_ONLY_COLLECTION_ENABLED'
       - name: Run deterministic local tests before touching internet
         if: steps.trial_gate.outputs.allow == 'true'
         run: python -m unittest discover -s v2/tests -q
