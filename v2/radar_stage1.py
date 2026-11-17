@@ -20,13 +20,14 @@ import threading
 import time
 import urllib.parse
 import urllib.request
+import urllib.error
 from collections import defaultdict
 
 ROOT = pathlib.Path(__file__).resolve().parent
 TOKEN_RE = re.compile(r'^0x[0-9a-f]{40}$')
 MINUTE_MS = 60000
-BSC_RPC = ('https://bsc-dataseed.bnbchain.org', 'https://bsc.publicnode.com')
-BASE_RPC = ('https://mainnet.base.org', 'https://base.publicnode.com')
+BSC_RPC = ('https://bsc.publicnode.com', 'https://bsc-dataseed.bnbchain.org','https://bsc-dataseed-public.bnbchain.org')
+BASE_RPC = ('https://api.zan.top/base-mainnet','https://rpc.swiftnodes.io/rpc/base','https://base-rpc.blockreq.com/v1/rpc/public','https://mainnet.base.org','https://base.publicnode.com')
 CHAINS = {'bsc': {'id':56, 'rpc':BSC_RPC,'block_seconds':1.0},'base': {'id':8453,'rpc':BASE_RPC,'block_seconds':2.0}}
 
 
@@ -148,7 +149,7 @@ class Store:
         x=self.db.execute('SELECT first_requested_ms FROM market_bootstrap WHERE coin=? AND venue=?',(coin,venue)).fetchone()
         return x[0] if x else None
     def market_save(self,rid,coin,venue,pair,status,t0,t1,bars,detail='',observed_ms=None,backlog_to_ms=None):
-        now=observed_ms or now_ms();expected=max(0,(t1-t0)//MINUTE_MS);n=len({b['minute_ms'] for b in bars});missing=max(0,expected-n)
+        now=observed_ms or now_ms();expected=max(0,(t1-t0)//MINUTE_MS);n=len({b['minute_ms'] for b in bars if t0<=b['minute_ms']<t1});missing=max(0,expected-n)
         with self.db:
             self.db.execute('INSERT INTO market_bootstrap VALUES(?,?,?) ON CONFLICT(coin,venue) DO UPDATE SET first_requested_ms=MIN(first_requested_ms,excluded.first_requested_ms)',(coin,venue,t0))
             for b in bars:
@@ -195,12 +196,31 @@ class Store:
         return {'run_id':rid,'market_counts':dict(__import__('collections').Counter(x[2] for x in market)),'market_checks': [{'coin':x[0],'venue':x[1],'status':x[2],'bars':x[3],'expected':x[4],'missing':x[5],'note':x[6]} for x in market], 'chain_checks':[{'chain':x[0],'status':x[1],'from':x[2],'to':x[3],'head':x[4],'detail':x[5]} for x in chain],'wallet_checks':[{'coin':x[0],'status':x[1],'count':x[2]} for x in wallets], 'gap_records':gaps,'total_candles':self.db.execute('SELECT COUNT(*) FROM market_candles').fetchone()[0], 'total_transfers':self.db.execute('SELECT COUNT(*) FROM token_transfers').fetchone()[0], 'unresolved_spot_minutes':self.db.execute('SELECT COUNT(*) FROM market_missing_minutes').fetchone()[0]}
 
 class HTTPClient:
-    def __init__(self,timeout=8):self.timeout=timeout
+    def __init__(self,timeout=8):
+        self.timeout=timeout
+        self._gecko_last=0.0
     def get(self,url,params):
         q=urllib.parse.urlencode({k:str(v) for k,v in params.items() if v is not None})
-        req=urllib.request.Request(url+('?' +q if q else ''),headers={'Accept':'application/json','User-Agent':'RadarV2-Research/0.1'})
-        with urllib.request.urlopen(req,timeout=self.timeout) as r:
-            return json.load(r)
+        target=url+('?' +q if q else '')
+        gecko='api.geckoterminal.com' in url
+        for attempt in range(3 if gecko else 1):
+            if gecko:
+                # Free API may allow only ~10 calls/min and GitHub runner IPs are shared.
+                time.sleep(max(0.0,7.5-(time.monotonic()-self._gecko_last)))
+                self._gecko_last=time.monotonic()
+            req=urllib.request.Request(target,headers={'Accept':'application/json','User-Agent':'RadarV2-Research/0.2'})
+            try:
+                with urllib.request.urlopen(req,timeout=self.timeout) as r:return json.load(r)
+            except urllib.error.HTTPError as e:
+                if gecko and e.code==429 and attempt<2:
+                    try:delay=min(35,max(12,float(e.headers.get('Retry-After') or 0)))
+                    except (ValueError,TypeError):delay=18
+                    time.sleep(delay)
+                    continue
+                if 'api.bybit.com' in target and e.code in (403,429):
+                    alt=target.replace('api.bybit.com','api.bytick.com')
+                    with urllib.request.urlopen(urllib.request.Request(alt,headers={'Accept':'application/json','User-Agent':'RadarV2-Research/0.2'}),timeout=self.timeout) as r:return json.load(r)
+                raise
     def rpc(self,url,method,params):
         req=urllib.request.Request(url,data=json.dumps({'jsonrpc':'2.0','id':1,'method':method,'params':params}).encode(),headers={'Content-Type':'application/json'},method='POST')
         with urllib.request.urlopen(req,timeout=self.timeout) as r:resp=json.load(r)
@@ -251,23 +271,23 @@ def get_market_spec(v,t0,t1):
 
 
 def market_ingest(store,rid,v,http,ts,lookback=70,cap=1000):
-    closed_to=(ts//MINUTE_MS)*MINUTE_MS
+    # Two-minute finalization delay reduces exchange-side unfinalized last candles.\n    closed_to=(ts//MINUTE_MS)*MINUTE_MS-2*MINUTE_MS
     old=store.last_market_end(v['coin'],v['venue']);initial=store.market_initial_start(v['coin'],v['venue'])
     t0=(initial if initial is not None else closed_to-lookback*MINUTE_MS) if old is None else old
-    if closed_to<=t0:t0=closed_to-MINUTE_MS
+    if closed_to<=t0:\n        return store.market_save(rid,v['coin'],v['venue'],v.get('pair'),'NO_NEW_CLOSED_MINUTES',t0,t0,[],detail='SOURCE_ALREADY_AT_CLOSED_TIME',observed_ms=ts)
     page_caps={'okx':90,'gate':900,'kucoin':1200,'bitget':900,'mexc':900,'bybit':900,'binance_alpha':900,'geckoterminal':900}
     venue_cap=min(cap,page_caps.get(v['venue'],900))
     t1=min(closed_to,t0+venue_cap*MINUTE_MS)
     if not v.get('pair') or v.get('identity_status')=='ALPHA_PAIR_NOT_TRADING_AS_OF_PREVIOUS_SCAN':
         return store.market_save(rid,v['coin'],v['venue'],v.get('pair'),'UNSUPPORTED',t0,t1,[],detail='PAIR_UNVERIFIED_OR_NOT_TRADING',observed_ms=ts)
     try:
-        url,args=get_market_spec(v,t0,t1)
+        # Re-fetch a short overlap to recover prior missing minutes without rewinding the main cursor.\n        repair_start=max(0,t0-3*MINUTE_MS) if old is not None else t0\n        url,args=get_market_spec(v,repair_start,t1)
         response=http.get(url,args)
         bars=parse_candles(v['venue'],response)
-        observed={b['minute_ms']:b for b in bars if t0<=b['minute_ms']<t1};valid=list(observed.values())
+        observed={b['minute_ms']:b for b in bars if repair_start<=b['minute_ms']<t1};valid=list(observed.values())
         expected=(t1-t0)//MINUTE_MS
-        if not valid:status='UNKNOWN';msg='EMPTY_CANDLE_RESULT; NO_TRADE_NOT_PROVEN'
-        elif len(valid)!=expected:status='PARTIAL';msg=f'MISSING_OR_ZERO_TRADE_CANDLES:{expected-len(valid)}; NOT_VERIFIED_TAKER_TAPE'
+        fresh=[b for b in valid if t0<=b['minute_ms']<t1]\n        if not fresh:status='UNKNOWN';msg='EMPTY_CANDLE_RESULT; NO_TRADE_NOT_PROVEN'
+        elif len(fresh)!=expected:status='PARTIAL';msg=f'MISSING_OR_ZERO_TRADE_CANDLES:{expected-len(fresh)}; NOT_VERIFIED_TAKER_TAPE'
         else:status='OK';msg='COMPLETE_1M_CANDLE_GRID; NOT_VERIFIED_TAKER_TAPE'
         if t1<closed_to:
             if status=='OK':status='BACKLOG'
@@ -369,7 +389,7 @@ def chain_ingest(store,rid,chain,config,http,ts,max_span=5000,chunk_blocks=200):
 
 
 def collect_all(config,store,http,ts=None,market=True,wallet=True,chain=True,dex=True):
-    lease=store.acquire_lease()
+    from chain_v2 import chain_ingest as checked_chain_ingest\n    lease=store.acquire_lease()
     rid=None
     try:
         ts=ts if ts is not None else now_ms();validate_config(config);rid=store.begin_run(ts)
@@ -386,7 +406,7 @@ def collect_all(config,store,http,ts=None,market=True,wallet=True,chain=True,dex
                 summary['spot'].append(market_ingest(store,rid,v,http,ts,config['limits']['initial_lookback_minutes'],config['limits']['max_backfill_minutes_per_run']))
         if wallet:summary['wallet_results']=wallet_ingest(store,rid,config,http,ts)
         if chain:
-            for c in CHAINS:summary['onchain'].append(chain_ingest(store,rid,c,config,http,ts))
+            for c in CHAINS:summary['onchain'].append(checked_chain_ingest(store,rid,c,config,http,ts))
         store.finish_run(rid,ts)
         summary['health']=store.report(rid)
         return summary
