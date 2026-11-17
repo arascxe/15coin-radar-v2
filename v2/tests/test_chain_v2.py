@@ -1,12 +1,12 @@
 """Deterministic chain and spot controls: every covered block must have actual RPC evidence."""
 import json,pathlib,sys,tempfile,unittest
 sys.path.insert(0,str(pathlib.Path(__file__).resolve().parents[1]))
-from radar_stage1 import Store,MINUTE_MS,market_ingest
+from radar_stage1 import Store,MINUTE_MS,market_ingest,CHAINS
 from chain_v2 import chain_ingest,select_provider,TRANSFER_TOPIC
 C=json.loads((pathlib.Path(__file__).resolve().parents[1]/'config.json').read_text())
 T=1800000000000
 BSC_HEAD=100000;BSC_SAFE=BSC_HEAD-15
-BSC_FROM=BSC_SAFE-3599
+BSC_FROM=BSC_SAFE-int(3600/CHAINS['bsc']['block_seconds'])+1
 class MockRPC:
     def __init__(self,fail_at=None):
         self.fail_at=fail_at;self.calls=[];self.base_log_calls=0
