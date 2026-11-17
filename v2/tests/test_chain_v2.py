@@ -32,6 +32,22 @@ class MockRPC:
             return []
         raise AssertionError(method)
 
+class SingleTokenBscRPC(MockRPC):
+    def rpc(self,url,method,params):
+        bsc='bsc' in url
+        if bsc and method=='eth_getLogs':
+            self.calls.append((url,method,params))
+            p=params[0]
+            if isinstance(p.get('address'),list):raise RuntimeError('HTTP_403_MULTI_ADDRESS')
+            token=next(x['token'] for x in C['coins'] if x['chain']=='bsc')
+            a=int(p['fromBlock'],16);b=int(p['toBlock'],16)
+            if p['address']==token and a<=BSC_FROM+1<=b:
+                return [{'address':token,'transactionHash':'0x'+'a'*64,'logIndex':'0x0','blockNumber':hex(BSC_FROM+1),
+                         'topics':[TRANSFER_TOPIC,'0x'+'0'*24+'1'*40,'0x'+'0'*24+'2'*40],
+                         'data':hex(12345)}]
+            return []
+        return super().rpc(url,method,params)
+
 class FakeSpot:
     def __init__(self):self.calls=[]
     def get(self,url,params):
@@ -62,6 +78,16 @@ class ChainChecks(unittest.TestCase):
             second=chain_ingest(store,store.begin_run(T+MINUTE_MS),'bsc',C,r,T+MINUTE_MS,max_span=24)
             self.assertEqual(second['from'],first['last_complete']+1)
             self.assertEqual(store.db.execute("select count(*) from chain_checks where chain='bsc'").fetchone()[0],2)
+            store.close()
+    def test_bsc_one_address_per_call_and_atomic_page(self):
+        with tempfile.TemporaryDirectory() as d:
+            store=Store(pathlib.Path(d)/'db');rpc=SingleTokenBscRPC()
+            out=chain_ingest(store,store.begin_run(T),'bsc',C,rpc,T,max_span=20)
+            self.assertEqual(out['method'],'token_separated_logs')
+            self.assertEqual(out['observed_events'],1)
+            self.assertEqual(store.db.execute('select count(*) from token_transfers').fetchone()[0],1)
+            self.assertTrue(all(isinstance(x[2][0]['address'],str) for x in rpc.calls if x[1]=='eth_getLogs'))
+            self.assertEqual(store.last_chain_block('bsc'),out['last_complete'])
             store.close()
     def test_base_chain_log_scanner_accepts_only_monitored_token(self):
         with tempfile.TemporaryDirectory() as d:
