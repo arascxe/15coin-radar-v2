@@ -346,6 +346,20 @@ jobs:
           git commit -m "V2 verified lossless incremental segment $(date -u +%Y-%m-%dT%H:%MZ)"
           git push origin HEAD:main
           echo 'COMMITTED_INCREMENTAL_SEGMENT_AND_RESEARCH_REPORT'
+      - name: Preserve unpublished observations when writer conflict occurs
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: v2-unpublished-observations-${{ github.run_id }}
+          if-no-files-found: warn
+          retention-days: 7
+          path: |
+            v2_runtime/live.sqlite3
+            v2_runtime/audit.json
+            v2_runtime/last_run.json
+            v2_runtime/spot_microstructure.json
+            v2_runtime/spot_microstructure.json.gz
+            v2_runtime/segment_store/manifest.json
   verify-new-runner:
     needs: live-collect-and-save
     runs-on: ubuntu-latest
