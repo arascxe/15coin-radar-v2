@@ -8,7 +8,7 @@ def setup():
               'wallet_accumulation_candidates':[]} for sym in EXPECTED]
     economic={'schema':'radar-v2-economic-brain-1','last_run_id':'TEST',
         'coins':records}
-    def venue(coin,name,buy,sell,events=9):
+    def venue(coin,name,buy,sell,events=12):
         return {'coin':coin,'venue':name,'trade_status':'RECENT_INCOMPLETE_SAMPLE',
             'trade':{'last_3min_observed':{'count':events,'buy_quote':str(buy),
                 'sell_quote':str(sell),'observed_quote_notional':str(buy+sell),
@@ -68,6 +68,37 @@ class DecisionTests(unittest.TestCase):
     def test_bad_schema_or_missing_coin_fails(self):
         e,s,t,f=setup();f['coins'].pop()
         with self.assertRaises(ValueError):build(f,s,t)
+    def test_small_two_venue_samples_are_weak_not_watch(self):
+        e,s,t,f=setup()
+        for m in s['data'][:2]:
+            m['trade']['last_3min_observed']['count']=6
+            m['trade']['last_3min_observed']['observed_quote_notional']='120'
+        r=build(f,s,t)['coins'][0]
+        self.assertEqual(r['state'],'INSUFFICIENT_EVIDENCE_UNKNOWN')
+        self.assertTrue(r['pathways']['spot_ignition']['weak_sample_research_lead'])
+        self.assertFalse(r['strong_alert'])
+    def test_single_tiny_sample_plus_thinning_is_weak(self):
+        e,s,t,f=setup()
+        s['data']=s['data'][:1]
+        f['coins'][0]['market_evidence']=[{'venue':'gate','ask_depth_change':'ASK_THINNER_TWO_SNAPSHOTS','ask_depth_change_pct':-42.0}]
+        r=build(f,s,t)['coins'][0]
+        self.assertFalse(r['watch_research_only'])
+        self.assertTrue(r['pathways']['spot_ignition']['weak_sample_research_lead'])
+    def test_strong_single_venue_research_does_not_require_wallet_or_rvol(self):
+        e,s,t,f=setup()
+        s['data']=s['data'][:1]
+        m=s['data'][0];m['trade']['last_3min_observed']['count']=28
+        f['coins'][0]['market_evidence']=[{'venue':'gate','ask_depth_change':'ASK_THINNER_TWO_SNAPSHOTS','ask_depth_change_pct':-35.0}]
+        r=build(f,s,t)['coins'][0]
+        self.assertEqual(r['state'],'SPOT_IGNITION_RESEARCH_WATCH')
+        self.assertFalse(r['strong_alert'])
+    def test_two_medium_venues_need_aggregate_notional(self):
+        e,s,t,f=setup()
+        s['data'][0]['trade']['last_3min_observed']['observed_quote_notional']='350'
+        s['data'][1]['trade']['last_3min_observed']['observed_quote_notional']='350'
+        r=build(f,s,t)['coins'][0]
+        self.assertEqual(r['state'],'INSUFFICIENT_EVIDENCE_UNKNOWN')
+        self.assertTrue(r['pathways']['spot_ignition']['weak_sample_research_lead'])
     def test_research_dedupe_stable_for_same_conditions(self):
         e,s,t,f=setup();a=build(f,s,t)
         b=build(f,s,t)

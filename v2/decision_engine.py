@@ -13,9 +13,17 @@ from collections import Counter
 EXPECTED=('ON','DOS','HANA','COLLECT','LIGHT','APR','IN','TRUST','B2','CYS','STBL','BSB','AIO','STAR','LYN')
 SCHEMA='radar-v2-decision-research-1'
 # Observational thresholds for RESEARCH ONLY, not tuned/validated as prediction.
+# Material research-watch thresholds, NOT calibrated predictive cutoffs.
+# Tiny public last-100 samples remain visible as weak leads but never promote
+# themselves to a watch merely because two sparse samples overlap.
 MIN_TRADES=5
 MIN_QUOTE=100.0
 BUY_FRACTION=0.65
+MATERIAL_TRADES=10
+MATERIAL_QUOTE=300.0
+MIN_CROSS_VENUE_QUOTE=1000.0
+STRONG_SINGLE_VENUE_TRADES=25
+STRONG_SINGLE_VENUE_QUOTE=1000.0
 MAX_TECH_STALENESS_MS=15*60*1000
 
 def _positive(value):
@@ -31,6 +39,7 @@ def evidence_for_coin(fusion,spot,technical,asof_ms):
     known={v['venue']:v for v in spot if v.get('coin')==sym}
     spot_details={v['venue']:v for v in f.get('market_evidence',[])}
     qualified=[]
+    material=[]
     bad=[]
     for venue,market in sorted(known.items()):
         t=market.get('trade',{})
@@ -43,9 +52,12 @@ def evidence_for_coin(fusion,spot,technical,asof_ms):
             and frac is not None and frac>=BUY_FRACTION
             and notional is not None and notional>=MIN_QUOTE)
         if enough:
-            qualified.append({'venue':venue,'observed_trades':n,
+            entry={'venue':venue,'observed_trades':n,
                 'sample_buy_fraction':round(frac,4),'observed_quote_notional':round(notional,2),
-                'direction_semantics':t.get('trade_side_semantics','UNVERIFIED')})
+                'direction_semantics':t.get('trade_side_semantics','UNVERIFIED')}
+            qualified.append(entry)
+            if n>=MATERIAL_TRADES and notional>=MATERIAL_QUOTE:
+                material.append(entry)
         elif market.get('trade_status') not in ('RECENT_INCOMPLETE_SAMPLE','STALE_SAMPLE'):
             bad.append({'venue':venue,'status':market.get('trade_status','UNKNOWN')})
     thin=[]
@@ -54,10 +66,21 @@ def evidence_for_coin(fusion,spot,technical,asof_ms):
             thin.append({'venue':venue,'depth_change_pct':detail.get('ask_depth_change_pct'),
                 'withdrawal_proven':False})
     qualified_venues={a['venue'] for a in qualified}
+    material_venues={a['venue'] for a in material}
     thin_venues={a['venue'] for a in thin}
     same_venue=sorted(qualified_venues & thin_venues)
-    # No requirement that wallet preparation and spot ignition both exist.
-    spot_watch= len(qualified_venues)>=2 or bool(same_venue)
+    material_same_venue=sorted(material_venues & thin_venues)
+    # Do not let a tiny sample and two noncontinuous depth readings imply
+    # convincing ignition. Two material independent spot venues can suffice
+    # without wallet or price indicators; alternatively require a more
+    # substantial single-venue sample plus observable ask thinning.
+    cross_material=(len(material_venues)>=2 and
+        sum(x['observed_quote_notional'] for x in material)>=MIN_CROSS_VENUE_QUOTE)
+    single_material=any(x['venue'] in thin_venues and
+        x['observed_trades']>=STRONG_SINGLE_VENUE_TRADES and
+        x['observed_quote_notional']>=STRONG_SINGLE_VENUE_QUOTE for x in material)
+    weak_spot_sample=bool(len(qualified_venues)>=2 or same_venue)
+    spot_watch=bool(cross_material or single_material)
     prep=f.get('preparation_path',{})
     prep_count=int(prep.get('wallet_candidate_count',0) or 0)
     prep_watch=prep_count>0 and prep.get('chain_currently_complete') is True
@@ -88,6 +111,8 @@ def evidence_for_coin(fusion,spot,technical,asof_ms):
     evidence_flags=[]
     if not prep_watch:evidence_flags.append('INDEPENDENT_EOA_PREPARATION_NOT_VERIFIED')
     if not spot_watch:evidence_flags.append('INDEPENDENT_SPOT_IGNITION_NOT_CORROBORATED')
+    if weak_spot_sample and not spot_watch:
+        evidence_flags.append('WEAK_SPOT_SAMPLE_BELOW_MATERIAL_RESEARCH_THRESHOLD')
     if not features:evidence_flags.append('NO_FRESH_COMPLETE_PRICE_VOLUME_CONFIRMATION')
     if len(known)<2:evidence_flags.append('FEWER_THAN_TWO_SPOT_VENUES_OBSERVED')
     if bad:evidence_flags.append('SOME_SPOT_TRADE_SAMPLES_MISSING_OR_FAILED')
@@ -97,7 +122,7 @@ def evidence_for_coin(fusion,spot,technical,asof_ms):
         'NO_HISTORICAL_PRECISION_RECALL_VALIDATION']
     # Exactly reproducible within the same run, without pretending repeated
     # hourly snapshots are distinct economic events.
-    dedupe=hashlib.sha256((sym+'|'+level+'|'+','.join(sorted(qualified_venues))+
+    dedupe=hashlib.sha256((sym+'|'+level+'|'+','.join(sorted(material_venues))+
         '|'+','.join(sorted(thin_venues))).encode()).hexdigest()[:20]
     return {'coin':sym,'state':level,
         'watch_research_only':spot_watch or prep_watch,
@@ -105,8 +130,14 @@ def evidence_for_coin(fusion,spot,technical,asof_ms):
         'pathways':{'preparation':{'active_unverified':prep_watch,
                     'candidate_count':prep_count,'chain_scan_complete':prep.get('chain_currently_complete')},
                     'spot_ignition':{'active_sample_based':spot_watch,
-                    'qualified_buy_sample_venues':qualified,'ask_thinner_snapshot_venues':thin,
+                    'weak_sample_research_lead':weak_spot_sample and not spot_watch,
+                    'qualified_buy_sample_venues':qualified,
+                    'material_buy_sample_venues':material,
+                    'ask_thinner_snapshot_venues':thin,
                     'both_buy_and_thinner_in_same_venue':same_venue,
+                    'material_both_in_same_venue':material_same_venue,
+                    'cross_venue_material':bool(cross_material),
+                    'single_venue_material':bool(single_material),
                     'sampled_markets':len(known)}},
         'optional_technical_context':features,
         'cross_venue_dispersion_research_only':technical.get('cross_venue_close_dispersion') if isinstance(technical,dict) else None,
