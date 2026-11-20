@@ -126,7 +126,15 @@ def dex_scope(row,now):
     if cap is None:return {'status':'INVALID_DEX_ASK_CAPACITY'}
     liq=src.get('active_liquidity_delta_same_tick')
     change=src.get('relative_2pct_quote_capacity_change')
-    drop=(positive(str(-D(str(liq)))) is not None if liq is not None else False)
+    frac=src.get('active_liquidity_fraction_change_same_tick')
+    try:
+        # Not every tiny tick-level fluctuation is a material sell-side event.
+        # A genuine active-liquidity contraction and lower observed capacity
+        # are required in the SAME pinned V3 pool and unchanged active tick.
+        drop=(liq is not None and D(str(liq))<0 and
+              frac is not None and D(str(frac))<=D('-.20') and
+              change is not None and D(str(change))<=D('-.20'))
+    except (InvalidOperation,TypeError,ValueError):drop=False
     return {'status':'PINNED_V3_ACTIVE_TICK_SCOPE','pool':src.get('pool'),
         'block':src.get('pinned_finalized_block'),
         'ask_token_qty_within_pool_2pct_curve':str(cap),
@@ -164,8 +172,8 @@ def enrich(report,history=None,now=None):
            all(w['history_asof_ms']<=earliest for w in wallets))
         cex_before=False
         if existing_verified_preparation and earliest is not None:
-            recipients=row.get('coin_inventory',{}).get('independent_recipients',[])
-            recipients+=row.get('coin_inventory',{}).get('revalidated_receivers',[])
+            recipients=list(row.get('coin_inventory',{}).get('independent_recipients',[]))
+            recipients.extend(row.get('coin_inventory',{}).get('revalidated_receivers',[]))
             cex_before=any(isinstance(x.get('last_block_ms'),int)
                            and x['last_block_ms']<=earliest
                            and earliest-x['last_block_ms']<=72*3600000
