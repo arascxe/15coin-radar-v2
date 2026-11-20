@@ -1,7 +1,7 @@
 {
   "schema": "radar-v2-dynamic-wallet-followup-1",
-  "created_utc": "2026-11-20T10:21:03.132894+00:00",
-  "run_id": "1f7a2f36adaba53b68",
+  "created_utc": "2026-11-20T11:50:22.257953+00:00",
+  "run_id": "d730a9b7a603335636",
   "source": "FREE_EXISTING_CHAIN_RPCS_AND_SQLITE",
   "owner_attribution_verified": false,
   "strong_alert": false,
@@ -11,8 +11,8 @@
     {
       "coin": "ON",
       "chain": "bsc",
-      "cursor_block": 134588300,
-      "coverage_status": "CONTIGUOUS_STORED_TOKEN_LOGS",
+      "cursor_block": 134600300,
+      "coverage_status": "CONTIGUOUS_ARCHIVE_PLUS_SEPARATE_HEAD_WINDOW",
       "address_candidates": [
         {
           "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
@@ -27,29 +27,61 @@
           "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
         },
         {
+          "address": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
+          "already_monitored": true,
+          "previous_seen_ms": 1794960440665,
+          "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
+        },
+        {
           "address": "0x4e7ed91e702ef2ff0c58e251c6e20d1dc1e31a5f",
-          "net_raw": "4352000000000000000000",
-          "recent_net_raw": "376000000000000000000",
-          "inflow_transactions": 20,
+          "net_raw": "13703000000000000000000",
+          "recent_net_raw": "6814000000000000000000",
+          "inflow_transactions": 47,
           "independent_sources_not_proven": 1,
-          "known_dex_inflow_transactions": 20,
+          "known_dex_inflow_transactions": 47,
+          "already_monitored": false,
+          "reason": "BALANCE_AND_EOA_OWNER_NOT_YET_VERIFIED"
+        },
+        {
+          "address": "0xa2349c76cb0806103e913d0f1c5786fb5c60d3ca",
+          "net_raw": "1480188140043707736099",
+          "recent_net_raw": "1480188140043707736099",
+          "inflow_transactions": 10,
+          "independent_sources_not_proven": 1,
+          "known_dex_inflow_transactions": 10,
+          "already_monitored": false,
+          "reason": "BALANCE_AND_EOA_OWNER_NOT_YET_VERIFIED"
+        },
+        {
+          "address": "0xd52e8e422a352ac1afdc2bd6ec533d41b20acb7b",
+          "net_raw": "634",
+          "recent_net_raw": "634",
+          "inflow_transactions": 2,
+          "independent_sources_not_proven": 2,
+          "known_dex_inflow_transactions": 1,
           "already_monitored": false,
           "reason": "BALANCE_AND_EOA_OWNER_NOT_YET_VERIFIED"
         }
       ],
-      "count": 3,
-      "interval_from": 134582301,
-      "interval_to": 134588300,
-      "eligible_unlabeled_receivers": 1,
+      "count": 6,
+      "fresh_head_window": [
+        134689422,
+        134690021
+      ],
+      "head_window_does_not_repair_older_missing_blocks": true,
+      "interval_from": 134594301,
+      "interval_to": 134600300,
+      "eligible_unlabeled_receivers": 3,
       "historically_rejected_contract_addresses": 23,
-      "snapshot_block": 134588300,
-      "snapshot_origin": "ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE"
+      "snapshot_block": 134690136,
+      "snapshot_origin": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "archive_cursor_not_used_for_rpc_balance": true
     },
     {
       "coin": "DOS",
       "chain": "bsc",
-      "cursor_block": 134588300,
-      "coverage_status": "CONTIGUOUS_STORED_TOKEN_LOGS",
+      "cursor_block": 134600300,
+      "coverage_status": "CONTIGUOUS_ARCHIVE_PLUS_SEPARATE_HEAD_WINDOW",
       "address_candidates": [
         {
           "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
@@ -68,21 +100,37 @@
           "already_monitored": true,
           "previous_seen_ms": 1794932699924,
           "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
+        },
+        {
+          "address": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+          "net_raw": "582854253292049664580",
+          "recent_net_raw": "532849701882832824317",
+          "inflow_transactions": 3,
+          "independent_sources_not_proven": 3,
+          "known_dex_inflow_transactions": 0,
+          "already_monitored": false,
+          "reason": "BALANCE_AND_EOA_OWNER_NOT_YET_VERIFIED"
         }
       ],
-      "count": 3,
-      "interval_from": 134582301,
-      "interval_to": 134588300,
-      "eligible_unlabeled_receivers": 0,
+      "count": 4,
+      "fresh_head_window": [
+        134689422,
+        134690021
+      ],
+      "head_window_does_not_repair_older_missing_blocks": true,
+      "interval_from": 134594301,
+      "interval_to": 134600300,
+      "eligible_unlabeled_receivers": 1,
       "historically_rejected_contract_addresses": 19,
-      "snapshot_block": 134588300,
-      "snapshot_origin": "ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE"
+      "snapshot_block": 134690136,
+      "snapshot_origin": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "archive_cursor_not_used_for_rpc_balance": true
     },
     {
       "coin": "HANA",
       "chain": "bsc",
-      "cursor_block": 134588300,
-      "coverage_status": "CONTIGUOUS_STORED_TOKEN_LOGS",
+      "cursor_block": 134600300,
+      "coverage_status": "CONTIGUOUS_ARCHIVE_PLUS_SEPARATE_HEAD_WINDOW",
       "address_candidates": [
         {
           "address": "0x53f78a071d04224b8e254e243fffc6d9f2f3fa23",
@@ -97,29 +145,47 @@
           "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
         },
         {
-          "address": "0xa2349c76cb0806103e913d0f1c5786fb5c60d3ca",
-          "net_raw": "13929903174427471974084",
-          "recent_net_raw": "13929903174427471974084",
-          "inflow_transactions": 13,
+          "address": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
+          "already_monitored": true,
+          "previous_seen_ms": 1794960440665,
+          "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
+        },
+        {
+          "address": "0xcf90dc7b365bf0714abfb8bfcd5fda6ba02bd21f",
+          "already_monitored": true,
+          "previous_seen_ms": 1794960440665,
+          "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
+        },
+        {
+          "address": "0xab293ac0ebb70860845b8007fc46bc7a0c8afd4c",
+          "net_raw": "1876064740455430636369",
+          "recent_net_raw": "2829351985784154243366",
+          "inflow_transactions": 7,
           "independent_sources_not_proven": 1,
-          "known_dex_inflow_transactions": 13,
+          "known_dex_inflow_transactions": 7,
           "already_monitored": false,
           "reason": "BALANCE_AND_EOA_OWNER_NOT_YET_VERIFIED"
         }
       ],
-      "count": 3,
-      "interval_from": 134582301,
-      "interval_to": 134588300,
-      "eligible_unlabeled_receivers": 4,
+      "count": 5,
+      "fresh_head_window": [
+        134689422,
+        134690021
+      ],
+      "head_window_does_not_repair_older_missing_blocks": true,
+      "interval_from": 134594301,
+      "interval_to": 134600300,
+      "eligible_unlabeled_receivers": 1,
       "historically_rejected_contract_addresses": 15,
-      "snapshot_block": 134588300,
-      "snapshot_origin": "ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE"
+      "snapshot_block": 134690136,
+      "snapshot_origin": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "archive_cursor_not_used_for_rpc_balance": true
     },
     {
       "coin": "COLLECT",
       "chain": "bsc",
-      "cursor_block": 134588300,
-      "coverage_status": "CONTIGUOUS_STORED_TOKEN_LOGS",
+      "cursor_block": 134600300,
+      "coverage_status": "CONTIGUOUS_ARCHIVE_PLUS_SEPARATE_HEAD_WINDOW",
       "address_candidates": [
         {
           "address": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
@@ -138,21 +204,53 @@
           "already_monitored": true,
           "previous_seen_ms": 1794935439539,
           "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
+        },
+        {
+          "address": "0xce2213f43ad773fb53f135f188e173bcce2feafc",
+          "already_monitored": true,
+          "previous_seen_ms": 1794960440665,
+          "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
+        },
+        {
+          "address": "0x28aee52c2dfd391fb5028615c930a9a7b43ca19b",
+          "net_raw": "55823010925637582519137",
+          "recent_net_raw": "55823010925637582519137",
+          "inflow_transactions": 4,
+          "independent_sources_not_proven": 2,
+          "known_dex_inflow_transactions": 3,
+          "already_monitored": false,
+          "reason": "BALANCE_AND_EOA_OWNER_NOT_YET_VERIFIED"
+        },
+        {
+          "address": "0x8955a9dd4a496a775ea662bdb0a43266ce1231de",
+          "net_raw": "1531957308745198496885",
+          "recent_net_raw": "993164985803242805039",
+          "inflow_transactions": 3,
+          "independent_sources_not_proven": 1,
+          "known_dex_inflow_transactions": 3,
+          "already_monitored": false,
+          "reason": "BALANCE_AND_EOA_OWNER_NOT_YET_VERIFIED"
         }
       ],
-      "count": 3,
-      "interval_from": 134582301,
-      "interval_to": 134588300,
-      "eligible_unlabeled_receivers": 0,
+      "count": 6,
+      "fresh_head_window": [
+        134689422,
+        134690021
+      ],
+      "head_window_does_not_repair_older_missing_blocks": true,
+      "interval_from": 134594301,
+      "interval_to": 134600300,
+      "eligible_unlabeled_receivers": 2,
       "historically_rejected_contract_addresses": 16,
-      "snapshot_block": 134588300,
-      "snapshot_origin": "ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE"
+      "snapshot_block": 134690136,
+      "snapshot_origin": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "archive_cursor_not_used_for_rpc_balance": true
     },
     {
       "coin": "LIGHT",
       "chain": "bsc",
-      "cursor_block": 134588300,
-      "coverage_status": "CONTIGUOUS_STORED_TOKEN_LOGS",
+      "cursor_block": 134600300,
+      "coverage_status": "CONTIGUOUS_ARCHIVE_PLUS_SEPARATE_HEAD_WINDOW",
       "address_candidates": [
         {
           "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
@@ -171,21 +269,49 @@
           "already_monitored": true,
           "previous_seen_ms": 1794932699924,
           "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
+        },
+        {
+          "address": "0x165ac4a52fd8b523a7898d876f4d6d707c2f10fa",
+          "already_monitored": true,
+          "previous_seen_ms": 1794960440665,
+          "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
+        },
+        {
+          "address": "0x53f78a071d04224b8e254e243fffc6d9f2f3fa23",
+          "already_monitored": true,
+          "previous_seen_ms": 1794960440665,
+          "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
+        },
+        {
+          "address": "0xe5addd2247231e753aa9b881236edfcea8cc82d0",
+          "net_raw": "1779442637",
+          "recent_net_raw": "446032371",
+          "inflow_transactions": 4,
+          "independent_sources_not_proven": 1,
+          "known_dex_inflow_transactions": 4,
+          "already_monitored": false,
+          "reason": "BALANCE_AND_EOA_OWNER_NOT_YET_VERIFIED"
         }
       ],
-      "count": 3,
-      "interval_from": 134582301,
-      "interval_to": 134588300,
-      "eligible_unlabeled_receivers": 0,
+      "count": 6,
+      "fresh_head_window": [
+        134689422,
+        134690021
+      ],
+      "head_window_does_not_repair_older_missing_blocks": true,
+      "interval_from": 134594301,
+      "interval_to": 134600300,
+      "eligible_unlabeled_receivers": 1,
       "historically_rejected_contract_addresses": 18,
-      "snapshot_block": 134588300,
-      "snapshot_origin": "ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE"
+      "snapshot_block": 134690136,
+      "snapshot_origin": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "archive_cursor_not_used_for_rpc_balance": true
     },
     {
       "coin": "APR",
       "chain": "bsc",
-      "cursor_block": 134588300,
-      "coverage_status": "CONTIGUOUS_STORED_TOKEN_LOGS",
+      "cursor_block": 134600300,
+      "coverage_status": "CONTIGUOUS_ARCHIVE_PLUS_SEPARATE_HEAD_WINDOW",
       "address_candidates": [
         {
           "address": "0x2bfd1fc5e25a8f55c2e849492ad7966ea8a0dd9e",
@@ -204,21 +330,33 @@
           "already_monitored": true,
           "previous_seen_ms": 1794960440665,
           "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
+        },
+        {
+          "address": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
+          "already_monitored": true,
+          "previous_seen_ms": 1794960440665,
+          "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
         }
       ],
-      "count": 3,
-      "interval_from": 134582301,
-      "interval_to": 134588300,
-      "eligible_unlabeled_receivers": 2,
+      "count": 4,
+      "fresh_head_window": [
+        134689422,
+        134690021
+      ],
+      "head_window_does_not_repair_older_missing_blocks": true,
+      "interval_from": 134594301,
+      "interval_to": 134600300,
+      "eligible_unlabeled_receivers": 1,
       "historically_rejected_contract_addresses": 14,
-      "snapshot_block": 134588300,
-      "snapshot_origin": "ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE"
+      "snapshot_block": 134690136,
+      "snapshot_origin": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "archive_cursor_not_used_for_rpc_balance": true
     },
     {
       "coin": "IN",
       "chain": "bsc",
-      "cursor_block": 134588300,
-      "coverage_status": "CONTIGUOUS_STORED_TOKEN_LOGS",
+      "cursor_block": 134600300,
+      "coverage_status": "CONTIGUOUS_ARCHIVE_PLUS_SEPARATE_HEAD_WINDOW",
       "address_candidates": [
         {
           "address": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
@@ -227,9 +365,9 @@
           "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
         },
         {
-          "address": "0x0f0067cd819cb8f20bda62046daff7a2b5c88280",
-          "net_raw": "19271982694127805402010",
-          "recent_net_raw": "5557666304963691069276",
+          "address": "0xa2349c76cb0806103e913d0f1c5786fb5c60d3ca",
+          "net_raw": "7801927909887306120052",
+          "recent_net_raw": "7801927909887306120052",
           "inflow_transactions": 6,
           "independent_sources_not_proven": 1,
           "known_dex_inflow_transactions": 6,
@@ -238,32 +376,44 @@
         }
       ],
       "count": 2,
-      "interval_from": 134582301,
-      "interval_to": 134588300,
+      "fresh_head_window": [
+        134689422,
+        134690021
+      ],
+      "head_window_does_not_repair_older_missing_blocks": true,
+      "interval_from": 134594301,
+      "interval_to": 134600300,
       "eligible_unlabeled_receivers": 1,
       "historically_rejected_contract_addresses": 15,
-      "snapshot_block": 134588300,
-      "snapshot_origin": "ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE"
+      "snapshot_block": 134690136,
+      "snapshot_origin": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "archive_cursor_not_used_for_rpc_balance": true
     },
     {
       "coin": "TRUST",
       "chain": "base",
-      "cursor_block": 58647885,
-      "coverage_status": "CONTIGUOUS_STORED_TOKEN_LOGS",
+      "cursor_block": 58652885,
+      "coverage_status": "CONTIGUOUS_ARCHIVE_PLUS_SEPARATE_HEAD_WINDOW",
       "address_candidates": [],
       "count": 0,
-      "interval_from": 58641886,
-      "interval_to": 58647885,
+      "fresh_head_window": [
+        59924380,
+        59924979
+      ],
+      "head_window_does_not_repair_older_missing_blocks": true,
+      "interval_from": 58646886,
+      "interval_to": 58652885,
       "eligible_unlabeled_receivers": 0,
       "historically_rejected_contract_addresses": 1,
-      "snapshot_block": 58647885,
-      "snapshot_origin": "ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE"
+      "snapshot_block": 59925194,
+      "snapshot_origin": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "archive_cursor_not_used_for_rpc_balance": true
     },
     {
       "coin": "B2",
       "chain": "bsc",
-      "cursor_block": 134588300,
-      "coverage_status": "CONTIGUOUS_STORED_TOKEN_LOGS",
+      "cursor_block": 134600300,
+      "coverage_status": "CONTIGUOUS_ARCHIVE_PLUS_SEPARATE_HEAD_WINDOW",
       "address_candidates": [
         {
           "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
@@ -278,50 +428,92 @@
           "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
         },
         {
-          "address": "0xa87eabb2150ff4e98ec06781706fafac3a1ce565",
-          "net_raw": "1621473355102177144001",
-          "recent_net_raw": "150571420928311972299",
-          "inflow_transactions": 8,
+          "address": "0x35f9c573ce5ec99a5c373f8b9cd9f6691826fb8b",
+          "net_raw": "573030862705035876369",
+          "recent_net_raw": "573030862705035876369",
+          "inflow_transactions": 3,
           "independent_sources_not_proven": 1,
-          "known_dex_inflow_transactions": 8,
+          "known_dex_inflow_transactions": 3,
+          "already_monitored": false,
+          "reason": "BALANCE_AND_EOA_OWNER_NOT_YET_VERIFIED"
+        },
+        {
+          "address": "0x8955a9dd4a496a775ea662bdb0a43266ce1231de",
+          "net_raw": "124090228195590053412",
+          "recent_net_raw": "124090228195590053412",
+          "inflow_transactions": 2,
+          "independent_sources_not_proven": 1,
+          "known_dex_inflow_transactions": 2,
+          "already_monitored": false,
+          "reason": "BALANCE_AND_EOA_OWNER_NOT_YET_VERIFIED"
+        }
+      ],
+      "count": 4,
+      "fresh_head_window": [
+        134689422,
+        134690021
+      ],
+      "head_window_does_not_repair_older_missing_blocks": true,
+      "interval_from": 134594301,
+      "interval_to": 134600300,
+      "eligible_unlabeled_receivers": 2,
+      "historically_rejected_contract_addresses": 14,
+      "snapshot_block": 134690136,
+      "snapshot_origin": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "archive_cursor_not_used_for_rpc_balance": true
+    },
+    {
+      "coin": "CYS",
+      "chain": "bsc",
+      "cursor_block": 134600300,
+      "coverage_status": "CONTIGUOUS_ARCHIVE_PLUS_SEPARATE_HEAD_WINDOW",
+      "address_candidates": [
+        {
+          "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
+          "already_monitored": true,
+          "previous_seen_ms": 1794932699924,
+          "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
+        },
+        {
+          "address": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
+          "net_raw": "439521204628348759272",
+          "recent_net_raw": "2384160000000000000000",
+          "inflow_transactions": 2,
+          "independent_sources_not_proven": 2,
+          "known_dex_inflow_transactions": 0,
+          "already_monitored": false,
+          "reason": "BALANCE_AND_EOA_OWNER_NOT_YET_VERIFIED"
+        },
+        {
+          "address": "0xcd5d5f733987a4a75599af7234fd61c7589bda4a",
+          "net_raw": "1276415850169614204621",
+          "recent_net_raw": "1276415850169614204621",
+          "inflow_transactions": 2,
+          "independent_sources_not_proven": 1,
+          "known_dex_inflow_transactions": 0,
           "already_monitored": false,
           "reason": "BALANCE_AND_EOA_OWNER_NOT_YET_VERIFIED"
         }
       ],
       "count": 3,
-      "interval_from": 134582301,
-      "interval_to": 134588300,
-      "eligible_unlabeled_receivers": 1,
-      "historically_rejected_contract_addresses": 14,
-      "snapshot_block": 134588300,
-      "snapshot_origin": "ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE"
-    },
-    {
-      "coin": "CYS",
-      "chain": "bsc",
-      "cursor_block": 134588300,
-      "coverage_status": "CONTIGUOUS_STORED_TOKEN_LOGS",
-      "address_candidates": [
-        {
-          "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
-          "already_monitored": true,
-          "previous_seen_ms": 1794932699924,
-          "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
-        }
+      "fresh_head_window": [
+        134689422,
+        134690021
       ],
-      "count": 1,
-      "interval_from": 134582301,
-      "interval_to": 134588300,
-      "eligible_unlabeled_receivers": 1,
+      "head_window_does_not_repair_older_missing_blocks": true,
+      "interval_from": 134594301,
+      "interval_to": 134600300,
+      "eligible_unlabeled_receivers": 2,
       "historically_rejected_contract_addresses": 16,
-      "snapshot_block": 134588300,
-      "snapshot_origin": "ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE"
+      "snapshot_block": 134690136,
+      "snapshot_origin": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "archive_cursor_not_used_for_rpc_balance": true
     },
     {
       "coin": "STBL",
       "chain": "bsc",
-      "cursor_block": 134588300,
-      "coverage_status": "CONTIGUOUS_STORED_TOKEN_LOGS",
+      "cursor_block": 134600300,
+      "coverage_status": "CONTIGUOUS_ARCHIVE_PLUS_SEPARATE_HEAD_WINDOW",
       "address_candidates": [
         {
           "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
@@ -331,18 +523,24 @@
         }
       ],
       "count": 1,
-      "interval_from": 134582301,
-      "interval_to": 134588300,
+      "fresh_head_window": [
+        134689422,
+        134690021
+      ],
+      "head_window_does_not_repair_older_missing_blocks": true,
+      "interval_from": 134594301,
+      "interval_to": 134600300,
       "eligible_unlabeled_receivers": 0,
       "historically_rejected_contract_addresses": 14,
-      "snapshot_block": 134588300,
-      "snapshot_origin": "ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE"
+      "snapshot_block": 134690136,
+      "snapshot_origin": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "archive_cursor_not_used_for_rpc_balance": true
     },
     {
       "coin": "BSB",
       "chain": "bsc",
-      "cursor_block": 134588300,
-      "coverage_status": "CONTIGUOUS_STORED_TOKEN_LOGS",
+      "cursor_block": 134600300,
+      "coverage_status": "CONTIGUOUS_ARCHIVE_PLUS_SEPARATE_HEAD_WINDOW",
       "address_candidates": [
         {
           "address": "0x09f3977040a58b1ab4d87cb2345f4a7e775af169",
@@ -361,21 +559,33 @@
           "already_monitored": true,
           "previous_seen_ms": 1794932699924,
           "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
+        },
+        {
+          "address": "0x7fc8fd8bb3192e2d62a3d8d97d9a7924d4bae58b",
+          "already_monitored": true,
+          "previous_seen_ms": 1794960440665,
+          "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
         }
       ],
-      "count": 3,
-      "interval_from": 134582301,
-      "interval_to": 134588300,
+      "count": 4,
+      "fresh_head_window": [
+        134689422,
+        134690021
+      ],
+      "head_window_does_not_repair_older_missing_blocks": true,
+      "interval_from": 134594301,
+      "interval_to": 134600300,
       "eligible_unlabeled_receivers": 0,
       "historically_rejected_contract_addresses": 17,
-      "snapshot_block": 134588300,
-      "snapshot_origin": "ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE"
+      "snapshot_block": 134690136,
+      "snapshot_origin": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "archive_cursor_not_used_for_rpc_balance": true
     },
     {
       "coin": "AIO",
       "chain": "bsc",
-      "cursor_block": 134588300,
-      "coverage_status": "CONTIGUOUS_STORED_TOKEN_LOGS",
+      "cursor_block": 134600300,
+      "coverage_status": "CONTIGUOUS_ARCHIVE_PLUS_SEPARATE_HEAD_WINDOW",
       "address_candidates": [
         {
           "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
@@ -391,18 +601,24 @@
         }
       ],
       "count": 2,
-      "interval_from": 134582301,
-      "interval_to": 134588300,
+      "fresh_head_window": [
+        134689422,
+        134690021
+      ],
+      "head_window_does_not_repair_older_missing_blocks": true,
+      "interval_from": 134594301,
+      "interval_to": 134600300,
       "eligible_unlabeled_receivers": 0,
       "historically_rejected_contract_addresses": 6,
-      "snapshot_block": 134588300,
-      "snapshot_origin": "ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE"
+      "snapshot_block": 134690136,
+      "snapshot_origin": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "archive_cursor_not_used_for_rpc_balance": true
     },
     {
       "coin": "STAR",
       "chain": "bsc",
-      "cursor_block": 134588300,
-      "coverage_status": "CONTIGUOUS_STORED_TOKEN_LOGS",
+      "cursor_block": 134600300,
+      "coverage_status": "CONTIGUOUS_ARCHIVE_PLUS_SEPARATE_HEAD_WINDOW",
       "address_candidates": [
         {
           "address": "0x165ac4a52fd8b523a7898d876f4d6d707c2f10fa",
@@ -417,29 +633,31 @@
           "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
         },
         {
-          "address": "0x60b97709d633dd4e0f0f44f6102fd50341c0afa6",
-          "net_raw": "2818506651948520058740",
-          "recent_net_raw": "1580056403464038551542",
-          "inflow_transactions": 2,
-          "independent_sources_not_proven": 1,
-          "known_dex_inflow_transactions": 2,
-          "already_monitored": false,
-          "reason": "BALANCE_AND_EOA_OWNER_NOT_YET_VERIFIED"
+          "address": "0xc06ebbefd94032b85424d51906e2a335efae264b",
+          "already_monitored": true,
+          "previous_seen_ms": 1794935439539,
+          "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
         }
       ],
       "count": 3,
-      "interval_from": 134582301,
-      "interval_to": 134588300,
-      "eligible_unlabeled_receivers": 2,
+      "fresh_head_window": [
+        134689422,
+        134690021
+      ],
+      "head_window_does_not_repair_older_missing_blocks": true,
+      "interval_from": 134594301,
+      "interval_to": 134600300,
+      "eligible_unlabeled_receivers": 0,
       "historically_rejected_contract_addresses": 18,
-      "snapshot_block": 134588300,
-      "snapshot_origin": "ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE"
+      "snapshot_block": 134690136,
+      "snapshot_origin": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "archive_cursor_not_used_for_rpc_balance": true
     },
     {
       "coin": "LYN",
       "chain": "bsc",
-      "cursor_block": 134588300,
-      "coverage_status": "CONTIGUOUS_STORED_TOKEN_LOGS",
+      "cursor_block": 134600300,
+      "coverage_status": "CONTIGUOUS_ARCHIVE_PLUS_SEPARATE_HEAD_WINDOW",
       "address_candidates": [
         {
           "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
@@ -458,418 +676,675 @@
           "already_monitored": true,
           "previous_seen_ms": 1794960440665,
           "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
+        },
+        {
+          "address": "0xc037a180b8e0355d31ae342c23e39daea82a013e",
+          "already_monitored": true,
+          "previous_seen_ms": 1794960440665,
+          "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
+        },
+        {
+          "address": "0xe3581b98a72583a3556451b3e5281d971c32aecf",
+          "already_monitored": true,
+          "previous_seen_ms": 1794960440665,
+          "reason": "FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION"
         }
       ],
-      "count": 3,
-      "interval_from": 134582301,
-      "interval_to": 134588300,
+      "count": 5,
+      "fresh_head_window": [
+        134689422,
+        134690021
+      ],
+      "head_window_does_not_repair_older_missing_blocks": true,
+      "interval_from": 134594301,
+      "interval_to": 134600300,
       "eligible_unlabeled_receivers": 0,
       "historically_rejected_contract_addresses": 4,
-      "snapshot_block": 134588300,
-      "snapshot_origin": "ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE"
+      "snapshot_block": 134690136,
+      "snapshot_origin": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "archive_cursor_not_used_for_rpc_balance": true
     }
   ],
   "check_status_counts": {
-    "ERROR": 36
+    "OK": 45,
+    "SKIPPED_CONTRACT": 10
   },
   "results": [
     {
       "coin": "ON",
       "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "38651177632551675503314",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "ON",
       "address": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "31932230246521338799181",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+      "strong_alert": false
+    },
+    {
+      "coin": "ON",
+      "address": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "34035133948451525771852",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "ON",
       "address": "0x4e7ed91e702ef2ff0c58e251c6e20d1dc1e31a5f",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
+      "block": 134690136,
+      "status": "SKIPPED_CONTRACT",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
       "owner_status": "NOT_VERIFIED",
       "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "detail": "DYNAMIC_CONTRACT_CODE_SKIP",
+      "strong_alert": false
+    },
+    {
+      "coin": "ON",
+      "address": "0xa2349c76cb0806103e913d0f1c5786fb5c60d3ca",
+      "block": 134690136,
+      "status": "SKIPPED_CONTRACT",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "NOT_VERIFIED",
+      "snapshot_amount_raw": null,
+      "detail": "DYNAMIC_CONTRACT_CODE_SKIP",
+      "strong_alert": false
+    },
+    {
+      "coin": "ON",
+      "address": "0xd52e8e422a352ac1afdc2bd6ec533d41b20acb7b",
+      "block": 134690136,
+      "status": "SKIPPED_CONTRACT",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "NOT_VERIFIED",
+      "snapshot_amount_raw": null,
+      "detail": "DYNAMIC_CONTRACT_CODE_SKIP",
       "strong_alert": false
     },
     {
       "coin": "DOS",
       "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "202259309627130698",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "DOS",
       "address": "0xd9b33fe2eae536b3331adb9f0cbd60c741edb7f7",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "2000",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "DOS",
       "address": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "24866152083648556207246",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+      "strong_alert": false
+    },
+    {
+      "coin": "DOS",
+      "address": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "146757597761476293174815",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "HANA",
       "address": "0x53f78a071d04224b8e254e243fffc6d9f2f3fa23",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "10927202939520390719221531",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "HANA",
       "address": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "97668288711480148525238",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "HANA",
-      "address": "0xa2349c76cb0806103e913d0f1c5786fb5c60d3ca",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
+      "address": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "526628901755160187570989",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+      "strong_alert": false
+    },
+    {
+      "coin": "HANA",
+      "address": "0xcf90dc7b365bf0714abfb8bfcd5fda6ba02bd21f",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "78258120784688974925827",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+      "strong_alert": false
+    },
+    {
+      "coin": "HANA",
+      "address": "0xab293ac0ebb70860845b8007fc46bc7a0c8afd4c",
+      "block": 134690136,
+      "status": "SKIPPED_CONTRACT",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
       "owner_status": "NOT_VERIFIED",
       "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "detail": "DYNAMIC_CONTRACT_CODE_SKIP",
       "strong_alert": false
     },
     {
       "coin": "COLLECT",
       "address": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "65446987448631639765202",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "COLLECT",
       "address": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "269853378208931157058240",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "COLLECT",
       "address": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "8075196035148034395798434",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+      "strong_alert": false
+    },
+    {
+      "coin": "COLLECT",
+      "address": "0xce2213f43ad773fb53f135f188e173bcce2feafc",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "605568",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+      "strong_alert": false
+    },
+    {
+      "coin": "COLLECT",
+      "address": "0x28aee52c2dfd391fb5028615c930a9a7b43ca19b",
+      "block": 134690136,
+      "status": "SKIPPED_CONTRACT",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
       "owner_status": "NOT_VERIFIED",
       "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "detail": "DYNAMIC_CONTRACT_CODE_SKIP",
+      "strong_alert": false
+    },
+    {
+      "coin": "COLLECT",
+      "address": "0x8955a9dd4a496a775ea662bdb0a43266ce1231de",
+      "block": 134690136,
+      "status": "SKIPPED_CONTRACT",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "NOT_VERIFIED",
+      "snapshot_amount_raw": null,
+      "detail": "DYNAMIC_CONTRACT_CODE_SKIP",
       "strong_alert": false
     },
     {
       "coin": "LIGHT",
       "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "831950695",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "LIGHT",
       "address": "0x789f0cd9ea6fd81c9bdc10b4c5cad643189cc23c",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "353",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "LIGHT",
       "address": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "22690860692",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+      "strong_alert": false
+    },
+    {
+      "coin": "LIGHT",
+      "address": "0x165ac4a52fd8b523a7898d876f4d6d707c2f10fa",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "4531502694",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+      "strong_alert": false
+    },
+    {
+      "coin": "LIGHT",
+      "address": "0x53f78a071d04224b8e254e243fffc6d9f2f3fa23",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "568109589780",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+      "strong_alert": false
+    },
+    {
+      "coin": "LIGHT",
+      "address": "0xe5addd2247231e753aa9b881236edfcea8cc82d0",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "10296059945",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "APR",
       "address": "0x2bfd1fc5e25a8f55c2e849492ad7966ea8a0dd9e",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "15942346503400723799017",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "APR",
       "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "12936469616789453327732",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "APR",
       "address": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "183949486246568210864540",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+      "strong_alert": false
+    },
+    {
+      "coin": "APR",
+      "address": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "90205473254846122625161",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "IN",
       "address": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "396150736410797676140679",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "IN",
-      "address": "0x0f0067cd819cb8f20bda62046daff7a2b5c88280",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
+      "address": "0xa2349c76cb0806103e913d0f1c5786fb5c60d3ca",
+      "block": 134690136,
+      "status": "SKIPPED_CONTRACT",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
       "owner_status": "NOT_VERIFIED",
       "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "detail": "DYNAMIC_CONTRACT_CODE_SKIP",
       "strong_alert": false
     },
     {
       "coin": "B2",
       "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "38242368343575902659062",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "B2",
       "address": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "13746260334236982237784",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "B2",
-      "address": "0xa87eabb2150ff4e98ec06781706fafac3a1ce565",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
+      "address": "0x35f9c573ce5ec99a5c373f8b9cd9f6691826fb8b",
+      "block": 134690136,
+      "status": "SKIPPED_CONTRACT",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
       "owner_status": "NOT_VERIFIED",
       "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "detail": "DYNAMIC_CONTRACT_CODE_SKIP",
+      "strong_alert": false
+    },
+    {
+      "coin": "B2",
+      "address": "0x8955a9dd4a496a775ea662bdb0a43266ce1231de",
+      "block": 134690136,
+      "status": "SKIPPED_CONTRACT",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "NOT_VERIFIED",
+      "snapshot_amount_raw": null,
+      "detail": "DYNAMIC_CONTRACT_CODE_SKIP",
       "strong_alert": false
     },
     {
       "coin": "CYS",
       "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "221462825413738542845980",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+      "strong_alert": false
+    },
+    {
+      "coin": "CYS",
+      "address": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "8199640949999998830237",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+      "strong_alert": false
+    },
+    {
+      "coin": "CYS",
+      "address": "0xcd5d5f733987a4a75599af7234fd61c7589bda4a",
+      "block": 134690136,
+      "status": "SKIPPED_CONTRACT",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
       "owner_status": "NOT_VERIFIED",
       "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "detail": "DYNAMIC_CONTRACT_CODE_SKIP",
       "strong_alert": false
     },
     {
       "coin": "STBL",
       "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "8670792193064765157806",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "BSB",
       "address": "0x09f3977040a58b1ab4d87cb2345f4a7e775af169",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "36199127973662061854624",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "BSB",
       "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "29645027795860866718162",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "BSB",
       "address": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "2216165443173242442794",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+      "strong_alert": false
+    },
+    {
+      "coin": "BSB",
+      "address": "0x7fc8fd8bb3192e2d62a3d8d97d9a7924d4bae58b",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "156593789577548674185",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "AIO",
       "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "403499344590932730223637",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "AIO",
       "address": "0x0f0067cd819cb8f20bda62046daff7a2b5c88280",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "3232428612522042432993",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "STAR",
       "address": "0x165ac4a52fd8b523a7898d876f4d6d707c2f10fa",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "143309692718446091030661",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "STAR",
       "address": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "126502598748403509778132",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "STAR",
-      "address": "0x60b97709d633dd4e0f0f44f6102fd50341c0afa6",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "address": "0xc06ebbefd94032b85424d51906e2a335efae264b",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "14191453033540078217",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "LYN",
       "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "351063796115202734189013",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "LYN",
       "address": "0x7fc8fd8bb3192e2d62a3d8d97d9a7924d4bae58b",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "43989032072505294379865",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     },
     {
       "coin": "LYN",
       "address": "0x8e2a9d954e7c88a00d3571eeab3d5e733a309426",
-      "block": 134588300,
-      "status": "ERROR",
-      "rpc_provider": null,
-      "owner_status": "NOT_VERIFIED",
-      "snapshot_amount_raw": null,
-      "detail": "DYNAMIC_RPC_ERROR:HTTPError:HTTP Error 403: Forbidden|RuntimeError:{'code': -32000, 'message': 'missing trie node'}|RuntimeError:{'code': -32000, 'message': 'not supported'}",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "133080101817203090424",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+      "strong_alert": false
+    },
+    {
+      "coin": "LYN",
+      "address": "0xc037a180b8e0355d31ae342c23e39daea82a013e",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "836028974691528245829584",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+      "strong_alert": false
+    },
+    {
+      "coin": "LYN",
+      "address": "0xe3581b98a72583a3556451b3e5281d971c32aecf",
+      "block": 134690136,
+      "status": "OK",
+      "rpc_provider": "https://bsc-rpc.publicnode.com",
+      "owner_status": "EOA_CODE_ONLY_OWNER_NOT_PROVEN",
+      "snapshot_amount_raw": "547906783928632687215772",
+      "detail": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
       "strong_alert": false
     }
   ],
-  "snapshot_tip_chains": {},
+  "snapshot_tip_chains": {
+    "bsc": 134690136,
+    "base": 59925194
+  },
+  "snapshot_head_provenance": {
+    "bsc": {
+      "block": 134690136,
+      "source": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "provider": "https://bsc-rpc.publicnode.com",
+      "prior_verified_tip": null
+    },
+    "base": {
+      "block": 59925194,
+      "source": "LIVE_RPC_CURRENT_FINALIZED_HEAD",
+      "provider": "https://rpc.swiftnodes.io/rpc/base",
+      "prior_verified_tip": null
+    }
+  },
+  "snapshot_head_errors": {},
+  "previous_near_tip_log_heads": {},
+  "independent_head_discovery_intervals": {
+    "bsc": [
+      134689422,
+      134690021
+    ],
+    "base": [
+      59924380,
+      59924979
+    ]
+  },
   "stale_archival_transfer_gap_not_repaired_by_balance_snapshots": true
 }
