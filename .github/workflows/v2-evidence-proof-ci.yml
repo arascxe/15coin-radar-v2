@@ -54,6 +54,10 @@ jobs:
           print('CHAINS',d.get('chain_health'))
           print('IDENTITY_STATUS',collections.Counter(d.get('exchange_pair_identity',{}).values()))
           assert len(d['coins'])==15
+          fusion=d.get('unified_economic_fusion',{})
+          assert fusion.get('schema')=='radar-v2-live-economic-fusion-1', 'UNIFIED_ECONOMIC_FUSION_NOT_EXECUTED'
+          assert fusion.get('coin_count')==15, 'UNIFIED_FUSION_15_COIN_COVERAGE_FAILURE'
+          assert all('unified_economic_evidence' in c and c['unified_economic_evidence'].get('orders_cancelled_vs_consumed_exactly_known') is False for c in d['coins']), 'UNIFIED_EVIDENCE_MISSING_OR_OVERCLAIMED'
           assert d.get('onchain_economic_engine_status')=='COMPLETE_FRESH', 'ONCHAIN_ECONOMICS_NOT_LIVE_ACCEPTED'
           assert all(c.get('onchain_economics',{}).get('coin')==c.get('coin') for c in d['coins'])
           from v2_full.entities import load_entities
