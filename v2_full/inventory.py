@@ -65,6 +65,7 @@ def analyze(config,tail,verified_entities=None,codeproofs=None,balanceproofs=Non
             if not (bals and bals.get('reconciled') is True and
                     bals.get('two_distinct_finalized_block_snapshots') is True and
                     bals.get('source_balance_reconciled') is True and
+                    bals.get('recipient_baseline_raw') is not None and
                     int(bals.get('retained_raw',0))>=amt*7//10):
                 z['blocked'].append('CEX_SOURCE_AND_EOA_RETENTION_NOT_JOINTLY_PROVED');continue
             if not all(isinstance(x.get('block_ms'),int) for x in rows[(sym,to)]):
