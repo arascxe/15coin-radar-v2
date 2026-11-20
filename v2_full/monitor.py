@@ -301,7 +301,9 @@ def main(argv=None):
                     hourly_history=None
                     result['multiday_history_read_error']=type(exc).__name__
             try:
-                result=unify_economics(result,hourly_history,now)
+                # Evaluate at the timestamp of the actual live market report.
+                # The report may be milliseconds later than the loop entry clock.
+                result=unify_economics(result,hourly_history,int(result['asof_ms']))
             except Exception as exc:
                 result['unified_economic_fusion_error']=type(exc).__name__+':'+str(exc)[:140]
             result['onchain_economic_engine_status']='COMPLETE_FRESH' if economic_live and 0<=now-economic_live.get('asof_ms',0)<=600000 else 'STALE_OR_UNAVAILABLE'
