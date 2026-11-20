@@ -101,24 +101,55 @@ def ingest(store,rid,config,chain,http=None,ts=None,initial_blocks=600,
             'source':url,'method':method,'note':failure,
             'important':'Verified tip is not proof of CEX ownership or sellable supply'}
 
+def restore_prior_cursor(store,path):
+    """Tip cursors live in a tiny JSON file, not the immutable archive DB schema."""
+    if not path or not pathlib.Path(path).exists():return
+    d=json.loads(pathlib.Path(path).read_text())
+    if d.get('schema')!='v2-verified-independent-chain-tip-1':
+        raise RuntimeError('UNTRUSTED_TIP_CURSOR_REPORT')
+    store.db.executescript(DDL)
+    with store.db:
+        for x in d.get('chains',[]):
+            ch=x.get('chain');last=x.get('verified_to')
+            if ch not in ('bsc','base') or not isinstance(last,int) or last<=0:continue
+            store.db.execute("""INSERT INTO chain_tip_cursor VALUES(?,?,?)
+                 ON CONFLICT(chain) DO UPDATE SET
+                 last_complete_block=MAX(last_complete_block,excluded.last_complete_block)""",
+                 (ch,last,now_ms()))
+
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument('--db',required=True)
     ap.add_argument('--config',required=True)
     ap.add_argument('--out',required=True)
+    ap.add_argument('--prior',default=None,
+                    help='Previous independent tip JSON report, not archive SQLite')
     ap.add_argument('--deadline-seconds',type=int,default=150)
     a=ap.parse_args()
     cfg=json.loads(pathlib.Path(a.config).read_text())
     validate_config(cfg)
     store=Store(a.db)
+    report=None
     try:
         row=store.db.execute('SELECT run_id FROM runs ORDER BY started_ms DESC LIMIT 1').fetchone()
         if not row:raise RuntimeError('NO_COLLECTOR_RUN_TO_ATTACH')
+        restore_prior_cursor(store,a.prior)
         report={'schema':'v2-verified-independent-chain-tip-1',
                 'created_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
                 'run_id':row[0],'signals':False,'buy_signal':False,
                 'chains':[ingest(store,row[0],cfg,chain,deadline_seconds=a.deadline_seconds) for chain in ('bsc','base')]}
-    finally:store.close()
+        # The archive is an immutable-schema incremental SQLite ledger.
+        # These two scratch tip tables would break its lossless restore.
+        # Retain verified transfers in the original token_transfers table
+        # and the cursors/proof ranges in the independent tip JSON report.
+        with store.db:
+            store.db.execute('DROP TABLE IF EXISTS chain_tip_checks')
+            store.db.execute('DROP TABLE IF EXISTS chain_tip_cursor')
+        if report is not None:
+            report['cursor_persisted_in']='OUT_OF_BAND_JSON_ONLY'
+            report['archive_schema_unchanged']=True
+    finally:
+        store.close()
     target=pathlib.Path(a.out);target.parent.mkdir(parents=True,exist_ok=True)
     tmp=target.with_name(target.name+'.tmp')
     tmp.write_text(json.dumps(report,indent=2,ensure_ascii=False)+'\n')
