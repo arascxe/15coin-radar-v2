@@ -60,8 +60,9 @@ def build(event,capture=None,chain=None,config=None):
         sample=w.get('transaction_proof_sample')
         if isinstance(sample,dict):
             row['transaction_proof_sample']={k:sample.get(k) for k in
-                ('window_days','from_block_exclusive','to_block_inclusive','more_events_may_exist',
-                 'covered_every_intervening_block','balance_delta_reconciled_to_complete_transfers','scope')}
+                ('window_days','from_block_exclusive','to_block_inclusive','selected_event_count',
+                 'more_events_may_exist','covered_every_intervening_block',
+                 'balance_delta_reconciled_to_complete_transfers','scope')}
             rows=[]
             for tr in sample.get('entries',[])[:8]:
                 if not isinstance(tr,dict):continue
