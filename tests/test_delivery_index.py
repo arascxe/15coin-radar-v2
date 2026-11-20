@@ -24,6 +24,22 @@ class DeliveryTests(unittest.TestCase):
         self.assertEqual(inbox['research_events_72h'][0]['urgency'],
                          'EARLY_COMBINED_ECONOMIC_EVENT')
         self.assertEqual(inbox['delivery_status'],'NOT_SENT_BY_GITHUB_ACTIONS')
+    def test_alert_carries_exact_market_and_onchain_proof(self):
+        event={'coin':'ON','evidence_state':'COMBINED_PREP_THEN_SPOT_OBSERVED',
+               'first_seen_ms':T-60000,
+               'spot_markets':[{'venue':'gate','pair':'ON_USDT','phase':'early_90s',
+                                'buy_quote':'4500','sell_quote':'900',
+                                'ask_depleted_fraction':'0.45',
+                                'identity_verified':True}],
+               'inventory_proof':[{'address':'0x'+'a'*40,
+                                   'txs':['0x'+'b'*64,'0x'+'c'*64],
+                                   'source_balance_reconciled':True,
+                                   'source_net_decrease_raw':{'0x'+'d'*40:'30000'},
+                                   'last_block_ms':T-180000}]}
+        x=build(report(),{'events':[event]})['research_events_72h'][0]
+        self.assertEqual(x['spot_proof'][0]['buy_quote'],'4500')
+        self.assertEqual(x['inventory_proof'][0]['source_balance_reconciled'],True)
+        self.assertEqual(len(x['inventory_proof'][0]['txs']),2)
     def test_unknown_does_not_alert(self):
         inbox=build(report(),{'events':[]})
         self.assertEqual(inbox['research_events_72h'],[])
