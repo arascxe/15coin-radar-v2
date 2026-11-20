@@ -170,7 +170,8 @@ def build(db_path,config,asof_ms=None,verified_cex_path=None):
                        'window_days':days,'from_block_exclusive':lo,
                        'to_block_inclusive':hi,'selected_event_count':min(8,len(txs)),
                        'more_events_may_exist':len(txs)>8,
-                       'covered_every_intervening_block':window.get('transfer_proof_status')!='CHAIN_INTERVAL_NOT_COMPLETE',
+                       'covered_every_intervening_block':window.get('transfer_proof_status') in
+                            ('FULL_INTERVAL_TOKEN_TRANSFERS_RECONCILED','NET_BALANCE_TRANSFER_MISMATCH'),
                        'balance_delta_reconciled_to_complete_transfers':window.get('transfer_flow_reconciled_across_full_period') is True,
                        'entries':[{'tx':tx,'block':block,'from':frm,'to':to,
                             'amount_raw':str(amount),'chain':chain,
