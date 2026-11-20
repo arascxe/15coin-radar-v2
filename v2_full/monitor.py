@@ -18,6 +18,7 @@ from .entities import load_entities
 from .prep_memory import revalidate
 from .onchain_economics import observe as observe_economics
 from .economic_fusion_live import enrich as unify_economics
+from .evidence_packet import write_immutable
 
 def fresh_chain(src,now):
     if not src:return {'chains':{},'events':[]}
@@ -351,6 +352,14 @@ def main(argv=None):
                            'onchain_economics':row.get('onchain_economics',{}),
                            'unified_economic_evidence':row.get('unified_economic_evidence',{}),
                            'buy_signal':False,'validated_future_10x':False}
+                    # Freeze actual source evidence before deduplication is saved.
+                    # A later run must never overwrite or reconstruct this event.
+                    try:
+                        event.update(write_immutable(out/'evidence_packets',event,
+                            capture=cap,chain=active_chain,config=config))
+                    except Exception as exc:
+                        event['evidence_packet_status']='FAILED_NOT_AUDITABLE'
+                        event['evidence_packet_error']=type(exc).__name__+':'+str(exc)[:160]
                     events.append(event)
                     verified_event=st in ('INDEPENDENT_SPOT_IGNITION_OBSERVED',
                         'VERIFIED_INVENTORY_PREPARATION_OBSERVED','COMBINED_PREP_THEN_SPOT_OBSERVED')

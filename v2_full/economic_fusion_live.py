@@ -64,6 +64,11 @@ def qualified_prep(src,now,history_asof):
               'transfer_reconciled':x.get('transfer_flow_reconciled_across_full_period') is True,
               'transfer_proof_status':x.get('transfer_proof_status','UNKNOWN'),
               'source_exchange_scope':w.get('cex_sources_completeness','UNKNOWN'),
+              'start_block':x.get('start_block'),'end_block':x.get('end_block'),
+              'start_balance_token':x.get('start_balance'),'end_balance_token':x.get('end_balance'),
+              'recorded_snapshots':w.get('validated_snapshot_count'),
+              'transaction_proof_sample':w.get('transaction_proof_sample'),
+              'direct_verified_cex_address_sources':w.get('direct_verified_cex_address_sources',[])[:5],
               'owner_verified':False})
             break
     dedup={}
@@ -214,6 +219,7 @@ def enrich(report,history=None,now=None):
           'evidence_uncertainty':['NO_FULL_CEX_OR_DEX_GLOBAL_SELLABLE_SUPPLY',
             'UNKNOWN_BENEFICIAL_OWNER_AND_POSSIBLE_INTERNAL_HOPS',
             'L2_ASK_REMOVAL_MAY_BE_CANCELS_OR_TAKER_CONSUMPTION',
+            'HISTORICAL_TX_IDS_NOT_AVAILABLE_WHEN_ARCHIVE_COVERAGE_MISSING',
             'NO_BACKTESTED_FALSE_ALARM_RATE']}
         row['unified_economic_evidence']=detail
         row['pre_fusion_state']=row['state']

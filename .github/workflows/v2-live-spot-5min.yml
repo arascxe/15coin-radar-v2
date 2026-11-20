@@ -70,6 +70,7 @@ jobs:
             python -m v2_full.delivery_index \
               --report /tmp/v2-live/live_15_coin_economic_state.json \
               --outbox /tmp/v2-live/economic_event_outbox.json \
+              --packet-dir /tmp/v2-live/evidence_packets \
               --run-id ${{ github.run_id }} \
               --out /tmp/v2-live/live_alert_inbox.json
           else
@@ -110,12 +111,19 @@ jobs:
           for attempt in 1 2 3; do
             git fetch origin main
             git checkout -B live-inbox-publish origin/main
-            mkdir -p v2_state
+            mkdir -p v2_state/evidence_packets
+            python -m v2_full.packet_publish \
+              --inbox /tmp/v2-live/live_alert_inbox.json \
+              --source-dir /tmp/v2-live/evidence_packets \
+              --dest-dir v2_state/evidence_packets
             cp /tmp/v2-live/live_alert_inbox.json v2_state/live_alert_inbox.json
             if test -s /tmp/v2-live/published_event_outbox.json; then
               cp /tmp/v2-live/published_event_outbox.json v2_state/live_economic_event_outbox.json
             fi
             git add v2_state/live_alert_inbox.json v2_state/live_economic_event_outbox.json
+            if find v2_state/evidence_packets -type f -name '*.json' | grep -q .; then
+              git add v2_state/evidence_packets
+            fi
             if git diff --cached --quiet; then
               echo "NO_NEW_PUBLISHABLE_INBOX"
               exit 0
@@ -176,3 +184,4 @@ jobs:
             /tmp/v2-live/official_contract_identity.json
             /tmp/v2-live/dex_active_tick_quote.json
             /tmp/v2-live/evidence_*.jsonl.gz
+            /tmp/v2-live/evidence_packets/*.json
