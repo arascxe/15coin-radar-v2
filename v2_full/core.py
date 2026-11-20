@@ -193,7 +193,7 @@ class VenueState:
             b=self.book.compare(now,window_ms=window)
             t=self.tape.window(now,window_ms=window)
             reasons=[]
-            if self.identity!='VERIFIED_SAME_CONTRACT_NETWORK':reasons.append('SYMBOL_TO_CONTRACT_IDENTITY_UNVERIFIED')
+            if self.identity not in ('VERIFIED_SAME_CONTRACT_NETWORK','VERIFIED_OFFICIAL_HISTORICAL_MEXC_SPOT_LISTING_WITH_ACTIVE_PAIR'):reasons.append('SYMBOL_TO_CONTRACT_IDENTITY_UNVERIFIED')
             if b['status']!='VERIFIED_SEQUENCED_BOOK_INTERVAL':reasons.append(b['status'])
             if t['status']!='LIVE_TRANSPORT_CONTINUOUS_NOT_EXCHANGE_AUDITED':reasons.append(t['status'])
             buy=dec(t['buy_quote']) if t.get('buy_quote') is not None else D(0)
