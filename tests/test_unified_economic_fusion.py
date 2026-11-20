@@ -73,7 +73,7 @@ class UnifiedFusionTest(unittest.TestCase):
         self.assertEqual(x['phase'],'PREPARATION_THEN_SPOT_IGNITION_RESEARCH')
         self.assertTrue(x['preparation_before_spot_proved_in_observation_time'])
         self.assertEqual(x['full_period_transfer_reconciled_wallets'],1)
-        self.assertEqual(x['wallet_7d_or_30d_net_retained_delta_token'],'3000000')
+        self.assertEqual(x['wallet_3d_7d_30d_net_retained_delta_token'],'3000000')
         self.assertIsNotNone(x['relative_retained_balance_change_to_partial_observed_ask_depth'])
 
     def test_no_hindsight_preparation_historical_time_after_trade_window(self):
@@ -116,7 +116,7 @@ class UnifiedFusionTest(unittest.TestCase):
         h=history(w);h['coins'][0]['wallets'].append(copy.deepcopy(w))
         x=enrich(r,h,NOW)['coins'][0]['unified_economic_evidence']
         self.assertEqual(x['observed_multiday_wallet_count_unknown_owners'],1)
-        self.assertEqual(x['wallet_7d_or_30d_net_retained_delta_token'],'3000000')
+        self.assertEqual(x['wallet_3d_7d_30d_net_retained_delta_token'],'3000000')
         self.assertEqual(x['visible_ask_token_qty_across_observed_independent_venues_and_one_pool'],'580')
 
     def test_dex_same_tick_liquidity_drop_not_proven_lp_withdrawal(self):
@@ -133,6 +133,17 @@ class UnifiedFusionTest(unittest.TestCase):
         x=enrich(r,None,NOW)['coins'][0]['unified_economic_evidence']
         self.assertEqual(x['phase'],'DEX_ACTIVE_LIQUIDITY_REDUCTION_REVIEW')
         self.assertFalse(x['dex_scope']['LP_burn_event_verified'])
+
+    def test_three_day_early_preparation_is_visible_without_seven_day_wait(self):
+        r=report()
+        w=wallet(period=3,end=NOW-200000)
+        h=history(w)
+        out=enrich(r,h,NOW)
+        x=out['coins'][0]['unified_economic_evidence']
+        self.assertEqual(x['phase'],'PREPARATION_RESEARCH')
+        self.assertEqual(x['multiday_wallet_evidence'][0]['observed_days'],3)
+        self.assertFalse(x['spot_ignition_observed'])
+        self.assertFalse(x['price_pump_predicted_or_buy_recommended'])
 
     def test_L2_reports_anchored_token_ask_quantity(self):
         book=L2()
