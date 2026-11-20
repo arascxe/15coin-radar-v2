@@ -333,6 +333,16 @@ def main(argv=None):
             for row in result['coins']:
                 sym,st=row['coin'],row['state']
                 if st!='EVIDENCE_INSUFFICIENT_UNKNOWN' and previous.get(sym)!=st:
+                    # Restart/reconnect flaps must not send the same research
+                    # episode repeatedly. Material changes can be evaluated in
+                    # the hourly history, but not re-alerted every 10 seconds.
+                    recent_same=any(e.get('coin')==sym and e.get('evidence_state')==st
+                        and isinstance(e.get('first_seen_ms'),int)
+                        and 0<=now-e['first_seen_ms']<30*60000
+                        for e in events[-300:])
+                    if recent_same:
+                        previous[sym]=st
+                        continue
                     event={'coin':sym,'first_seen_ms':now,'evidence_state':st,
                            'spot_markets':row['market_evidence'],'preparation_proved':row['preparation_proved'],
                            'dex_active_quote':row['dex_pool'],
