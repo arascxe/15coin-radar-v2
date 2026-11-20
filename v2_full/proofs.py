@@ -43,25 +43,58 @@ def verify_transfers(config,chain,verified_entities,ledger_file,cap=50):
             current=_bal(http,provider,token,addr,block)
             key=sym+'|'+addr
             prior=old.get(key)
-            if prior and prior.get('block')==block:continue
+            if prior and int(prior.get('block',-1))==block:continue
             new[key]={'block':block,'balance_raw':str(current),'observed_ms':stamp()}
-            if not prior:continue
             start=state.get('from_block')
-            prevblock=int(prior['block'])
-            # Token transfer list covers (prevblock, block] without missing blocks.
-            if not isinstance(start,int) or start>prevblock+1:continue
-            inraw=sum(int(e['raw']) for e in chain['events'] if e['coin']==sym and e['to'].lower()==addr and prevblock<e['block']<=block)
-            outraw=sum(int(e['raw']) for e in chain['events'] if e['coin']==sym and e['from'].lower()==addr and prevblock<e['block']<=block)
-            delta=current-int(prior['balance_raw'])
-            if delta!=inraw-outraw:continue  # rebasing/fee token or incomplete coverage
-            # At least two separate snapshots and two exchange transactions in the interval.
+            if not isinstance(start,int):continue
+            # A GitHub 5-minute runner has a new filesystem each run. Bootstrap
+            # with a real historical finalized block rather than requiring a
+            # cached prior snapshot that will not exist on a first launch.
+            valid_prior=(prior is not None and
+                start<=int(prior.get('block',0))+1 and
+                0<int(prior.get('block',0))<block)
+            if valid_prior:
+                prevblock=int(prior['block'])
+                previous=int(prior['balance_raw'])
+                snapshot_method='PERSISTED_PREVIOUS_FINALIZED_BALANCE'
+            else:
+                source_blocks=sorted({int(e['block']) for e in incoming})
+                if len(source_blocks)<2:continue
+                prevblock=source_blocks[0]-1
+                if prevblock<start-1 or prevblock<1:continue
+                previous=_bal(http,provider,token,addr,prevblock)
+                snapshot_method='HISTORICAL_FINALIZED_BALANCE_AT_FIRST_CEX_OUTFLOW_MINUS_ONE'
+            # The entire token Transfer interval must be present and continuous.
+            rows=[e for e in chain['events'] if e['coin']==sym and prevblock<e['block']<=block]
+            inraw=sum(int(e['raw']) for e in rows if e['to'].lower()==addr)
+            outraw=sum(int(e['raw']) for e in rows if e['from'].lower()==addr)
+            delta=current-previous
+            if delta!=inraw-outraw:continue
             source_txs=[e for e in incoming if prevblock<e['block']<=block]
-            if len(set(e['tx'] for e in source_txs))<2:continue
+            if len({e['tx'] for e in source_txs})<2:continue
             emitted=sum(int(e['raw']) for e in source_txs)
             if emitted<=0 or delta<emitted*7//10:continue
+            # Check both ends: an apparent hot-wallet withdrawal is not a
+            # verified *net* exchange inventory reduction if source balances
+            # grew or the transfer logs fail exact ERC20 reconciliation.
+            source_net_decreases={}
+            source_valid=True
+            for src in {e['from'].lower() for e in source_txs}:
+                src_before=_bal(http,provider,token,src,prevblock)
+                src_after=_bal(http,provider,token,src,block)
+                net=sum(int(e['raw']) for e in rows if e['to'].lower()==src)
+                net-=sum(int(e['raw']) for e in rows if e['from'].lower()==src)
+                if src_after-src_before!=net or net>=0:
+                    source_valid=False
+                    break
+                source_net_decreases[src]=str(-net)
+            if not source_valid:continue
             balanceproofs[key]={'reconciled':True,
                 'two_distinct_finalized_block_snapshots':True,
                 'retained_raw':str(delta),
+                'source_balance_reconciled':True,
+                'source_net_decrease_raw':source_net_decreases,
+                'snapshot_method':snapshot_method,
                 'prevblock':prevblock,'end_block':block,'increase_raw':str(delta),
                 'exchange_txs':[e['tx'] for e in source_txs],
                 'note':'Balance delta equals all known token transfers in contiguous block interval; owner independence beyond EOA not proved.'}
