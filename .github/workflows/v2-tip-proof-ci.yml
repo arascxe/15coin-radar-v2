@@ -22,6 +22,8 @@ jobs:
         with:
           python-version: '3.11'
       - name: Run old V2 and integrated live-evidence unit tests
+        env:
+          PYTHONPATH: '.:v2'
         run: |
           python -m unittest discover -s v2/tests -q
           python -m unittest discover -s tests -q
