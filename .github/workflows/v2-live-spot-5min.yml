@@ -1,0 +1,78 @@
+name: Radar V2 independent spot live windows (research only)
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: v2-live-public-spot
+  cancel-in-progress: false
+jobs:
+  observe-15-coins:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install public WebSocket client, no credentials
+        run: python -m pip install --disable-pip-version-check --quiet websocket-client
+      - name: Observe 15 coins with live spot chain and DEX
+        shell: bash
+        run: |
+          mkdir -p /tmp/v2-live
+          export PYTHONPATH=.:v2
+          set +e
+          timeout --signal=TERM --kill-after=15s 335s \
+            python -u -m v2_full.monitor --config v2/config.json \
+              --output-dir /tmp/v2-live --interval-sec 10 --max-seconds 270
+          code=$?
+          echo "MONITOR_EXIT_CODE=$code"
+          if test "$code" != 0; then
+            echo "::warning title=V2 monitoring source failure::Monitoring did not complete. This window cannot be treated as complete."
+          fi
+          exit 0
+      - name: Publish evidence and gaps in workflow summary
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import pathlib,json,collections,os
+          path=pathlib.Path('/tmp/v2-live/live_15_coin_economic_state.json')
+          lines=['## Radar V2 — 15 coin market/chain evidence',
+                 'GitHub schedule may be delayed. This is **not** a guaranteed continuous 24/7 feed, a backtested 10x predictor or a buy recommendation.']
+          if not path.exists():
+              lines+=['DATA FAILURE: no report']
+              print('::warning title=V2 missing data::No verified live report')
+          else:
+              try:
+                  d=json.loads(path.read_text())
+                  states=collections.Counter(x.get('state') for x in d.get('coins',[]))
+                  lines+=['As-of unix ms: '+str(d.get('asof_ms')),
+                          'Coins: '+str(len(d.get('coins',[])))+' — Markets: '+str(len(d.get('stream_health',[]))),
+                          'Observed evidence states: '+json.dumps(dict(states))]
+                  for coin in d.get('coins',[]):
+                      state=str(coin.get('state'))
+                      if state not in ('EVIDENCE_INSUFFICIENT_UNKNOWN','CEX_FLOW_ATTRIBUTION_REVIEW'):
+                          print('::notice title=V2 research candidate::'+str(coin.get('coin'))+' '+state+'; view artifacts. Not a verified 10x signal.')
+                          lines+=['Candidate: '+str(coin.get('coin'))+' — '+state+' (RESEARCH ONLY)']
+              except Exception as exc:lines+=['REPORT ERROR: '+str(exc)]
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:f.write('\n\n'.join(lines)+'\n')
+          PY
+      - name: Archive source evidence and event history
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v2-live-evidence-${{ github.run_id }}
+          retention-days: 14
+          if-no-files-found: warn
+          compression-level: 7
+          path: |
+            /tmp/v2-live/live_15_coin_economic_state.json
+            /tmp/v2-live/economic_event_outbox.json
+            /tmp/v2-live/latest_chain_tail.json
+            /tmp/v2-live/official_contract_identity.json
+            /tmp/v2-live/dex_active_tick_quote.json
+            /tmp/v2-live/evidence_*.jsonl.gz
