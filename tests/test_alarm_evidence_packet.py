@@ -12,6 +12,7 @@ from v2_full.core import COINS,VenueState
 from v2_full.evidence_packet import build,write_immutable,packet_id
 from v2_full.delivery_index import build as delivery
 from v2_full.packet_publish import stage
+from v2_full.evidence_verify import verify
 
 T=1800000000000
 ADDR='0x'+'a'*40
@@ -76,6 +77,21 @@ class AlarmPacketTests(unittest.TestCase):
         self.assertEqual([p['trade_id'] for p in r['trade_replay']['trade_receipts_latest']],['first','second'])
         self.assertTrue(packet['proof_health']['L2_cancellation_vs_execution_unknown'])
         self.assertTrue(packet['not_buy_advice'])
+
+    def test_independent_offline_replay_checks_before_and_after_asks_public_ids_wallet_math(self):
+        e,chain,cap,config=setup()
+        with tempfile.TemporaryDirectory() as d:
+            ref=write_immutable(d,e,cap,chain,config)
+            data=(pathlib.Path(d)/(ref['evidence_packet_id']+'.json')).read_bytes()
+            result=verify(data,ref['evidence_packet_sha256'])
+            self.assertTrue(result['content_sha256_verified'])
+            self.assertEqual(result['markets'][0]['book'],'INTERNAL_LEVEL_REPLAY_CONSISTENT')
+            self.assertEqual(result['markets'][0]['trades'],
+                             'INTERNAL_PUBLIC_WS_TRADE_SAMPLE_REPLAY_CONSISTENT')
+            self.assertEqual(result['wallets'][0]['snapshot_net_balance_math'],'CONSISTENT')
+            self.assertFalse(result['CEX_trade_authenticity_independently_rechecked'])
+            with self.assertRaisesRegex(ValueError,'SHA256'):
+                verify(data+b' ',ref['evidence_packet_sha256'])
 
     def test_hash_stays_identical_and_previous_evidence_cannot_be_overwritten(self):
         e,chain,cap,config=setup()
