@@ -16,6 +16,7 @@ import sqlite3
 import time
 
 from radar_stage1 import validate_config
+from economic_brain import covered, net_transfers
 
 D = decimal.Decimal
 DAY = 86400000
@@ -132,6 +133,23 @@ def build(db_path,config,asof_ms=None,verified_cex_path=None):
                 snaps=validated_snapshots(conn,sym,chain,address,now_ms)
                 if not snaps:continue
                 periods={str(days)+'d':series_stats(snaps,days,now_ms,decimals) for days in WINDOWS}
+                # Full-period chain logs, when available, can independently
+                # reconcile balance changes; lack of logs remains UNKNOWN.
+                for days in WINDOWS:
+                    window=periods[str(days)+'d']
+                    if window.get('state')!='COMPLETE_OBSERVED_WINDOW':
+                        continue
+                    lo=window['start_block'];hi=window['end_block']
+                    if not covered(conn,chain,lo+1,hi):
+                        window['transfer_proof_status']='CHAIN_INTERVAL_NOT_COMPLETE'
+                        continue
+                    flow=net_transfers(conn,sym,lo,hi,address)
+                    matched=flow['net_raw']==int(window['net_delta_raw'])
+                    window['transfer_flow_reconciled_across_full_period']=matched
+                    window['transfer_proof_status']=('FULL_INTERVAL_TOKEN_TRANSFERS_RECONCILED'
+                        if matched else 'NET_BALANCE_TRANSFER_MISMATCH')
+                    window['verified_incoming_transactions']=flow['incoming_transactions']
+                    window['verified_inflow_source_count']=flow['distinct_incoming_sources']
                 latest=snaps[-1]
                 direct_cex=[]
                 for frm,raw,tx,block in conn.execute("""
@@ -170,7 +188,7 @@ def build(db_path,config,asof_ms=None,verified_cex_path=None):
                     'SINGLE_WALLET_BALANCE_ACCUMULATION_RESEARCH'
                     if material else 'NO_VERIFIED_MULTIDAY_ACCUMULATION_OR_DATA_INSUFFICIENT',
                 'no_independent_beneficial_owner_proof':True,
-                'transfer_full_period_provenance':'NOT_FULLY_RECONCILED',
+                'transfer_full_period_provenance':'INDIVIDUAL_WALLET_WINDOW_DEPENDENT',
                 'relative_to_total_sellable_supply':'UNKNOWN_NO_COMPLETE_SELLABLE_SUPPLY',
                 'wallets':wallets[:25]})
         return {'schema':SCHEMA,
