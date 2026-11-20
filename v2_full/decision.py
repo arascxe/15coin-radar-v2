@@ -56,6 +56,8 @@ def verdict(config,market,inventory,dex=None):
                 'window_end_ms':tape.get('window_end_ms'),
                 'ask_depleted_fraction':book.get('fraction_depleted'),
                 'book_from_ms':book.get('from_ms'), 'book_to_ms':book.get('to_ms'),
+                'book_from_seq':book.get('from_seq'),'book_to_seq':book.get('to_seq'),
+                'book_observed':book,'tape_observed':tape,
                 'identity_verified':x['evidence_ready'],
                 'blockers':source.get('blockers',[])})
         results.append({'coin':sym,'state':state,'actual_positive_evidence':bool(ready or prep),
