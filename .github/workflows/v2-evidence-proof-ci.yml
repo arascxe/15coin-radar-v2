@@ -52,7 +52,9 @@ jobs:
           print('CHAINS',d.get('chain_health'))
           print('IDENTITY_STATUS',collections.Counter(d.get('exchange_pair_identity',{}).values()))
           assert len(d['coins'])==15
-          assert d.get('verified_exchange_source_addresses')==1
+          from v2_full.entities import load_entities
+          assert d.get('verified_exchange_source_addresses')==len(load_entities('v2/verified_cex_entities.json'))
+          assert d.get('verified_exchange_source_addresses')>=1
           PY
           test "$code" -eq 0
       - name: Preserve raw acceptance evidence
