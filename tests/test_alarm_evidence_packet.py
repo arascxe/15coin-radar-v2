@@ -11,6 +11,7 @@ from types import SimpleNamespace
 from v2_full.core import COINS,VenueState
 from v2_full.evidence_packet import build,write_immutable,packet_id
 from v2_full.delivery_index import build as delivery
+from v2_full.packet_publish import stage
 
 T=1800000000000
 ADDR='0x'+'a'*40
@@ -125,6 +126,45 @@ class AlarmPacketTests(unittest.TestCase):
         p=build(e,cap,chain,config)
         self.assertFalse(p['proof_health']['all_reported_market_windows_replayable'])
         self.assertEqual(p['market_windows_replayable_count'],0)
+
+    def test_atomic_packet_stage_preserves_old_links_and_blocks_bad_hash(self):
+        e,chain,cap,config=setup()
+        with tempfile.TemporaryDirectory() as td:
+            root=pathlib.Path(td);fresh=root/'fresh';main=root/'main'
+            e.update(write_immutable(fresh,e,cap,chain,config))
+            snapshot={'asof_ms':T,'coins':[{'coin':x,'state':'EVIDENCE_INSUFFICIENT_UNKNOWN'} for x in COINS],
+                'scope':'ALL_15_MONITORED_NOT_ALL_15_VERIFIED'}
+            inbox=delivery(snapshot,{'events':[e]},packet_dir=fresh)
+            ip=root/'live_alert_inbox.json';ip.write_text(json.dumps(inbox))
+            result=stage(ip,fresh,main)
+            self.assertEqual(result['new_packets_staged'],1)
+            ref=json.loads(ip.read_text())['research_events_72h'][0]['evidence_packet']
+            self.assertEqual(ref['status'],'PACKET_VERIFIED_READY_FOR_ATOMIC_GITHUB_PUBLISH')
+            self.assertIn('/blob/main/v2_state/evidence_packets/',ref['url'])
+            src=fresh/(packet_id(e)+'.json')
+            dst=main/(packet_id(e)+'.json')
+            self.assertEqual(src.read_bytes(),dst.read_bytes())
+            src.unlink()
+            result=stage(ip,fresh,main)
+            self.assertEqual(result['new_packets_staged'],0)
+            dst.write_text(dst.read_text()+'\\n')
+            with self.assertRaisesRegex(ValueError,'SHA'):
+                stage(ip,fresh,main)
+
+    def test_missing_packet_stage_publishes_no_fake_url(self):
+        e,chain,cap,config=setup()
+        with tempfile.TemporaryDirectory() as td:
+            root=pathlib.Path(td)
+            e.update({'evidence_packet_id':packet_id(e),'evidence_packet_sha256':'a'*64})
+            snapshot={'asof_ms':T,'coins':[{'coin':x,'state':'EVIDENCE_INSUFFICIENT_UNKNOWN'} for x in COINS],
+                'scope':'ALL_15_MONITORED_NOT_ALL_15_VERIFIED'}
+            inbox=delivery(snapshot,{'events':[e]})
+            ip=root/'inbox.json';ip.write_text(json.dumps(inbox))
+            result=stage(ip,root/'no_source',root/'published')
+            self.assertEqual(result['older_packets_missing'],1)
+            packet=json.loads(ip.read_text())['research_events_72h'][0]['evidence_packet']
+            self.assertEqual(packet['status'],'NOT_PUBLISHED_PACKET_MISSING')
+            self.assertIsNone(packet['url'])
 
 if __name__=='__main__':
     unittest.main()
