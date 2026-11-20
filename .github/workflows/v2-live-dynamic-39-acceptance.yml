@@ -1,0 +1,85 @@
+name: V2 direct 39 dynamic-wallet fresh-tip acceptance (read-only)
+on:
+  push:
+    branches:
+      - v2-live-dynamic-validation-20261120
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dynamic-wallet-live-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Regression tests for dynamic wallet and economic events
+        env:
+          PYTHONPATH: .:v2
+        run: |
+          python -m unittest discover -s v2/tests -p "test_dynamic_wallet_monitor.py" -v
+          python -m unittest discover -s tests -p "test_onchain_economics.py" -v
+      - name: Directly retry all 39 previously failed wallets at CURRENT finalized block
+        env:
+          PYTHONPATH: .:v2
+        run: |
+          mkdir -p /tmp/v2-dynamic-proof
+          timeout --signal=TERM --kill-after=10s 370s python -u - <<'PY'
+          import collections,concurrent.futures,datetime,json,pathlib,sys,time
+          from radar_stage1 import HTTPClient,confirmed_head
+          from dynamic_wallet_monitor import read_same_block
+          cfg=json.loads(pathlib.Path('v2/config.json').read_text())
+          prev=json.loads(pathlib.Path('v2_state/dynamic_wallets.json').read_text())
+          failed=[r for r in prev['results'] if r['status']=='ERROR']
+          assert len(failed)==39,('EXPECTED_PREVIOUS_39_ERRORS',len(failed))
+          print('PREVIOUS_RECORDED_FAILURES',len(failed),flush=True)
+          coins={c['symbol']:c for c in cfg['coins']}
+          rpc=HTTPClient(12)
+          heads={}
+          for chain in ('bsc','base'):
+            try:
+              u,head=confirmed_head(rpc,chain)
+              heads[chain]={'status':'CURRENT_VERIFIED','provider':u,'safe_head':head}
+            except Exception as exc:
+              heads[chain]={'status':'RPC_ERROR','error':str(exc)[:250]}
+          print('CURRENT_CHAIN_HEADS',json.dumps(heads),flush=True)
+          def check(w):
+            c=coins[w['coin']]
+            head=heads[c['chain']].get('safe_head')
+            if not head:
+              return {'coin':w['coin'],'address':w['address'],'status':'ERROR','detail':'NO_FRESH_CHAIN_HEAD'}
+            result=read_same_block(rpc,c,w['address'],head)
+            return {'coin':w['coin'],'address':w['address'],'block':head,
+                    'prior_failed_block':w.get('block'),'status':result['status'],
+                    'provider':result.get('provider'),'detail':result.get('detail'),
+                    'amount_raw':str(result['raw']) if result.get('raw') is not None else None}
+          with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+            rows=list(pool.map(check,failed))
+          stats=collections.Counter(x['status'] for x in rows)
+          per_coin={}
+          for x in rows:
+            per_coin.setdefault(x['coin'],collections.Counter())[x['status']]+=1
+          report={'schema':'radar-v2-real-dynamic-39-acceptance-1',
+                  'created_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                  'exact_previous_failures_tested':len(rows),'current_heads':heads,
+                  'status_counts':dict(stats),'by_coin':{k:dict(v) for k,v in per_coin.items()},
+                  'read_only':True,'no_historical_gap_claim':True,'rows':rows}
+          pathlib.Path('/tmp/v2-dynamic-proof/report.json').write_text(json.dumps(report,indent=2))
+          print('REAL_FRESH_TIP_WALLET_RESULT',json.dumps({
+            'total':len(rows),'states':dict(stats),'by_coin':report['by_coin'],
+            'errors':[{'coin':x['coin'],'address':x['address'],'detail':x['detail']}
+                      for x in rows if x['status']=='ERROR'][:20]},ensure_ascii=False),flush=True)
+          if len(rows)!=39 or stats['ERROR'] or stats['OK']+stats['SKIPPED_CONTRACT']!=39:
+            sys.exit('REAL_39_WALLET_PRODUCTION_ACCEPTANCE_NOT_COMPLETE')
+          print('ALL_39_CURRENT_HEAD_RPC_PROBES_COMPLETED_NO_OLD_BLOCK_ERRORS',flush=True)
+          PY
+      - name: Save exact public-source evidence, no trading or notifications
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v2-real-39-current-tip-acceptance
+          path: /tmp/v2-dynamic-proof/report.json
+          retention-days: 7
+          if-no-files-found: warn
