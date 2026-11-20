@@ -4,7 +4,7 @@ from v2_full.core import COINS,L2,Tape,VenueState,Gap
 from v2_full.streams import StreamCapture
 from v2_full.inventory import analyze
 from v2_full.decision import verdict
-from v2_full.dex import v3_raw_ask_quote, tick_sqrt
+from v2_full.dex import v3_raw_ask_quote, v3_raw_ask_token_quantity, tick_sqrt
 from v2_full.runner import evaluate
 
 T=1_800_000_000_000
@@ -103,6 +103,16 @@ class CoreTests(unittest.TestCase):
         balance={'ON|'+dst:{'reconciled':True,'two_distinct_finalized_block_snapshots':True,'source_balance_reconciled':True,'source_net_decrease_raw':{'0x'+'a'*40:'1000'},'retained_raw':'1000'}}
         result=evaluate(CONFIG,{'asof_ms':T,'markets':[sample_good_market()]},ch,entities,codes,balance)
         self.assertEqual(result['coins'][0]['state'],'INDEPENDENT_SPOT_IGNITION_OBSERVED')
+    def test_v3_ask_band_returns_token_quantity_not_only_quote(self):
+        # At parity, buying token0 or token1 must consume a positive and
+        # finite target amount before a +2% price impact.
+        for is_token0 in (True,False):
+            quote=v3_raw_ask_quote(2**96,1000000,{},is_token0)
+            token=v3_raw_ask_token_quantity(2**96,1000000,{},is_token0)
+            self.assertGreater(quote,0)
+            self.assertGreater(token,0)
+            self.assertLess(float(token),30000)
+
     def test_v3_direction_both(self):
         a=v3_raw_ask_quote(2**96,1000000,{},True)
         b=v3_raw_ask_quote(2**96,1000000,{},False)
