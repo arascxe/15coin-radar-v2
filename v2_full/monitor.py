@@ -218,7 +218,14 @@ def main(argv=None):
                 sym,st=row['coin'],row['state']
                 if st!='EVIDENCE_INSUFFICIENT_UNKNOWN' and previous.get(sym)!=st:
                     event={'coin':sym,'first_seen_ms':now,'evidence_state':st,
-                           'spot_markets':row['market_evidence'],'preparation_proved':row['preparation_proved'],
+                           'spot_markets':row['market_evidence'][:3],
+                           'inventory_proof':[{'address':x.get('address'),
+                               'txs':x.get('txs',[])[:6],
+                               'source_balance_reconciled':x.get('source_balance_reconciled'),
+                               'source_net_decrease_raw':x.get('source_net_decrease_raw'),
+                               'last_block_ms':x.get('last_block_ms')}
+                               for x in row.get('coin_inventory',{}).get('independent_recipients',[])[:4]],
+                           'preparation_proved':row['preparation_proved'],
                            'dex_active_quote':row['dex_pool'],
                            'buy_signal':False,'validated_future_10x':False}
                     events.append(event)
