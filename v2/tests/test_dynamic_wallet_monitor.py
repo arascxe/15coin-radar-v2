@@ -178,4 +178,32 @@ class DynamicMonitorTests(unittest.TestCase):
             self.assertIn(DEST,[x['address'] for x in dos['address_candidates']])
             st.close()
 
+
+    def test_fresh_recent_transfer_window_finds_new_receiver_despite_old_archive(self):
+        import datetime
+        from dynamic_wallet_monitor import fresh_recent_transfer_intervals
+        with tempfile.TemporaryDirectory() as d:
+            st=setup_db(pathlib.Path(d)/'s.db')
+            fresh_address='0x'+'f'*40
+            with st.db:
+                for item in [xfer(40,2820,A,fresh_address,1700),xfer(41,2850,B,fresh_address,1300)]:
+                    st.db.execute('''INSERT OR IGNORE INTO token_transfers
+                        VALUES(?,?,?,?,?,?,?,?,?,?,?)''',(
+                        'bsc',56,item['token'],item['coin'],item['tx'],item['log_index'],
+                        item['block'],item['from'],item['to'],item['raw'],NOW))
+            timestamp=datetime.datetime.fromtimestamp(NOW/1000,datetime.timezone.utc).isoformat()
+            report={'schema':'v2-verified-independent-chain-tip-1',
+                    'created_utc':timestamp,'head_only_window':True,
+                    'chains':[{'chain':'bsc','status':'OK','from':2801,
+                               'verified_to':3000,'head':3000,'lag_blocks':0}]}
+            self.assertEqual(fresh_recent_transfer_intervals(report,NOW)['bsc'],(2801,3000))
+            dos=next(x for x in propose(st.db,CONFIG,NOW,recent_tip_report=report)['coins']
+                     if x['coin']=='DOS')
+            self.assertEqual(dos['cursor_block'],1100)
+            self.assertEqual(dos['fresh_head_window'],[2801,3000])
+            self.assertIn(fresh_address,[a['address'] for a in dos['address_candidates']])
+            report['created_utc']=datetime.datetime.fromtimestamp((NOW-7200000)/1000,datetime.timezone.utc).isoformat()
+            self.assertEqual(fresh_recent_transfer_intervals(report,NOW),{})
+            st.close()
+
 if __name__=='__main__':unittest.main()
