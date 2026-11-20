@@ -74,6 +74,20 @@ class AccumulationHistoryTests(unittest.TestCase):
             self.assertEqual(dos['observed_non_infrastructure_wallet_count'],0)
             self.assertEqual(dos['regular_30d_wallets_unknown_owners'],0)
 
+    def test_three_day_regular_increase_detected_before_seven_day_window(self):
+        with tempfile.TemporaryDirectory() as d:
+            path=pathlib.Path(d)/'t.sqlite'
+            populate(path,[0,1,2,3],EOAS[:1])
+            report=build(path,CONFIG,asof_ms=BASE+3*DAY+1000)
+            dos=next(x for x in report['coins'] if x['coin']=='DOS')
+            self.assertEqual(dos['recent_regular_3d_wallets_unknown_owners'],1)
+            self.assertEqual(dos['recent_regular_7d_wallets_unknown_owners'],0)
+            self.assertEqual(dos['long_term_status'],'EARLY_3D_BALANCE_ACCUMULATION_RESEARCH')
+            a=next(x for x in dos['wallets'] if x['address']==EOAS[0])
+            self.assertTrue(a['periods']['3d']['regular_multi_day_increase_observed'])
+            self.assertFalse(a['periods']['7d']['regular_multi_day_increase_observed'])
+            self.assertFalse(a['periods']['3d']['transfer_flow_reconciled_across_full_period'])
+
     def test_flat_balance_not_called_accumulation_and_stale_live_is_unknown(self):
         with tempfile.TemporaryDirectory() as d:
             path=pathlib.Path(d)/'t.sqlite'
