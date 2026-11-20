@@ -60,7 +60,10 @@ def revalidate(config,report,chain,previous=None,now=None,http=None):
                 health[coin]='STALE_OR_MISSING_RECHECK_CANNOT_PROMOTE'
                 episodes[key]=prior
                 continue
-            if 0<=now-int(prior.get('last_reverified_ms',0))<120000:
+            # Never skip proof merely because its clock age is short: the
+            # recipient might have sold newly received inventory meanwhile.
+            # Reuse a proof only for the EXACT SAME finalized block.
+            if prior.get('last_reverified_block')==meta.get('safe_head'):
                 episodes[key]=prior
                 continue
             try:
