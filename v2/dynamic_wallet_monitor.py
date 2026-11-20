@@ -55,7 +55,24 @@ def fresh_tip_heads(report,ts_ms):
         result[chain]=head
     return result
 
-def propose(conn, config, ts_ms=None, per_coin=MAX_PER_COIN):
+def fresh_recent_transfer_intervals(report,ts_ms):
+    """Only separately captured and complete near-head Transfer windows qualify.
+
+    This does not fill archival gaps and cannot prove multi-day net inventory.
+    """
+    if not isinstance(report,dict) or report.get('head_only_window') is not True:
+        return {}
+    heads=fresh_tip_heads(report,ts_ms)
+    intervals={}
+    for row in report.get('chains',[]):
+        chain=row.get('chain')
+        lo=row.get('from');hi=row.get('verified_to')
+        if (chain in heads and isinstance(lo,int) and isinstance(hi,int)
+                and 0<lo<=hi==heads[chain] and hi-lo<4000):
+            intervals[chain]=(lo,hi)
+    return intervals
+
+def propose(conn, config, ts_ms=None, per_coin=MAX_PER_COIN,recent_tip_report=None):
     """Rank for follow-up, *not* economic signals or whale identities."""
     validate_config(config)
     if ts_ms is None:
@@ -64,18 +81,24 @@ def propose(conn, config, ts_ms=None, per_coin=MAX_PER_COIN):
     positions={chain:row for chain,row in conn.execute(
         'SELECT chain,last_complete_block FROM chain_cursor')}
     candidates=[]
+    recent_intervals=fresh_recent_transfer_intervals(recent_tip_report,ts_ms)
     for coin in config['coins']:
         sym=coin['symbol'];chain=coin['chain'];head=positions.get(chain)
         base={'coin':sym,'chain':chain,'cursor_block':head,
               'coverage_status':'UNKNOWN_NO_CONTIGUOUS_CHAIN',
               'address_candidates':[],'count':0}
         interval=final_contiguous_interval(conn,chain,head) if head is not None else None
-        if not interval:
+        recent=recent_intervals.get(chain)
+        if not interval and not recent:
             candidates.append(base);continue
-        begin,end=interval
+        begin,end=interval if interval else recent
         begin=max(begin,end-RECENT_BLOCKS+1)
         activity_from=max(begin,end-ACTIVE_BLOCKS+1)
-        base['coverage_status']='CONTIGUOUS_STORED_TOKEN_LOGS'
+        base['coverage_status']=('CONTIGUOUS_ARCHIVE_PLUS_SEPARATE_HEAD_WINDOW'
+            if interval and recent else 'CONTIGUOUS_ARCHIVE_ONLY' if interval
+            else 'SEPARATE_VERIFIED_HEAD_WINDOW_ARCHIVE_UNKNOWN')
+        base['fresh_head_window']=list(recent) if recent else None
+        base['head_window_does_not_repair_older_missing_blocks']=True
         base['interval_from']=begin
         base['interval_to']=end
         registered={w['address'].lower():w for w in config['wallets']
@@ -86,24 +109,32 @@ def propose(conn, config, ts_ms=None, per_coin=MAX_PER_COIN):
         infra.discard('')
         flows=collections.defaultdict(lambda:{'in':0,'out':0,'recent_in':0,'recent_out':0,
                  'transactions':set(),'from_addresses':set(),'dex_tx':set(),'all_from':set()})
-        for tx,block,frm,to,raw in conn.execute('''SELECT tx_hash,block,from_address,to_address,amount_raw
-             FROM token_transfers WHERE coin=? AND chain=? AND block BETWEEN ? AND ?''',
-             (sym,chain,begin,end)):
-            if frm==to or int(raw)<=0:continue
-            amount=int(raw)
-            if to!=ZERO:
-                v=flows[to];v['in']+=amount;v['transactions'].add(tx)
-                v['all_from'].add(frm)
-                if frm!=ZERO:v['from_addresses'].add(frm)
-                if block>=activity_from:v['recent_in']+=amount
-                if (frm in registered and registered[frm].get('role')
-                        in ('dex_pool','dex_vault','pool_address_unverified')) or (
-                            frm in infra and any(x.get('pool','').lower()==frm for x in config.get('dex_pools',[])
-                                                  if x['coin']==sym and x['chain']==chain)):
-                    v['dex_tx'].add(tx)
-            if frm!=ZERO:
-                flows[frm]['out']+=amount
-                if block>=activity_from:flows[frm]['recent_out']+=amount
+        # Historical cursor may be days behind; merge an independently complete
+        # *recent* head window for candidate discovery only. Never pretend the
+        # unobserved middle blocks were scanned or count overlapping logs twice.
+        ranges=[(begin,end,activity_from)]
+        if recent and recent[1]>end:
+            ranges.append((max(end+1,recent[0]),recent[1],recent[0]))
+        for left,right,active_from in ranges:
+            if left>right:continue
+            for tx,block,frm,to,raw in conn.execute('''SELECT tx_hash,block,from_address,to_address,amount_raw
+                 FROM token_transfers WHERE coin=? AND chain=? AND block BETWEEN ? AND ?''',
+                 (sym,chain,left,right)):
+                if frm==to or int(raw)<=0:continue
+                amount=int(raw)
+                if to!=ZERO:
+                    v=flows[to];v['in']+=amount;v['transactions'].add(tx)
+                    v['all_from'].add(frm)
+                    if frm!=ZERO:v['from_addresses'].add(frm)
+                    if block>=active_from:v['recent_in']+=amount
+                    if (frm in registered and registered[frm].get('role')
+                            in ('dex_pool','dex_vault','pool_address_unverified')) or (
+                                frm in infra and any(x.get('pool','').lower()==frm for x in config.get('dex_pools',[])
+                                                      if x['coin']==sym and x['chain']==chain)):
+                        v['dex_tx'].add(tx)
+                if frm!=ZERO:
+                    flows[frm]['out']+=amount
+                    if block>=active_from:flows[frm]['recent_out']+=amount
         history={}
         for address,last_seen in conn.execute('''SELECT w.address,MAX(b.seen_ms)
              FROM wallet_checks w JOIN wallet_balances b
@@ -223,9 +254,10 @@ def independently_verified_heads(http,tip_report,ts_ms):
                 errors[chain]=type(exc).__name__+':'+str(exc)[:180]
     return heads,errors
 
-def monitor(store,config,http,ts_ms=None,max_workers=5,per_coin=MAX_PER_COIN,tip_report=None):
+def monitor(store,config,http,ts_ms=None,max_workers=5,per_coin=MAX_PER_COIN,
+            tip_report=None,recent_tip_report=None):
     if ts_ms is None:ts_ms=int(time.time()*1000)
-    plan=propose(store.db,config,ts_ms,per_coin)
+    plan=propose(store.db,config,ts_ms,per_coin,recent_tip_report=recent_tip_report)
     last=store.db.execute('SELECT run_id FROM runs ORDER BY started_ms DESC LIMIT 1').fetchone()
     if last is None:
         return {'schema':plan['schema'],'status':'NO_COLLECTOR_RUN',
@@ -286,6 +318,7 @@ def monitor(store,config,http,ts_ms=None,max_workers=5,per_coin=MAX_PER_COIN,tip
        'snapshot_head_provenance':fresh_heads,
        'snapshot_head_errors':head_errors,
        'previous_near_tip_log_heads':fresh_tip_heads(tip_report,ts_ms),
+       'independent_head_discovery_intervals':fresh_recent_transfer_intervals(recent_tip_report,ts_ms),
        'stale_archival_transfer_gap_not_repaired_by_balance_snapshots':True}
 
 def main():
@@ -294,6 +327,7 @@ def main():
     p.add_argument('--out',required=True);p.add_argument('--propose-only',action='store_true')
     p.add_argument('--per-coin',type=int,default=MAX_PER_COIN)
     p.add_argument('--tip-report',default=None)
+    p.add_argument('--recent-tip-report',default=None)
     a=p.parse_args()
     if not 1<=a.per_coin<=12:raise ValueError('PER_COIN_OUT_OF_BOUNDS')
     config=json.loads(pathlib.Path(a.config).read_text())
@@ -306,7 +340,8 @@ def main():
     else:
         store=Store(a.db)
         try:result=monitor(store,config,HTTPClient(config['limits']['request_timeout_seconds']),per_coin=a.per_coin,
-                tip_report=json.loads(pathlib.Path(a.tip_report).read_text()) if a.tip_report and pathlib.Path(a.tip_report).exists() else None)
+                tip_report=json.loads(pathlib.Path(a.tip_report).read_text()) if a.tip_report and pathlib.Path(a.tip_report).exists() else None,
+                recent_tip_report=json.loads(pathlib.Path(a.recent_tip_report).read_text()) if a.recent_tip_report and pathlib.Path(a.recent_tip_report).exists() else None)
         finally:store.close()
     dest=pathlib.Path(a.out);dest.parent.mkdir(parents=True,exist_ok=True)
     temporary=dest.with_suffix(dest.suffix+'.tmp')
