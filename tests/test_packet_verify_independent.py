@@ -80,6 +80,54 @@ class ImmutablePacketAudit(unittest.TestCase):
         self.assertEqual(check['status'],STATUS_PARTIAL)
         self.assertEqual(check['market_windows_fully_independently_replayed'],0)
 
+    def test_wallet_baseline_transfer_identity_and_unresolved_coverage(self):
+        p=sample(False)
+        wallet='0x'+'b'*40
+        source='0x'+'c'*40
+        tx='0x'+'d'*64
+        item={'address':wallet,'observed_days':3,
+              'start_balance_token':'1200','end_balance_token':'1500',
+              'net_retained_increase_token':'300','start_block':100,'end_block':200,
+              'period_begin_ms':T-3*86400000,'history_asof_ms':T-1000,
+              'transfer_reconciled':False,'owner_verified':False,
+              'wallet_ownership_not_proven':True,
+              'transaction_proof_sample':{'from_block_exclusive':100,
+                  'to_block_inclusive':200,'selected_event_count':1,
+                  'covered_every_intervening_block':False,
+                  'balance_delta_reconciled_to_complete_transfers':False,
+                  'entries':[{'chain':'bsc','tx':tx,'block':120,'from':source,'to':wallet,
+                             'amount_raw':'300000000000000000000',
+                             'direction_relative_to_wallet':'IN'}]}}
+        p['multiday_wallet_evidence']=[item]
+        out=validate(p)
+        self.assertEqual(out['multiday_wallet_count'],1)
+        self.assertIn(wallet+':FULL_TRANSFER_LOGS_NOT_RECONCILED',
+                      out['wallet_provenance_limitations'])
+        x=copy.deepcopy(p)
+        x['multiday_wallet_evidence'][0]['end_balance_token']='1501'
+        with self.assertRaisesRegex(ValueError,'WALLET_BALANCE_DELTA'):
+            validate(x)
+        x=copy.deepcopy(p)
+        x['multiday_wallet_evidence'][0]['transaction_proof_sample']['entries'][0]['to']=source
+        with self.assertRaisesRegex(ValueError,'INCOMING_TRANSFER_NOT_TO_WALLET'):
+            validate(x)
+        x=copy.deepcopy(p)
+        x['multiday_wallet_evidence'][0]['transfer_reconciled']=True
+        with self.assertRaisesRegex(ValueError,'RECONCILED_WALLET_WITHOUT'):
+            validate(x)
+
+    def test_real_published_lyn_partial_packet_independently_verified(self):
+        root=pathlib.Path(__file__).resolve().parents[1]
+        name='baf9c3b3a372b88623c037'
+        path=root/'v2_state'/'evidence_packets'/(name+'.json')
+        if not path.exists():self.skipTest('Public real LYN packet not bundled')
+        result=validate_file(path,expected_event=name,
+            sha='ceefb0ad1c826f5dfb83907029e8fed87e450aa9ffb830306a219f7c50cdd3b7')
+        self.assertEqual(result['coin'],'LYN')
+        self.assertEqual(result['status'],STATUS_NONE)
+        self.assertEqual(result['market_windows_fully_independently_replayed'],0)
+        self.assertGreater(len(result['wallet_provenance_limitations']),0)
+
     def test_packet_with_no_market_not_false_pump_proof(self):
         s=validate(sample(False))
         self.assertEqual(s['status'],STATUS_NONE)
