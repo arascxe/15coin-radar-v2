@@ -22,7 +22,39 @@ SEVERITY={
     'UNEXPLAINED_LARGE_TRANSFER_REVIEW':'UNEXPLAINED_TRANSFER_REVIEW',
 }
 
-def build(report,outbox,workflow_id=None,now=None):
+def verify_packet(event,ident,packet_dir):
+    """Verify immutable local packet SHA and identity; never claim GitHub push yet."""
+    pid=event.get('evidence_packet_id')
+    sha=event.get('evidence_packet_sha256')
+    item={'id':ident,'status':'NOT_PRODUCED_IN_LEGACY_EVENT',
+          'sha256':None,'url':None,'path':None}
+    if pid is None:return item
+    if pid!=ident or not isinstance(sha,str) or len(sha)!=64:
+        item['status']='INVALID_ID_OR_DIGEST'
+        return item
+    path='v2_state/evidence_packets/'+ident+'.json'
+    item.update({'sha256':sha,'path':path,
+                 'status':'PACKET_STATED_BUT_NOT_RECHECKED'})
+    if packet_dir is None:return item
+    target=pathlib.Path(packet_dir)/(ident+'.json')
+    if not target.is_file():
+        item['status']='LOCAL_PACKET_NOT_AVAILABLE_MAY_BE_PREVIOUS_RUN'
+        return item
+    try:
+        raw=target.read_bytes()
+        packet=json.loads(raw)
+        consistent=(hashlib.sha256(raw).hexdigest()==sha and
+           packet.get('schema')=='radar-v2-alarm-evidence-packet-1' and
+           packet.get('event_id')==ident and
+           packet.get('coin')==event.get('coin') and
+           packet.get('state')==event.get('evidence_state') and
+           packet.get('event_first_observed_ms')==event.get('first_seen_ms'))
+        item['status']='VERIFIED_LOCAL_PACKET_READY_FOR_GITHUB_PUBLISH' if consistent else 'PACKET_SHA_OR_EVENT_IDENTITY_MISMATCH'
+    except (OSError,ValueError,TypeError):
+        item['status']='UNREADABLE_PACKET'
+    return item
+
+def build(report,outbox,workflow_id=None,now=None,packet_dir=None):
     now=int(now if now is not None else report.get('asof_ms',0))
     if not isinstance(now,int) or now<=0:raise ValueError('INVALID_OBSERVATION_TIME')
     coins=report.get('coins',[])
@@ -43,8 +75,9 @@ def build(report,outbox,workflow_id=None,now=None):
         if not isinstance(onchain,dict):onchain={}
         fusion=event.get('unified_economic_evidence',{})
         if not isinstance(fusion,dict):fusion={}
+        packet=verify_packet(event,ident,packet_dir)
         entries.append({
-            'event_id':ident,'coin':coin,'state':state,'urgency':SEVERITY[state],
+            'event_id':ident,'evidence_packet':packet,'coin':coin,'state':state,'urgency':SEVERITY[state],
             'first_observed_ms':observed,
             'age_minutes_at_publication':round((now-observed)/60000,1),
             'evidence_only_not_10x_prediction':True,
@@ -98,10 +131,11 @@ def main():
     p=argparse.ArgumentParser()
     p.add_argument('--report',required=True);p.add_argument('--outbox',required=True)
     p.add_argument('--out',required=True);p.add_argument('--run-id',default=None)
+    p.add_argument('--packet-dir',default=None)
     a=p.parse_args()
     src=json.loads(pathlib.Path(a.report).read_text())
     box=json.loads(pathlib.Path(a.outbox).read_text())
-    result=build(src,box,a.run_id)
+    result=build(src,box,a.run_id,packet_dir=a.packet_dir)
     target=pathlib.Path(a.out);target.parent.mkdir(parents=True,exist_ok=True)
     temp=target.with_name(target.name+'.tmp')
     temp.write_text(json.dumps(result,indent=2,ensure_ascii=False)+'\n')
