@@ -111,7 +111,7 @@ def _supply(http,provider,token,block):
         val=http.rpc(provider,'eth_call',[{'to':token,'data':'0x18160ddd'},hex(block)])
         n=int(val,16)
         return n if n>0 else None
-    except (TypeError,ValueError,RuntimeError,KeyError):
+    except Exception:  # a missing public RPC is UNKNOWN, never a zero supply
         return None
 
 def _visible_ask(market,coin):
@@ -272,7 +272,7 @@ def observe(config,tail,market=None,verified_entities=None,prior=None,http=None,
         unexplained=None
         if fresh and supply:
             for e in sorted(z['events'],key=lambda x:x['raw'],reverse=True):
-                if (e['classification']=='UNKNOWN_OWNER_TRANSFER' and
+                if (e['classification'] in ('UNKNOWN_OWNER_TRANSFER','UNVERIFIED_EXCHANGE_LABEL_ROUTE') and
                     e['raw']*1000>=supply and
                     _clean_eligible(sym,ch,e['to'],z,labels,pools)):
                     unexplained={'tx':e['tx'],'block':e['block'],
@@ -290,7 +290,7 @@ def observe(config,tail,market=None,verified_entities=None,prior=None,http=None,
             'classified_transfer_counts':dict(statuses),
             'observed_eoa_snapshot_count':sum(1 for k in snapshots if k.startswith(sym+'|')),
             'balances':dict(attempts),'eligible_followed_addresses':chosen,
-            'confirmed_independent_eoa_accumulation_count':len(accepted),
+            'balance_verified_eoa_receiver_count_unknown_owner':len(accepted),
             'recipient_evidence':accepted[:5],
             'multi_receiver_unknown_owner_cluster':two_receiver_cluster,
             'research_state':research,'unknown_owner_not_independent_buyer_proof':True,
