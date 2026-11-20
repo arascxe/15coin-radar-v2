@@ -112,8 +112,10 @@ class DynamicMonitorTests(unittest.TestCase):
             st=setup_db(pathlib.Path(d)/'s.db')
             monitor(st,CONFIG,FakeHTTP(amount=1800),NOW,max_workers=1)
             rid=st.begin_run(NOW+3700000)
-            st.chain_save(rid,'bsc',1200,1101,1200,
-                [xfer(3,1170,A,DEST,300),xfer(4,1180,B,DEST,200)],'OK',
+            # Confirm all logs between the actual two finalized balance blocks.
+            # The old archival interval 1101..1200 cannot prove a 2985..3385 delta.
+            st.chain_save(rid,'bsc',3400,2986,3385,
+                [xfer(3,3170,A,DEST,300),xfer(4,3180,B,DEST,200)],'PARTIAL',
                 observed_ms=NOW+3700000)
             st.finish_run(rid,NOW+3700000)
             next_result=monitor(st,CONFIG,FakeHTTP(amount=2300,head=3400),NOW+3700000,max_workers=1)
