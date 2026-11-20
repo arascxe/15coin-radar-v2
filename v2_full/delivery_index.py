@@ -1,4 +1,4 @@
-"""Publish a small, auditable V2 alert inbox for ChatGPT/Telegram delivery.
+"""Publish a small, auditable V2 alert inbox for ChatGPT-only delivery.
 
 GitHub Actions cannot call ChatGPT push directly. This JSON is a durable
 read-only handoff to the existing authorized hourly ChatGPT monitor.
@@ -34,12 +34,24 @@ def build(report,outbox,workflow_id=None,now=None):
         if observed>now+60000 or now-observed>72*3600000:continue
         ident=hashlib.sha256(
             (coin+'|'+state+'|'+str(observed)).encode()).hexdigest()[:22]
+        onchain=event.get('onchain_economics',{})
+        if not isinstance(onchain,dict):onchain={}
         entries.append({
             'event_id':ident,'coin':coin,'state':state,'urgency':SEVERITY[state],
             'first_observed_ms':observed,
             'age_minutes_at_publication':round((now-observed)/60000,1),
             'evidence_only_not_10x_prediction':True,
             'verified_combined':state=='COMBINED_PREP_THEN_SPOT_OBSERVED',
+            'evidence_summary':{
+                'economic_classification':onchain.get('classified_transfer_counts',{}),
+                'onchain_research_state':onchain.get('research_state'),
+                'balance_verified_eoa_receivers_unknown_owner':onchain.get('balance_verified_eoa_receiver_count_unknown_owner',0),
+                'recent_confirmed_token_accumulation':onchain.get('accumulation_token_quantity'),
+                'fraction_of_total_supply_not_circulating':onchain.get('fraction_of_total_onchain_supply'),
+                'fraction_of_visible_ask_depth_proxy':onchain.get('accumulation_to_visible_ask_ratio'),
+                'unexplained_transfer':onchain.get('unexplained_transfer'),
+                'recipient_evidence':onchain.get('recipient_evidence',[])[:3],
+            },
             'verification_limitations':[
                 'Past performance uncalibrated; not a buy instruction.',
                 'Observed ask depth is not total CEX/DEX sellable inventory.']})
@@ -53,7 +65,7 @@ def build(report,outbox,workflow_id=None,now=None):
                       'safe_head':h.get('safe_head'),
                       'complete':h.get('complete',False)})
     return {
-        'schema':'radar-v2-telegram-chatgpt-readonly-inbox-1',
+        'schema':'radar-v2-chatgpt-readonly-inbox-2',
         'published_event_unix_ms':now,
         'generated_utc':datetime.datetime.fromtimestamp(now/1000,datetime.timezone.utc).isoformat(),
         'github_workflow_run_id':str(workflow_id) if workflow_id is not None else None,
@@ -68,7 +80,7 @@ def build(report,outbox,workflow_id=None,now=None):
         'research_events_72h':entries,
         'onchain_engine_health':report.get('onchain_economic_engine_status','UNAVAILABLE'),
         'onchain_research_states':{c['coin']:c.get('onchain_economics',{}).get('research_state','UNKNOWN') for c in coins},
-        'note':'A ChatGPT task must check freshness, compare event_id to prior deliveries, and send via its connected notification tool.'}
+        'note':'Only the pre-existing ChatGPT application task can generate a notification. No Telegram, email, SMS or external message is sent.'}
 
 def main():
     p=argparse.ArgumentParser()
