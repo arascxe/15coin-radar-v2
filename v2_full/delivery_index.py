@@ -12,6 +12,9 @@ SEVERITY={
     'VERIFIED_INVENTORY_PREPARATION_OBSERVED':'VERIFIED_CEX_INVENTORY_WATCH',
     'SPOT_MARKET_IDENTITY_REVIEW_URGENT':'UNVERIFIED_IDENTITY_REVIEW',
     'CEX_FLOW_ATTRIBUTION_REVIEW':'UNVERIFIED_CUSTODY_REVIEW',
+    'UNVERIFIED_CLUSTER_ACCUMULATION_RESEARCH':'UNVERIFIED_ONCHAIN_CLUSTER_REVIEW',
+    'UNVERIFIED_CLUSTER_WITH_SPOT_RESEARCH':'UNVERIFIED_ONCHAIN_CLUSTER_AND_SPOT_REVIEW',
+    'UNEXPLAINED_LARGE_TRANSFER_REVIEW':'UNEXPLAINED_TRANSFER_REVIEW',
 }
 
 def build(report,outbox,workflow_id=None,now=None):
@@ -57,11 +60,14 @@ def build(report,outbox,workflow_id=None,now=None):
         'source_kind':'LIVE_READ_ONLY_RUNNER_SNAPSHOT',
         'delivery_status':'NOT_SENT_BY_GITHUB_ACTIONS',
         'scope':'ALL_15_MONITORED_NOT_ALL_15_VERIFIED',
+        'delivery_channel':'CHATGPT_TASK_ONLY_NO_EXTERNAL_PUSH',
         'verified_exchange_source_address_count':report.get('verified_exchange_source_addresses',0),
         'chain_health':fresh,
         'coin_states':{c['coin']:c['state'] for c in coins},
         'stream_markets':len(report.get('stream_health',[])),
         'research_events_72h':entries,
+        'onchain_engine_health':report.get('onchain_economic_engine_status','UNAVAILABLE'),
+        'onchain_research_states':{c['coin']:c.get('onchain_economics',{}).get('research_state','UNKNOWN') for c in coins},
         'note':'A ChatGPT task must check freshness, compare event_id to prior deliveries, and send via its connected notification tool.'}
 
 def main():
