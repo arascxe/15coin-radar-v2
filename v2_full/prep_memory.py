@@ -56,6 +56,8 @@ def revalidate(config,report,chain,previous=None,now=None,http=None):
             address=prior.get('recipient','')
             if not (isinstance(address,str) and len(address)==42 and
                     address.startswith('0x')):continue
+            if prior.get('baseline_raw') is None:
+                health[coin]='PREVIOUS_EPISODE_MISSING_PRE_TRANSFER_BALANCE';continue
             if not safe or http is None:
                 health[coin]='STALE_OR_MISSING_RECHECK_CANNOT_PROMOTE'
                 episodes[key]=prior
