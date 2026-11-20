@@ -1,6 +1,6 @@
 {
   "schema": "radar-v2-route-tracing-1",
-  "generated_utc": "2026-11-19T22:34:20.234780+00:00",
+  "generated_utc": "2026-11-20T00:23:17.991419+00:00",
   "signal": false,
   "no_verified_cex_withdrawal_claim": true,
   "coins": [
@@ -8,8 +8,8 @@
       "coin": "ON",
       "chain": "bsc",
       "status": "EXPLORATORY_UNVERIFIED_CEX_FLOW_TRACING",
-      "chain_scanned_from": 134486301,
-      "chain_scanned_to": 134516300,
+      "chain_scanned_from": 134498301,
+      "chain_scanned_to": 134528300,
       "observed_from_candidate_cex": 0,
       "exact_relays": 0,
       "traces": []
@@ -18,8 +18,8 @@
       "coin": "DOS",
       "chain": "bsc",
       "status": "EXPLORATORY_UNVERIFIED_CEX_FLOW_TRACING",
-      "chain_scanned_from": 134486301,
-      "chain_scanned_to": 134516300,
+      "chain_scanned_from": 134498301,
+      "chain_scanned_to": 134528300,
       "observed_from_candidate_cex": 0,
       "exact_relays": 0,
       "traces": []
@@ -28,8 +28,8 @@
       "coin": "HANA",
       "chain": "bsc",
       "status": "EXPLORATORY_UNVERIFIED_CEX_FLOW_TRACING",
-      "chain_scanned_from": 134486301,
-      "chain_scanned_to": 134516300,
+      "chain_scanned_from": 134498301,
+      "chain_scanned_to": 134528300,
       "observed_from_candidate_cex": 1,
       "exact_relays": 0,
       "traces": [
@@ -56,10 +56,10 @@
       "coin": "COLLECT",
       "chain": "bsc",
       "status": "EXPLORATORY_UNVERIFIED_CEX_FLOW_TRACING",
-      "chain_scanned_from": 134486301,
-      "chain_scanned_to": 134516300,
-      "observed_from_candidate_cex": 8,
-      "exact_relays": 3,
+      "chain_scanned_from": 134498301,
+      "chain_scanned_to": 134528300,
+      "observed_from_candidate_cex": 9,
+      "exact_relays": 4,
       "traces": [
         {
           "from_labeled_cex_address": "0xed9ab5bc05a0152b9dc2f7902e8369af7bc18771",
@@ -185,6 +185,29 @@
           "from_labeled_cex_address": "0xed9ab5bc05a0152b9dc2f7902e8369af7bc18771",
           "cex_label_only": "Bitget hot (radar attribution)",
           "independent_exchange_ownership_verified": false,
+          "coin_amount_raw": "87601179437560000000000",
+          "path": [
+            {
+              "tx": "0x9ed9b56fe29f2d848e2129abc50564011e9e4386f9442a51bcc9124fd20c947a",
+              "block": 134521488,
+              "from": "0xed9ab5bc05a0152b9dc2f7902e8369af7bc18771",
+              "to": "0x4a4915a02ebfd6e05132ff9f622646d157b719bb"
+            },
+            {
+              "tx": "0x4ad703fd5820fedbdff509a90713998857f420be6a43afca9016ecdf7fc6b3e7",
+              "block": 134521508,
+              "from": "0x4a4915a02ebfd6e05132ff9f622646d157b719bb",
+              "to": "0x4e7ed91e702ef2ff0c58e251c6e20d1dc1e31a5f"
+            }
+          ],
+          "final_address_role_unverified": "UNCLASSIFIED",
+          "classification": "EXACT_AMOUNT_RELAY_TO_UNCLASSIFIED_ADDRESS",
+          "warning": "Same-amount relay is a path hypothesis, not proof of common owner."
+        },
+        {
+          "from_labeled_cex_address": "0xed9ab5bc05a0152b9dc2f7902e8369af7bc18771",
+          "cex_label_only": "Bitget hot (radar attribution)",
+          "independent_exchange_ownership_verified": false,
           "coin_amount_raw": "87474729437560000000000",
           "path": [
             {
@@ -221,8 +244,8 @@
       "coin": "LIGHT",
       "chain": "bsc",
       "status": "EXPLORATORY_UNVERIFIED_CEX_FLOW_TRACING",
-      "chain_scanned_from": 134486301,
-      "chain_scanned_to": 134516300,
+      "chain_scanned_from": 134498301,
+      "chain_scanned_to": 134528300,
       "observed_from_candidate_cex": 0,
       "exact_relays": 0,
       "traces": []
@@ -231,18 +254,36 @@
       "coin": "APR",
       "chain": "bsc",
       "status": "EXPLORATORY_UNVERIFIED_CEX_FLOW_TRACING",
-      "chain_scanned_from": 134486301,
-      "chain_scanned_to": 134516300,
-      "observed_from_candidate_cex": 0,
+      "chain_scanned_from": 134498301,
+      "chain_scanned_to": 134528300,
+      "observed_from_candidate_cex": 1,
       "exact_relays": 0,
-      "traces": []
+      "traces": [
+        {
+          "from_labeled_cex_address": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+          "cex_label_only": "MEXC hot",
+          "independent_exchange_ownership_verified": false,
+          "coin_amount_raw": "2000000000000000000",
+          "path": [
+            {
+              "tx": "0xecaa927994e350ad7499ec8b31849138e5a4c8c501efa1b936155ce3c82454ff",
+              "block": 134522179,
+              "from": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+              "to": "0xce75b60ee9a9c987d25a83819a69b96de573a9d1"
+            }
+          ],
+          "final_address_role_unverified": "UNCLASSIFIED",
+          "classification": "NO_EXACT_RELAY_OBSERVED_NOT_PROOF_OF_HOLDING",
+          "warning": "Same-amount relay is a path hypothesis, not proof of common owner."
+        }
+      ]
     },
     {
       "coin": "IN",
       "chain": "bsc",
       "status": "EXPLORATORY_UNVERIFIED_CEX_FLOW_TRACING",
-      "chain_scanned_from": 134486301,
-      "chain_scanned_to": 134516300,
+      "chain_scanned_from": 134498301,
+      "chain_scanned_to": 134528300,
       "observed_from_candidate_cex": 0,
       "exact_relays": 0,
       "traces": []
@@ -257,19 +298,43 @@
       "coin": "B2",
       "chain": "bsc",
       "status": "EXPLORATORY_UNVERIFIED_CEX_FLOW_TRACING",
-      "chain_scanned_from": 134486301,
-      "chain_scanned_to": 134516300,
-      "observed_from_candidate_cex": 0,
-      "exact_relays": 0,
-      "traces": []
+      "chain_scanned_from": 134498301,
+      "chain_scanned_to": 134528300,
+      "observed_from_candidate_cex": 1,
+      "exact_relays": 1,
+      "traces": [
+        {
+          "from_labeled_cex_address": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
+          "cex_label_only": "Gate.io hot",
+          "independent_exchange_ownership_verified": false,
+          "coin_amount_raw": "5467880000000000000000",
+          "path": [
+            {
+              "tx": "0x56e3d2ba12fae22d71629246986aae855ac9c526279718c0d7f5e2a926323f4b",
+              "block": 134523619,
+              "from": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
+              "to": "0x4a4915a02ebfd6e05132ff9f622646d157b719bb"
+            },
+            {
+              "tx": "0x8625715c8d3b2174f70437db25d1eac766b4d73ea1945a46e09ebd12d83b94cb",
+              "block": 134523638,
+              "from": "0x4a4915a02ebfd6e05132ff9f622646d157b719bb",
+              "to": "0x4e7ed91e702ef2ff0c58e251c6e20d1dc1e31a5f"
+            }
+          ],
+          "final_address_role_unverified": "UNCLASSIFIED",
+          "classification": "EXACT_AMOUNT_RELAY_TO_UNCLASSIFIED_ADDRESS",
+          "warning": "Same-amount relay is a path hypothesis, not proof of common owner."
+        }
+      ]
     },
     {
       "coin": "CYS",
       "chain": "bsc",
       "status": "EXPLORATORY_UNVERIFIED_CEX_FLOW_TRACING",
-      "chain_scanned_from": 134486301,
-      "chain_scanned_to": 134516300,
-      "observed_from_candidate_cex": 1,
+      "chain_scanned_from": 134498301,
+      "chain_scanned_to": 134528300,
+      "observed_from_candidate_cex": 2,
       "exact_relays": 0,
       "traces": [
         {
@@ -288,6 +353,23 @@
           "final_address_role_unverified": "UNCLASSIFIED",
           "classification": "NO_EXACT_RELAY_OBSERVED_NOT_PROOF_OF_HOLDING",
           "warning": "Same-amount relay is a path hypothesis, not proof of common owner."
+        },
+        {
+          "from_labeled_cex_address": "0xed9ab5bc05a0152b9dc2f7902e8369af7bc18771",
+          "cex_label_only": "Bitget hot (radar attribution)",
+          "independent_exchange_ownership_verified": false,
+          "coin_amount_raw": "26592802003630000000000",
+          "path": [
+            {
+              "tx": "0x21a5e326973bbaa5be1e7da32bd6d45adf6d29a3bb10d347bad93570fbfad841",
+              "block": 134520391,
+              "from": "0xed9ab5bc05a0152b9dc2f7902e8369af7bc18771",
+              "to": "0xadfffc33cdc9970349cbcea3d73ec343d6ed116d"
+            }
+          ],
+          "final_address_role_unverified": "exchange_custody",
+          "classification": "NO_EXACT_RELAY_OBSERVED_NOT_PROOF_OF_HOLDING",
+          "warning": "Same-amount relay is a path hypothesis, not proof of common owner."
         }
       ]
     },
@@ -295,18 +377,76 @@
       "coin": "STBL",
       "chain": "bsc",
       "status": "EXPLORATORY_UNVERIFIED_CEX_FLOW_TRACING",
-      "chain_scanned_from": 134486301,
-      "chain_scanned_to": 134516300,
-      "observed_from_candidate_cex": 0,
-      "exact_relays": 0,
-      "traces": []
+      "chain_scanned_from": 134498301,
+      "chain_scanned_to": 134528300,
+      "observed_from_candidate_cex": 3,
+      "exact_relays": 1,
+      "traces": [
+        {
+          "from_labeled_cex_address": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+          "cex_label_only": "MEXC hot",
+          "independent_exchange_ownership_verified": false,
+          "coin_amount_raw": "157992000000000000000000",
+          "path": [
+            {
+              "tx": "0xedba8637c0137729e72d63fc2545f55ace4f60c67f252a218410e0241845cf3b",
+              "block": 134526865,
+              "from": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+              "to": "0x39412452be12dad2c7e156ce6e40b71b3680b540"
+            }
+          ],
+          "final_address_role_unverified": "UNCLASSIFIED",
+          "classification": "NO_EXACT_RELAY_OBSERVED_NOT_PROOF_OF_HOLDING",
+          "warning": "Same-amount relay is a path hypothesis, not proof of common owner."
+        },
+        {
+          "from_labeled_cex_address": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+          "cex_label_only": "MEXC hot",
+          "independent_exchange_ownership_verified": false,
+          "coin_amount_raw": "836730000000000000000",
+          "path": [
+            {
+              "tx": "0x1cd529f936afb6fd2af7a311143cb00b112111280872bb6ca8510be97fc6aba2",
+              "block": 134524197,
+              "from": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+              "to": "0x4284bbafeb6504e0908ebdc5d51ec20433284209"
+            },
+            {
+              "tx": "0x7af2ffd0f5cda03a103be4821e55d80c0e9638429be6cb0d9b37a5c8a241a122",
+              "block": 134524389,
+              "from": "0x4284bbafeb6504e0908ebdc5d51ec20433284209",
+              "to": "0x4e5bc1cd2c421ecfef65395b3237f90a97178c55"
+            }
+          ],
+          "final_address_role_unverified": "UNCLASSIFIED",
+          "classification": "EXACT_AMOUNT_RELAY_TO_UNCLASSIFIED_ADDRESS",
+          "warning": "Same-amount relay is a path hypothesis, not proof of common owner."
+        },
+        {
+          "from_labeled_cex_address": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+          "cex_label_only": "MEXC hot",
+          "independent_exchange_ownership_verified": false,
+          "coin_amount_raw": "692000000000000000000",
+          "path": [
+            {
+              "tx": "0x6df3f931543dcb17694109187618ba4f0a82f4a01c0ad538f2e451ea4bad7814",
+              "block": 134526195,
+              "from": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+              "to": "0x39412452be12dad2c7e156ce6e40b71b3680b540"
+            }
+          ],
+          "final_address_role_unverified": "UNCLASSIFIED",
+          "classification": "NO_EXACT_RELAY_OBSERVED_NOT_PROOF_OF_HOLDING",
+          "warning": "Same-amount relay is a path hypothesis, not proof of common owner."
+        }
+      ]
     },
     {
       "coin": "BSB",
       "chain": "bsc",
       "status": "EXPLORATORY_UNVERIFIED_CEX_FLOW_TRACING",
-      "chain_scanned_from": 134486301,
-      "chain_scanned_to": 134516300,
+      "chain_scanned_from": 134498301,
+      "chain_scanned_to": 134528300,
       "observed_from_candidate_cex": 0,
       "exact_relays": 0,
       "traces": []
@@ -315,8 +455,8 @@
       "coin": "AIO",
       "chain": "bsc",
       "status": "EXPLORATORY_UNVERIFIED_CEX_FLOW_TRACING",
-      "chain_scanned_from": 134486301,
-      "chain_scanned_to": 134516300,
+      "chain_scanned_from": 134498301,
+      "chain_scanned_to": 134528300,
       "observed_from_candidate_cex": 1,
       "exact_relays": 0,
       "traces": [
@@ -343,19 +483,129 @@
       "coin": "STAR",
       "chain": "bsc",
       "status": "EXPLORATORY_UNVERIFIED_CEX_FLOW_TRACING",
-      "chain_scanned_from": 134486301,
-      "chain_scanned_to": 134516300,
-      "observed_from_candidate_cex": 0,
-      "exact_relays": 0,
-      "traces": []
+      "chain_scanned_from": 134498301,
+      "chain_scanned_to": 134528300,
+      "observed_from_candidate_cex": 5,
+      "exact_relays": 3,
+      "traces": [
+        {
+          "from_labeled_cex_address": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+          "cex_label_only": "MEXC hot",
+          "independent_exchange_ownership_verified": false,
+          "coin_amount_raw": "27515900000000000000000",
+          "path": [
+            {
+              "tx": "0x0a8b0432c09b82fac8778dfdfd57c9ea4f56ff13128a55f8d90d388bc6d2a094",
+              "block": 134525388,
+              "from": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+              "to": "0x055a3b37957bfbd3345bed9968e7e8dd56d67066"
+            },
+            {
+              "tx": "0xcfc8331882550b3b62295c9a57f534e692e706ab337219b2de0f9cca4b1e09bb",
+              "block": 134525389,
+              "from": "0x055a3b37957bfbd3345bed9968e7e8dd56d67066",
+              "to": "0xda987e749ac9d7abf78c2eb58ff6e817bc335e08"
+            },
+            {
+              "tx": "0xcfc8331882550b3b62295c9a57f534e692e706ab337219b2de0f9cca4b1e09bb",
+              "block": 134525389,
+              "from": "0xda987e749ac9d7abf78c2eb58ff6e817bc335e08",
+              "to": "0xb4db9fcda97fd7b02eaf1e8317e6ddb04bacc1af"
+            }
+          ],
+          "final_address_role_unverified": "dex_pool",
+          "classification": "EXACT_AMOUNT_RELAY_TO_KNOWN_INFRASTRUCTURE_TAG",
+          "warning": "Same-amount relay is a path hypothesis, not proof of common owner."
+        },
+        {
+          "from_labeled_cex_address": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+          "cex_label_only": "MEXC hot",
+          "independent_exchange_ownership_verified": false,
+          "coin_amount_raw": "14999000000000000000000",
+          "path": [
+            {
+              "tx": "0x5aa13423f71a2f3cc302777f6af385236ed855ed7b20071cf19d31742fe87a87",
+              "block": 134525397,
+              "from": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+              "to": "0x4ede629216256eace56b32c620261da2360313d9"
+            }
+          ],
+          "final_address_role_unverified": "UNCLASSIFIED",
+          "classification": "NO_EXACT_RELAY_OBSERVED_NOT_PROOF_OF_HOLDING",
+          "warning": "Same-amount relay is a path hypothesis, not proof of common owner."
+        },
+        {
+          "from_labeled_cex_address": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+          "cex_label_only": "MEXC hot",
+          "independent_exchange_ownership_verified": false,
+          "coin_amount_raw": "12405490000000000000000",
+          "path": [
+            {
+              "tx": "0x371a87d28bcd91b34a21e758152fa64f27e8afcaa99493340da8416f0491831d",
+              "block": 134517130,
+              "from": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+              "to": "0x4ede629216256eace56b32c620261da2360313d9"
+            }
+          ],
+          "final_address_role_unverified": "UNCLASSIFIED",
+          "classification": "NO_EXACT_RELAY_OBSERVED_NOT_PROOF_OF_HOLDING",
+          "warning": "Same-amount relay is a path hypothesis, not proof of common owner."
+        },
+        {
+          "from_labeled_cex_address": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+          "cex_label_only": "MEXC hot",
+          "independent_exchange_ownership_verified": false,
+          "coin_amount_raw": "5012780000000000000000",
+          "path": [
+            {
+              "tx": "0xabd5cde770ec69e7f7b7b39a901c817bef9daf57e8314299a3ea56ff7818c9a7",
+              "block": 134527785,
+              "from": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+              "to": "0xa9c3cacff416e644dec51986dfd0e17cc2132817"
+            },
+            {
+              "tx": "0xc00cf49fdf6f851a017f6dc42a28577a84991b1068138b75ba2f9833f30a7bce",
+              "block": 134527790,
+              "from": "0xa9c3cacff416e644dec51986dfd0e17cc2132817",
+              "to": "0xb4db9fcda97fd7b02eaf1e8317e6ddb04bacc1af"
+            }
+          ],
+          "final_address_role_unverified": "dex_pool",
+          "classification": "EXACT_AMOUNT_RELAY_TO_KNOWN_INFRASTRUCTURE_TAG",
+          "warning": "Same-amount relay is a path hypothesis, not proof of common owner."
+        },
+        {
+          "from_labeled_cex_address": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+          "cex_label_only": "MEXC hot",
+          "independent_exchange_ownership_verified": false,
+          "coin_amount_raw": "1459660000000000000000",
+          "path": [
+            {
+              "tx": "0xd81640867355716955c5c3609a85ffd15a7ae82247bd5e0543ca519de5ddc9ee",
+              "block": 134527916,
+              "from": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+              "to": "0xa9c3cacff416e644dec51986dfd0e17cc2132817"
+            },
+            {
+              "tx": "0x119dd587cad216f4627e49f20c7383aadbf1330368cea40714d9e0075a0d6336",
+              "block": 134527921,
+              "from": "0xa9c3cacff416e644dec51986dfd0e17cc2132817",
+              "to": "0xb4db9fcda97fd7b02eaf1e8317e6ddb04bacc1af"
+            }
+          ],
+          "final_address_role_unverified": "dex_pool",
+          "classification": "EXACT_AMOUNT_RELAY_TO_KNOWN_INFRASTRUCTURE_TAG",
+          "warning": "Same-amount relay is a path hypothesis, not proof of common owner."
+        }
+      ]
     },
     {
       "coin": "LYN",
       "chain": "bsc",
       "status": "EXPLORATORY_UNVERIFIED_CEX_FLOW_TRACING",
-      "chain_scanned_from": 134486301,
-      "chain_scanned_to": 134516300,
-      "observed_from_candidate_cex": 10,
+      "chain_scanned_from": 134498301,
+      "chain_scanned_to": 134528300,
+      "observed_from_candidate_cex": 11,
       "exact_relays": 10,
       "traces": [
         {
