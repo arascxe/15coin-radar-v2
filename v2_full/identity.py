@@ -57,15 +57,52 @@ def bitget_match(c,pair,fetch=http_json):
             'expected_contract':expected,'published_contracts_on_expected_chain':got,
             'chain_metadata':network_details,'source':'OFFICIAL_BITGET_PUBLIC_COIN_CHAINS','pair':pair}
 
+
+# Curated historical MEXC *spot* listings: exact spot pair, BEP20 contract
+# and MEXC first-party announcement jointly reviewed on 2026-11-20.
+# A listing does NOT prove current CEX custody, deposit route, or unchanged code.
+# Reject if the live public spot exchangeInfo no longer advertises the pair.
+MEXC_OFFICIAL_LISTINGS={
+  'DOS':('0xb0f09ea9ae0515c3551080d4a745c8115aa30e37',
+         'https://www.mexc.com/announcements/article/first-in-market-17827791537404'),
+  'LYN':('0x302dfaf2cdbe51a18d97186a7384e87cf599877d',
+         'https://www.mexc.com/announcements/article/initial-listing-mexc-will-list-everlyn-ai-lyn-in-innovation-zone-with-convert-feature-17827791530626'),
+  'STAR':('0x8fce7206e3043dd360f115afa956ee31b90b787c',
+         'https://www.mexc.com/announcements/article/initial-listing-mexc-will-list-starpower-star-in-innovation-zone-with-convert-feature-17827791529929'),
+  'IN':('0x61fac5f038515572d6f42d4bcb6b581642753d50',
+         'https://www.mexc.com/announcements/article/initial-listing-mexc-will-list-infinit-in-in-innovation-zone-with-convert-feature-17827791527903'),
+  'APR':('0x299ad4299da5b2b93fba4c96967b040c7f611099',
+         'https://www.mexc.com/announcements/article/initial-listing-mexc-will-list-apriori-apr-in-innovation-zone-with-convert-feature-17827791531061'),
+  'BSB':('0x595deaad1eb5476ff1e649fdb7efc36f1e4679cc',
+         'https://www.mexc.com/announcements/article/first-in-market-17827791534007')
+}
+def mexc_match(c,pair,fetch=http_json):
+    symbol=c['symbol']
+    listing=MEXC_OFFICIAL_LISTINGS.get(symbol)
+    if not listing or c['chain']!='bsc' or listing[0]!=c['token'].lower() or pair!=symbol+'USDT':
+        return {'status':'NO_EXACT_OFFICIAL_SPOT_LISTING_PROOF'}
+    data=fetch('https://api.mexc.com/api/v3/exchangeInfo',{'symbol':pair})
+    instruments=data.get('symbols',[]) if isinstance(data,dict) else []
+    live=[x for x in instruments if x.get('symbol')==pair and
+          x.get('baseAsset')==symbol and x.get('quoteAsset')=='USDT' and
+          str(x.get('status','')).upper() in ('1','TRADING') and
+          x.get('isSpotTradingAllowed',True) is not False]
+    return {'status':('VERIFIED_OFFICIAL_HISTORICAL_MEXC_SPOT_LISTING_WITH_ACTIVE_PAIR'
+                       if live else 'OFFICIAL_LISTING_BUT_PAIR_INACTIVE_OR_UNVERIFIED'),
+            'source':listing[1],
+            'expected_contract':listing[0],
+            'pair':pair,'scope':'Official historical MEXC spot listing; current network deposit or CEX custody NOT proven'}
+
 def verify_all(config,fetch=http_json):
     bysym={x['symbol']:x for x in config['coins']}
     statuses={};proofs={}
     for x in config['venues']:
-        if x['venue'] not in ('gate','bitget') or not x.get('pair'):continue
+        if x['venue'] not in ('gate','bitget','mexc') or not x.get('pair'):continue
         key=x['coin']+'|'+x['venue']
         try:
             proof=(gate_match(bysym[x['coin']],x['pair'],fetch)
-                   if x['venue']=='gate' else bitget_match(bysym[x['coin']],x['pair'],fetch))
+                   if x['venue']=='gate' else bitget_match(bysym[x['coin']],x['pair'],fetch)
+                   if x['venue']=='bitget' else mexc_match(bysym[x['coin']],x['pair'],fetch))
         except Exception as e:
             proof={'status':'ERROR_SOURCE_UNAVAILABLE','error':str(e)[:120]}
         statuses[key]=proof['status'];proofs[key]=proof
