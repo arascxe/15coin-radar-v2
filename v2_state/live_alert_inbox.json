@@ -1,8 +1,8 @@
 {
   "schema": "radar-v2-chatgpt-readonly-inbox-2",
-  "published_event_unix_ms": 1795169468426,
-  "generated_utc": "2026-11-20T10:11:08.426000+00:00",
-  "github_workflow_run_id": "44716357545",
+  "published_event_unix_ms": 1795177932094,
+  "generated_utc": "2026-11-20T12:32:12.094000+00:00",
+  "github_workflow_run_id": "44735932548",
   "source_kind": "LIVE_READ_ONLY_RUNNER_SNAPSHOT",
   "delivery_status": "NOT_SENT_BY_GITHUB_ACTIONS",
   "scope": "ALL_15_MONITORED_NOT_ALL_15_VERIFIED",
@@ -12,13 +12,13 @@
     {
       "chain": "bsc",
       "status": "FRESH_CONTIGUOUS_TAIL",
-      "safe_head": 134676755,
+      "safe_head": 134695550,
       "complete": true
     },
     {
       "chain": "base",
       "status": "FRESH_CONTIGUOUS_TAIL",
-      "safe_head": 59895083,
+      "safe_head": 59937399,
       "complete": true
     }
   ],
@@ -36,7 +36,7 @@
     "STBL": "UNEXPLAINED_LARGE_TRANSFER_REVIEW",
     "BSB": "EVIDENCE_INSUFFICIENT_UNKNOWN",
     "AIO": "EVIDENCE_INSUFFICIENT_UNKNOWN",
-    "STAR": "CEX_FLOW_ATTRIBUTION_REVIEW",
+    "STAR": "EVIDENCE_INSUFFICIENT_UNKNOWN",
     "LYN": "EVIDENCE_INSUFFICIENT_UNKNOWN"
   },
   "stream_markets": 34,
@@ -47,9 +47,10 @@
       "state": "CEX_FLOW_ATTRIBUTION_REVIEW",
       "urgency": "UNVERIFIED_CUSTODY_REVIEW",
       "first_observed_ms": 1795169247868,
-      "age_minutes_at_publication": 3.7,
+      "age_minutes_at_publication": 144.7,
       "evidence_only_not_10x_prediction": true,
       "verified_combined": false,
+      "unified_economic_evidence": {},
       "evidence_summary": {
         "economic_classification": {},
         "onchain_research_state": null,
@@ -71,9 +72,10 @@
       "state": "UNEXPLAINED_LARGE_TRANSFER_REVIEW",
       "urgency": "UNEXPLAINED_TRANSFER_REVIEW",
       "first_observed_ms": 1795169257961,
-      "age_minutes_at_publication": 3.5,
+      "age_minutes_at_publication": 144.6,
       "evidence_only_not_10x_prediction": true,
       "verified_combined": false,
+      "unified_economic_evidence": {},
       "evidence_summary": {
         "economic_classification": {
           "DEX_SWAP_OR_LP_INTERACTION_UNRESOLVED": 2071,
@@ -102,9 +104,103 @@
         "Past performance uncalibrated; not a buy instruction.",
         "Observed ask depth is not total CEX/DEX sellable inventory."
       ]
+    },
+    {
+      "event_id": "808306d053cfca81b1c68a",
+      "coin": "STBL",
+      "state": "UNEXPLAINED_LARGE_TRANSFER_REVIEW",
+      "urgency": "UNEXPLAINED_TRANSFER_REVIEW",
+      "first_observed_ms": 1795177721897,
+      "age_minutes_at_publication": 3.5,
+      "evidence_only_not_10x_prediction": true,
+      "verified_combined": false,
+      "unified_economic_evidence": {
+        "phase": "DATA_INSUFFICIENT_UNKNOWN",
+        "preparation_present": false,
+        "historical_wallet_report_status": "FRESH_PUBLISHED_MULTI_DAY_REPORT",
+        "observed_multiday_wallet_count_unknown_owners": 0,
+        "multiday_wallet_evidence": [],
+        "wallet_3d_7d_30d_net_retained_delta_token": "0",
+        "full_period_transfer_reconciled_wallets": 0,
+        "existing_verified_cex_inventory_preparation": false,
+        "onchain_short_window_cluster_unknown_owner": false,
+        "spot_ignition_observed": false,
+        "spot_windows": [],
+        "preparation_before_spot_proved_in_observation_time": false,
+        "dex_scope": {
+          "status": "NO_FRESH_SUPPORTED_V3_POOL"
+        },
+        "visible_ask_token_qty_across_observed_independent_venues_and_one_pool": null,
+        "relative_retained_balance_change_to_partial_observed_ask_depth": null,
+        "sellable_supply_denominator_complete": false,
+        "orders_cancelled_vs_consumed_exactly_known": false,
+        "price_pump_predicted_or_buy_recommended": false,
+        "evidence_uncertainty": [
+          "NO_FULL_CEX_OR_DEX_GLOBAL_SELLABLE_SUPPLY",
+          "UNKNOWN_BENEFICIAL_OWNER_AND_POSSIBLE_INTERNAL_HOPS",
+          "L2_ASK_REMOVAL_MAY_BE_CANCELS_OR_TAKER_CONSUMPTION",
+          "NO_BACKTESTED_FALSE_ALARM_RATE"
+        ]
+      },
+      "evidence_summary": {
+        "economic_classification": {
+          "UNKNOWN_OWNER_TRANSFER": 30,
+          "DEX_SWAP_OR_LP_INTERACTION_UNRESOLVED": 56,
+          "CONTRACT_OR_ROUTER_INTERACTION_UNRESOLVED": 6
+        },
+        "onchain_research_state": "UNEXPLAINED_LARGE_TRANSFER_REVIEW",
+        "balance_verified_eoa_receivers_unknown_owner": 0,
+        "recent_confirmed_token_accumulation": "0",
+        "fraction_of_total_supply_not_circulating": null,
+        "fraction_of_visible_ask_depth_proxy": null,
+        "unexplained_transfer": {
+          "tx": "0x04cc7de0fef7849e8396cef852d567794276caa8a48d5e79cf8ee4d0e6aefe52",
+          "block": 134694893,
+          "amount_raw": "811924000000000000000000",
+          "amount_token_quantity": "811924",
+          "fraction_of_onchain_total_supply": "0.001159891428571428571428571429",
+          "owner_unknown": true,
+          "no_cex_or_buy_inference": true
+        },
+        "recipient_evidence": []
+      },
+      "verification_limitations": [
+        "Past performance uncalibrated; not a buy instruction.",
+        "Observed ask depth is not total CEX/DEX sellable inventory."
+      ]
     }
   ],
   "onchain_engine_health": "COMPLETE_FRESH",
+  "unified_economic_fusion_status": {
+    "schema": "radar-v2-live-economic-fusion-1",
+    "coin_count": 15,
+    "states": {
+      "DATA_INSUFFICIENT_UNKNOWN": 15
+    },
+    "multiday_history_status": "FRESH_PUBLISHED_MULTI_DAY_REPORT",
+    "spot_feed": "CONTINUOUS_SEQUENCED_L2_AND_TRANSPORT_OBSERVED_TAKER_TRADES",
+    "causality": "CANNOT_SEPARATE_CANCELS_FROM_EXECUTIONS_WITH_L2",
+    "predictive_precision": null,
+    "auto_trade": false,
+    "notifications_sent": false
+  },
+  "unified_economic_states": {
+    "ON": "DATA_INSUFFICIENT_UNKNOWN",
+    "DOS": "DATA_INSUFFICIENT_UNKNOWN",
+    "HANA": "DATA_INSUFFICIENT_UNKNOWN",
+    "COLLECT": "DATA_INSUFFICIENT_UNKNOWN",
+    "LIGHT": "DATA_INSUFFICIENT_UNKNOWN",
+    "APR": "DATA_INSUFFICIENT_UNKNOWN",
+    "IN": "DATA_INSUFFICIENT_UNKNOWN",
+    "TRUST": "DATA_INSUFFICIENT_UNKNOWN",
+    "B2": "DATA_INSUFFICIENT_UNKNOWN",
+    "CYS": "DATA_INSUFFICIENT_UNKNOWN",
+    "STBL": "DATA_INSUFFICIENT_UNKNOWN",
+    "BSB": "DATA_INSUFFICIENT_UNKNOWN",
+    "AIO": "DATA_INSUFFICIENT_UNKNOWN",
+    "STAR": "DATA_INSUFFICIENT_UNKNOWN",
+    "LYN": "DATA_INSUFFICIENT_UNKNOWN"
+  },
   "onchain_research_states": {
     "ON": "NO_RESEARCH_TRIGGER_OBSERVED",
     "DOS": "NO_RESEARCH_TRIGGER_OBSERVED",

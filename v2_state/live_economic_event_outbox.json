@@ -1,6 +1,6 @@
 {
   "schema": "radar-v2-live-evidence-events-1",
-  "asof_ms": 1795169468426,
+  "asof_ms": 1795177932094,
   "events": [
     {
       "coin": "STAR",
@@ -88,6 +88,104 @@
       "validated_future_10x": false,
       "evidence_only_not_future_10x_prediction": true,
       "only_review_candidate": true
+    },
+    {
+      "coin": "STBL",
+      "first_seen_ms": 1795177721897,
+      "evidence_state": "UNEXPLAINED_LARGE_TRANSFER_REVIEW",
+      "spot_markets": [],
+      "preparation_proved": false,
+      "dex_active_quote": {
+        "status": "NOT_OBSERVED"
+      },
+      "onchain_economics": {
+        "coin": "STBL",
+        "chain": "bsc",
+        "chain_fresh_contiguous": true,
+        "chain_scope": "VERIFIED_RECENT_TIP_ONLY_NOT_ALL_HISTORICAL_BLOCKS",
+        "classified_transfer_counts": {
+          "UNKNOWN_OWNER_TRANSFER": 30,
+          "DEX_SWAP_OR_LP_INTERACTION_UNRESOLVED": 56,
+          "CONTRACT_OR_ROUTER_INTERACTION_UNRESOLVED": 6
+        },
+        "observed_eoa_snapshot_count": 2,
+        "balances": {
+          "CURRENT_BALANCE_VERIFIED": 2,
+          "CONTRACT_OR_UNKNOWN_CODE": 1
+        },
+        "eligible_followed_addresses": [
+          "0x5c4c6c6d0358baf2ade28ffb1723e70139cd534d",
+          "0x57fd714755dbe55798501e1b4b2bcc355c06bf6a",
+          "0xcc282e2004428939ee5149a9e7872f0b4d5d5ec7"
+        ],
+        "balance_verified_eoa_receiver_count_unknown_owner": 0,
+        "recipient_evidence": [],
+        "multi_receiver_unknown_owner_cluster": false,
+        "research_state": "UNEXPLAINED_LARGE_TRANSFER_REVIEW",
+        "unknown_owner_not_independent_buyer_proof": true,
+        "accumulation_raw": "0",
+        "accumulation_token_quantity": "0",
+        "fraction_of_total_onchain_supply": null,
+        "visible_spot_2pct_ask_token_capacity": {
+          "token_units_within_observed_2pct_ask_band": null,
+          "venues": [],
+          "thinning_venues": [],
+          "scope": "Observed anchored sequenced CEX visible asks; excludes hidden orders, other venues and all DEXes."
+        },
+        "accumulation_to_visible_ask_ratio": null,
+        "unexplained_transfer": {
+          "tx": "0x04cc7de0fef7849e8396cef852d567794276caa8a48d5e79cf8ee4d0e6aefe52",
+          "block": 134694893,
+          "amount_raw": "811924000000000000000000",
+          "amount_token_quantity": "811924",
+          "fraction_of_onchain_total_supply": "0.001159891428571428571428571429",
+          "owner_unknown": true,
+          "no_cex_or_buy_inference": true
+        },
+        "observed_onchain_total_supply_raw": "700000000000000000000000000",
+        "total_supply_not_circulating_supply": true,
+        "historical_predictive_precision": null,
+        "buy_signal": false,
+        "observed_dex_2pct_token_ask_capacity": {
+          "pool": "0x90166b5795250fe7f0831e844121cc91799787e9",
+          "pinned_block": 134695150,
+          "available_token_quantity": "460416.6432376945433231477777",
+          "ratio_of_verified_eoa_delta_to_pool_ask_capacity": "0E+22",
+          "scope": "ONE_VERIFIED_V3_POOL_ONLY_NOT_ALL_SPOT_SUPPLY"
+        }
+      },
+      "unified_economic_evidence": {
+        "phase": "DATA_INSUFFICIENT_UNKNOWN",
+        "preparation_present": false,
+        "historical_wallet_report_status": "FRESH_PUBLISHED_MULTI_DAY_REPORT",
+        "observed_multiday_wallet_count_unknown_owners": 0,
+        "multiday_wallet_evidence": [],
+        "wallet_3d_7d_30d_net_retained_delta_token": "0",
+        "full_period_transfer_reconciled_wallets": 0,
+        "existing_verified_cex_inventory_preparation": false,
+        "onchain_short_window_cluster_unknown_owner": false,
+        "spot_ignition_observed": false,
+        "spot_windows": [],
+        "preparation_before_spot_proved_in_observation_time": false,
+        "dex_scope": {
+          "status": "NO_FRESH_SUPPORTED_V3_POOL"
+        },
+        "visible_ask_token_qty_across_observed_independent_venues_and_one_pool": null,
+        "relative_retained_balance_change_to_partial_observed_ask_depth": null,
+        "sellable_supply_denominator_complete": false,
+        "orders_cancelled_vs_consumed_exactly_known": false,
+        "price_pump_predicted_or_buy_recommended": false,
+        "evidence_uncertainty": [
+          "NO_FULL_CEX_OR_DEX_GLOBAL_SELLABLE_SUPPLY",
+          "UNKNOWN_BENEFICIAL_OWNER_AND_POSSIBLE_INTERNAL_HOPS",
+          "L2_ASK_REMOVAL_MAY_BE_CANCELS_OR_TAKER_CONSUMPTION",
+          "NO_BACKTESTED_FALSE_ALARM_RATE"
+        ]
+      },
+      "buy_signal": false,
+      "validated_future_10x": false,
+      "evidence_only_not_future_10x_prediction": true,
+      "only_review_candidate": true
     }
   ],
   "last_state": {
@@ -104,7 +202,7 @@
     "STBL": "UNEXPLAINED_LARGE_TRANSFER_REVIEW",
     "BSB": "EVIDENCE_INSUFFICIENT_UNKNOWN",
     "AIO": "EVIDENCE_INSUFFICIENT_UNKNOWN",
-    "STAR": "CEX_FLOW_ATTRIBUTION_REVIEW",
+    "STAR": "EVIDENCE_INSUFFICIENT_UNKNOWN",
     "LYN": "EVIDENCE_INSUFFICIENT_UNKNOWN"
   }
 }
