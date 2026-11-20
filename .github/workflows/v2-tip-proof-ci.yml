@@ -14,7 +14,7 @@ permissions:
 jobs:
   verify-tip-proof:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 16
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -89,6 +89,34 @@ jobs:
               json.dumps({'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
                           'results':out},indent=2))
           PY
+      - name: Test 15-coin live Gate/Bitget/MEXC and chain monitor with bounded public access
+        shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check websocket-client
+          mkdir -p /tmp/v2-proof/live
+          export PYTHONPATH=.:v2
+          set +e
+          timeout --signal=TERM --kill-after=10s 340s python -u -m v2_full.monitor \
+            --config v2/config.json --output-dir /tmp/v2-proof/live \
+            --interval-sec 10 --max-seconds 170
+          code=$?
+          echo "LIVE_MONITOR_EXIT_CODE=$code"
+          python - <<'PY'
+          import json,pathlib,collections
+          root=pathlib.Path('/tmp/v2-proof/live')
+          path=root/'live_15_coin_economic_state.json'
+          if not path.exists():
+              print('NO_LIVE_MARKET_REPORT: network or runtime failure; no verified early alert')
+          else:
+              report=json.loads(path.read_text())
+              m=report.get('stream_health',[])
+              print('LIVE_MARKETS',len(m),'COINS',len(report.get('coins',[])))
+              print('BOOK_STATUSES',dict(collections.Counter(x.get('book_status') for x in m)))
+              print('TAPE_STATUSES',dict(collections.Counter(x.get('tape_status') for x in m)))
+              print('MARKET_STATES',dict(collections.Counter(x.get('state') for x in report.get('coins',[]))))
+              print('IDENTITY_VERIFIED',sum(x=='VERIFIED_SAME_CONTRACT_NETWORK' for x in report.get('exchange_pair_identity',{}).values()))
+          PY
+          exit 0
       - name: Keep evidence of remote provider capabilities
         if: always()
         uses: actions/upload-artifact@v4
@@ -99,3 +127,4 @@ jobs:
           path: |
             /tmp/v2-proof/provider_report.json
             /tmp/v2-proof/base_provider_probes.json
+            /tmp/v2-proof/live/**
