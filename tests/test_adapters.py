@@ -1,6 +1,6 @@
 import unittest
 from v2_full.mexc_pb import decode, DecodeError
-from v2_full.identity import gate_match, bitget_match,matching_chain
+from v2_full.identity import gate_match, bitget_match,mexc_match,matching_chain
 from v2_full.core import VenueState
 from v2_full.dex import selector_int, v3_raw_ask_quote
 
@@ -58,6 +58,22 @@ class TestExchangeAdapters(unittest.TestCase):
             if '/instruments' in url:return {'code':'00000','data':[{'symbol':'DOSUSDT','baseCoin':'DOS'}]}
             return {'code':'00000','data':[{'coin':'DOS','chains':[{'chain':'BEP20','contractAddress':c['token']}]}]}
         self.assertEqual(bitget_match(c,'DOSUSDT',get)['status'],'VERIFIED_SAME_CONTRACT_NETWORK')
+    def test_official_mexc_listing_plus_live_pair(self):
+        c={'symbol':'DOS','chain':'bsc','token':'0xb0f09ea9ae0515c3551080d4a745c8115aa30e37'}
+        def get(url,params=None):
+            self.assertEqual(params['symbol'],'DOSUSDT')
+            return {'symbols':[{'symbol':'DOSUSDT','baseAsset':'DOS','quoteAsset':'USDT','status':'1','isSpotTradingAllowed':True}]}
+        self.assertEqual(mexc_match(c,'DOSUSDT',get)['status'],
+           'VERIFIED_OFFICIAL_HISTORICAL_MEXC_SPOT_LISTING_WITH_ACTIVE_PAIR')
+
+    def test_official_mexc_listing_reject_wrong_contract_and_inactive_pair(self):
+        c={'symbol':'DOS','chain':'bsc','token':'0x'+'1'*40}
+        self.assertEqual(mexc_match(c,'DOSUSDT',lambda *a: (_ for _ in ()).throw(AssertionError()))['status'],
+                         'NO_EXACT_OFFICIAL_SPOT_LISTING_PROOF')
+        c['token']='0xb0f09ea9ae0515c3551080d4a745c8115aa30e37'
+        self.assertEqual(mexc_match(c,'DOSUSDT',lambda *a: {'symbols':[{'symbol':'DOSUSDT','baseAsset':'DOS','quoteAsset':'USDT','status':'BREAK'}]})['status'],
+                         'OFFICIAL_LISTING_BUT_PAIR_INACTIVE_OR_UNVERIFIED')
+
     def test_nonmatching_chain_rejected(self):
         self.assertFalse(matching_chain('ETH','bsc'))
         self.assertTrue(matching_chain('BASE','base'))
