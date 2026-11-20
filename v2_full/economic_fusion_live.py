@@ -45,7 +45,7 @@ def qualified_prep(src,now,history_asof):
         if w.get('beneficial_owner_verified') is not False:continue
         addr=w.get('address','').lower()
         if not (addr.startswith('0x') and len(addr)==42):continue
-        for days in (30,7):
+        for days in (30,7,3):
             x=w.get('periods',{}).get(str(days)+'d',{})
             if (x.get('state')!='COMPLETE_OBSERVED_WINDOW'
                 or x.get('regular_multi_day_increase_observed') is not True
@@ -199,7 +199,7 @@ def enrich(report,history=None,now=None):
           'historical_wallet_report_status':hist_status,
           'observed_multiday_wallet_count_unknown_owners':len(wallets),
           'multiday_wallet_evidence':wallets[:8],
-          'wallet_7d_or_30d_net_retained_delta_token':str(retained),
+          'wallet_3d_7d_30d_net_retained_delta_token':str(retained),
           'full_period_transfer_reconciled_wallets':sum(w['transfer_reconciled'] for w in wallets),
           'existing_verified_cex_inventory_preparation':existing_verified_preparation,
           'onchain_short_window_cluster_unknown_owner':cluster,
