@@ -69,7 +69,7 @@ class TestEconomicDetection(unittest.TestCase):
         self.assertEqual(z['DOS']['classes']['DEX_SWAP_OR_LP_INTERACTION_UNRESOLVED'],1)
         r,_=observe(CONFIG,ch([evt(1,POOL,A,100*D18,102)]),verified_entities=ENT,
                     prior=baseline(),http=RPC({A:100*D18}),now_ms=NOW)
-        self.assertEqual(r['coins'][0]['confirmed_independent_eoa_accumulation_count'],0)
+        self.assertEqual(r['coins'][0]['balance_verified_eoa_receiver_count_unknown_owner'],0)
 
     def test_multi_hop_not_double_counted(self):
         z,_,_=classify(CONFIG,ch([
@@ -86,7 +86,7 @@ class TestEconomicDetection(unittest.TestCase):
         row=r['coins'][0]
         self.assertTrue(row['multi_receiver_unknown_owner_cluster'])
         self.assertEqual(row['research_state'],'CLUSTER_ACCUMULATION_RESEARCH')
-        self.assertEqual(row['confirmed_independent_eoa_accumulation_count'],2)
+        self.assertEqual(row['balance_verified_eoa_receiver_count_unknown_owner'],2)
         self.assertFalse(row['buy_signal'])
         self.assertFalse(r['strong_buy_signal'])
         self.assertTrue(all(e['owner_verified'] is False for e in row['recipient_evidence']))
@@ -95,7 +95,7 @@ class TestEconomicDetection(unittest.TestCase):
         tx=[evt(1,S1,A,600*D18,102),evt(2,S2,A,600*D18,105),
             evt(3,S2,B,800*D18,103),evt(4,S3,B,800*D18,107)]
         r,state=observe(CONFIG,ch(tx),prior={},http=RPC({A:1200*D18,B:1600*D18}),now_ms=NOW)
-        self.assertEqual(r['coins'][0]['confirmed_independent_eoa_accumulation_count'],0)
+        self.assertEqual(r['coins'][0]['balance_verified_eoa_receiver_count_unknown_owner'],0)
         self.assertTrue(state['snapshots'])
 
     def test_false_cluster_if_chain_interval_not_contiguous(self):
@@ -103,7 +103,7 @@ class TestEconomicDetection(unittest.TestCase):
             evt(3,S2,B,800*D18,103),evt(4,S3,B,800*D18,107)]
         r,_=observe(CONFIG,ch(tx,start=106),prior=baseline(),
             http=RPC({A:1200*D18,B:1600*D18}),now_ms=NOW)
-        self.assertEqual(r['coins'][0]['confirmed_independent_eoa_accumulation_count'],0)
+        self.assertEqual(r['coins'][0]['balance_verified_eoa_receiver_count_unknown_owner'],0)
 
     def test_balance_delta_mismatch_blocks_candidate(self):
         tx=[evt(1,S1,A,600*D18,102),evt(2,S2,A,600*D18,105),
@@ -115,7 +115,7 @@ class TestEconomicDetection(unittest.TestCase):
     def test_single_whale_transfer_not_preparation(self):
         r,_=observe(CONFIG,ch([evt(1,S1,A,2000*D18,102)]),http=RPC({A:2000*D18}),now_ms=NOW)
         self.assertEqual(r['coins'][0]['research_state'],'UNEXPLAINED_LARGE_TRANSFER_REVIEW')
-        self.assertEqual(r['coins'][0]['confirmed_independent_eoa_accumulation_count'],0)
+        self.assertEqual(r['coins'][0]['balance_verified_eoa_receiver_count_unknown_owner'],0)
 
     def test_rpc_error_never_promotes_old_episode(self):
         episodes={'DOS|'+A:{'coin':'DOS','chain':'bsc','address':A,'retained_post_raw':str(1200*D18),
@@ -126,7 +126,7 @@ class TestEconomicDetection(unittest.TestCase):
                     'delta_raw':str(1600*D18)}}
         prior={'snapshots':baseline()['snapshots'],'episodes':episodes}
         r,_=observe(CONFIG,ch([],start=101),prior=prior,http=RPC(fail=True),now_ms=NOW)
-        self.assertEqual(r['coins'][0]['confirmed_independent_eoa_accumulation_count'],0)
+        self.assertEqual(r['coins'][0]['balance_verified_eoa_receiver_count_unknown_owner'],0)
 
     def test_capacity_ratio_is_only_partial_market_depth(self):
         tx=[evt(1,S1,A,600*D18,102),evt(2,S2,A,600*D18,105),
