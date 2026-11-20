@@ -244,7 +244,9 @@ def observe(config,tail,market=None,verified_entities=None,prior=None,http=None,
             if not (0<=now-int(episode.get('last_observed_ms',0))<=MEMORY_MS):
                 continue
             newer=snapshots.get(key)
-            if newer and fresh and int(newer['raw'])>=int(episode['retained_post_raw'])*7//10:
+            if (newer and fresh and newer.get('block')==head and
+                newer.get('observed_ms')==now and
+                int(newer['raw'])>=int(episode['retained_post_raw'])*7//10):
                 episodes[key]={**episode,'last_reverified_ms':now,
                                'retained_current_raw':newer['raw']}
         accepted=[e for e in episodes.values() if e['coin']==sym and
