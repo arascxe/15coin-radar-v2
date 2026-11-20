@@ -177,6 +177,9 @@ jobs:
         run: |
           python v2/economic_brain.py --db v2_runtime/live.sqlite3 \
             --config v2/config.json --out v2_runtime/economic_brain.json
+      - name: Build persistent 1d 7d 30d observed accumulation report (read-only)
+        run: |
+          python v2/accumulation_history.py --db v2_runtime/live.sqlite3             --config v2/config.json --verified-cex v2/verified_cex_entities.json             --out v2_runtime/accumulation_history.json
       - name: Discover untracked onchain receivers as research candidates only
         run: |
           python v2/flow_discovery.py --db v2_runtime/live.sqlite3 \
@@ -267,6 +270,7 @@ jobs:
           if test -f v2_runtime/tip_state.json; then cp v2_runtime/tip_state.json "$SNAP/tip_state.json"; fi
           cp v2_runtime/preparation_research.json "$SNAP/preparation_research.json"
           cp v2_runtime/economic_brain.json "$SNAP/economic_brain.json"
+          cp v2_runtime/accumulation_history.json "$SNAP/accumulation_history.json"
           cp v2_runtime/flow_discovery.json "$SNAP/flow_discovery.json"
           cp v2_runtime/transfer_trace.json "$SNAP/transfer_trace.json"
           if test -f v2_runtime/economic_fusion.json; then cp v2_runtime/economic_fusion.json "$SNAP/economic_fusion.json"; fi
@@ -306,6 +310,7 @@ jobs:
           if test -f "$SNAP/tip_state.json"; then cp "$SNAP/tip_state.json" v2_state/tip_state.json; fi
           cp "$SNAP/preparation_research.json" v2_state/preparation_research.json
           cp "$SNAP/economic_brain.json" v2_state/economic_brain.json
+          cp "$SNAP/accumulation_history.json" v2_state/accumulation_history.json
           cp "$SNAP/flow_discovery.json" v2_state/flow_discovery.json
           cp "$SNAP/transfer_trace.json" v2_state/transfer_trace.json
           if test -f "$SNAP/economic_fusion.json"; then cp "$SNAP/economic_fusion.json" v2_state/economic_fusion.json; fi
@@ -352,7 +357,7 @@ jobs:
             fi
           fi
           if test -f "$SNAP/last_run.json"; then cp "$SNAP/last_run.json" v2_state/last_run.json; fi
-          git add v2_archive v2_state/audit.json v2_state/preparation_research.json v2_state/economic_brain.json v2_state/flow_discovery.json v2_state/transfer_trace.json v2_state/last_run.json
+          git add v2_archive v2_state/audit.json v2_state/preparation_research.json v2_state/economic_brain.json v2_state/accumulation_history.json v2_state/flow_discovery.json v2_state/transfer_trace.json v2_state/last_run.json
           if test -f v2_state/dynamic_wallets.json; then git add v2_state/dynamic_wallets.json; fi
           if test -f v2_state/tip_state.json; then git add v2_state/tip_state.json; fi
           if test -f v2_state/spot_microstructure.json; then git add v2_state/spot_microstructure.json; fi
