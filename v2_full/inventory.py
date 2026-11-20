@@ -75,6 +75,7 @@ def analyze(config,tail,verified_entities=None,codeproofs=None,balanceproofs=Non
                 'last_block_ms':max(x['block_ms'] for x in rows[(sym,to)]),
                 'source_net_decrease_raw':bals['source_net_decrease_raw'],
                 'source_balance_reconciled':True,
+                'baseline_raw':bals.get('recipient_baseline_raw'),
                 'txs':sorted({x['tx'] for x in rows[(sym,to)]})})
         z['verified_retained_eoa_count']=len(z['independent_recipients'])
         z['verified_cex_external_net_raw']=str(sum(int(r['raw']) for r in z['independent_recipients']))
