@@ -36,6 +36,7 @@ jobs:
             /tmp/v2-live/preparation_memory.json
             /tmp/v2-live/onchain_snapshots.json
             /tmp/v2-live/economic_event_outbox.json
+            /tmp/v2-live/dex_active_tick_quote.json
           key: v2-live-proof-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: |
             v2-live-proof-
@@ -55,7 +56,7 @@ jobs:
           timeout --signal=TERM --kill-after=15s 335s \
             python -u -m v2_full.monitor --config v2/config.json \
               --verified-cex v2/verified_cex_entities.json \
-              --output-dir /tmp/v2-live --interval-sec 10 --max-seconds 270
+              --output-dir /tmp/v2-live --interval-sec 10 --max-seconds 270               --accumulation-report v2_state/accumulation_history.json
           code=$?
           echo "MONITOR_EXIT_CODE=$code"
           if test "$code" != 0; then
@@ -84,6 +85,7 @@ jobs:
             /tmp/v2-live/preparation_memory.json
             /tmp/v2-live/onchain_snapshots.json
             /tmp/v2-live/economic_event_outbox.json
+            /tmp/v2-live/dex_active_tick_quote.json
           key: v2-live-proof-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Publish compact research inbox for authorized ChatGPT alert task
         if: github.ref == 'refs/heads/main'
