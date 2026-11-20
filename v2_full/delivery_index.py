@@ -34,6 +34,21 @@ def build(report,outbox,workflow_id=None,now=None):
         entries.append({
             'event_id':ident,'coin':coin,'state':state,'urgency':SEVERITY[state],
             'first_observed_ms':observed,
+            'spot_proof':[{'venue':x.get('venue'),'pair':x.get('pair'),
+                           'phase':x.get('phase'),
+                           'window_start_ms':x.get('window_start_ms'),
+                           'window_end_ms':x.get('window_end_ms'),
+                           'buy_quote':x.get('buy_quote'),
+                           'sell_quote':x.get('sell_quote'),
+                           'ask_depleted_fraction':x.get('ask_depleted_fraction'),
+                           'identity_verified':x.get('identity_verified')}
+                          for x in event.get('spot_markets',[])[:3]],
+            'inventory_proof':[{'address':x.get('address'),
+                                'txs':x.get('txs',[])[:6],
+                                'source_balance_reconciled':x.get('source_balance_reconciled'),
+                                'source_net_decrease_raw':x.get('source_net_decrease_raw'),
+                                'last_block_ms':x.get('last_block_ms')}
+                               for x in event.get('inventory_proof',[])[:4]],
             'age_minutes_at_publication':round((now-observed)/60000,1),
             'evidence_only_not_10x_prediction':True,
             'verified_combined':state=='COMBINED_PREP_THEN_SPOT_OBSERVED',
