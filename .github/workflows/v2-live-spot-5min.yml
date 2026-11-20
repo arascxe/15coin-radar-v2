@@ -123,8 +123,9 @@ jobs:
                   raise RuntimeError('UNSAFE_EVENT_PACKET_NAME')
               if not isinstance(ref,dict) or not ref.get('sha256'):
                   continue
-              if ref.get('id')!=name:
-                  raise RuntimeError('EVENT_PACKET_ID_MISMATCH')
+              if (ref.get('id')!=name or
+                  ref.get('path')!='v2_state/evidence_packets/'+name+'.json'):
+                  raise RuntimeError('EVENT_PACKET_ID_OR_PATH_MISMATCH')
               raw_sha=ref['sha256']
               if not re.fullmatch(r'[a-f0-9]{64}',raw_sha):
                   raise RuntimeError('INVALID_EVIDENCE_PACKET_DIGEST')
@@ -157,7 +158,10 @@ jobs:
             if test -s /tmp/v2-live/published_event_outbox.json; then
               cp /tmp/v2-live/published_event_outbox.json v2_state/live_economic_event_outbox.json
             fi
-            git add v2_state/live_alert_inbox.json v2_state/live_economic_event_outbox.json v2_state/evidence_packets
+            git add v2_state/live_alert_inbox.json v2_state/live_economic_event_outbox.json
+            if find v2_state/evidence_packets -type f -name '*.json' | grep -q .; then
+              git add v2_state/evidence_packets
+            fi
             if git diff --cached --quiet; then
               echo "NO_NEW_PUBLISHABLE_INBOX"
               exit 0
