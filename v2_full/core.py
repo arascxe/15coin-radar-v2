@@ -81,7 +81,7 @@ class L2:
         # High-frequency book deltas can exceed 10k/5min; sample the reconstructed
         # SEQUENCED state every 5 s so the history spans tens of minutes, not seconds.
         if self.history and int(ms)-self.history[-1][0]<5000:return
-        self.history.append((int(ms),self.mid(),self.copy_asks()))
+        self.history.append((int(ms),self.mid(),self.copy_asks(),self.seq))
     def mid(self):return (max(self.bids)+min(self.asks))/2
     def copy_asks(self):return tuple(sorted(self.asks.items()))
     @staticmethod
@@ -93,6 +93,34 @@ class L2:
         """Raw target-token amount on the displayed ask side in an anchored band."""
         cap=dec(reference)*(1+D(bps)/10000)
         return sum((q for p,q in asks if p<=cap),D(0))
+    def audit_book_levels(self,record,max_levels=250):
+        """Freeze reconstructed, sequence-anchored observed L2 asks; not raw WS deltas."""
+        if record.get('status')!='VERIFIED_SEQUENCED_BOOK_INTERVAL':
+            return {'status':'NO_VERIFIED_BOOK_INTERVAL'}
+        before=next((x for x in self.history if x[0]==record.get('from_ms') and x[3]==record.get('from_seq')),None)
+        after=next((x for x in self.history if x[0]==record.get('to_ms') and x[3]==record.get('to_seq')),None)
+        if before is None or after is None or before[0]>=after[0]:
+            return {'status':'BOOK_REFERENCE_SEQUENCE_NOT_RETAINED'}
+        reference=dec(record['reference_price'])
+        cap=reference*D('1.02')
+        b=[(str(p),str(q)) for p,q in before[2] if p<=cap]
+        a=[(str(p),str(q)) for p,q in after[2] if p<=cap]
+        before_quote=sum((dec(p)*dec(q) for p,q in b),D(0))
+        after_quote=sum((dec(p)*dec(q) for p,q in a),D(0))
+        matched=(before_quote==dec(record['ask_before_quote']) and after_quote==dec(record['ask_after_quote']))
+        complete=matched and len(b)<=max_levels and len(a)<=max_levels
+        return {'status':'BOOK_ASK_LEVELS_REPLAYABLE' if complete else 'BOOK_LEVELS_TRUNCATED_OR_CHANGED',
+          'before_ms':before[0],'after_ms':after[0],
+          'from_seq':before[3],'to_seq':after[3],'fixed_price':str(reference),
+          'ask_band':'FIXED_REFERENCE_TO_PLUS_2PCT',
+          'before_levels_total':len(b),'after_levels_total':len(a),
+          'before_ask_price_token_qty_pairs':b[:max_levels],
+          'after_ask_price_token_qty_pairs':a[:max_levels],
+          'recomputed_before_quote':str(before_quote),
+          'recomputed_after_quote':str(after_quote),
+          'all_necessary_levels_included':complete,
+          'not_raw_WS_delta_or_L3_order_attribution':True}
+
     @staticmethod
     def is_covered(asks,reference,bps=200):
         # If outermost observed level is below cap, ask depth MAY be truncated.
@@ -119,6 +147,7 @@ class L2:
         # Fixed reference band: order-book quantity is visible CEX supply only,
         # not exchange inventory, not all global sellable token supply.
         return {'status':'VERIFIED_SEQUENCED_BOOK_INTERVAL','from_ms':before[0],'to_ms':after[0],
+                'from_seq':before[3],'to_seq':after[3],
                 'reference_price':str(reference),'ask_before_quote':str(old),
                 'ask_after_quote':str(new),'ask_before_token_qty':str(old_qty),
                 'ask_after_token_qty':str(new_qty),
@@ -129,6 +158,7 @@ class L2:
 @dataclass
 class Tape:
     recent:deque=field(default_factory=lambda:deque(maxlen=200000))
+    receipts:deque=field(default_factory=lambda:deque(maxlen=12000))
     seen_ids:dict=field(default_factory=dict)
     started_ms:int|None=None
     connected:bool=False
@@ -138,7 +168,7 @@ class Tape:
     last_numeric_id:int|None=None
     def connected_at(self,ms):
         self.started_ms=int(ms);self.connected=True;self.gap_since=None;self.error=None
-        self.recent.clear();self.seen_ids.clear();self.last_numeric_id=None
+        self.recent.clear();self.receipts.clear();self.seen_ids.clear();self.last_numeric_id=None
         self.latest_event_ms=None
     def disconnected(self,ms,why):
         self.connected=False;self.gap_since=int(ms);self.error=why
@@ -162,11 +192,38 @@ class Tape:
                 self.disconnected(ms,'EXCHANGE_TRADE_ID_GAP');raise Gap('EXCHANGE_TRADE_ID_GAP')
             self.last_numeric_id=num
         self.seen_ids[ident]=data;self.recent.append(data)
+        self.receipts.append((ident,ms,side,str(dec(price)),str(dec(quantity)),str(notional)))
         self.latest_event_ms=ms if self.latest_event_ms is None else max(self.latest_event_ms,ms)
         # Rebuild a bounded dedupe window; an ID repeated outside this window
         # cannot be treated as an audited contiguous exchange trade stream.
         if len(self.seen_ids)>200000:
             self.seen_ids=dict(list(self.seen_ids.items())[-100000:])
+    def audit_trades(self,start_ms,end_ms,count=None,buy=None,sell=None,limit=48):
+        """Bounded original public WS trade IDs. This is not an audited full exchange tape."""
+        if not self.connected or self.gap_since is not None:
+            return {'status':'DISCONNECTED_NO_TRADE_PROOF'}
+        if self.started_ms is None or self.started_ms>start_ms:
+            return {'status':'START_OF_TRADE_WINDOW_NOT_COVERED'}
+        rows=[x for x in self.receipts if start_ms<=x[1]<=end_ms]
+        observed=[x for x in self.recent if start_ms<=x[0]<=end_ms]
+        b=sum((D(x[5]) for x in rows if x[2]=='buy'),D(0))
+        a=sum((D(x[5]) for x in rows if x[2]=='sell'),D(0))
+        matched=(len(rows)==len(observed)
+                 and (count is None or count==len(rows))
+                 and (buy is None or b==dec(buy))
+                 and (sell is None or a==dec(sell)))
+        return {'status':'RECEIVED_PUBLIC_TRADES_AGGREGATE_RECONCILED' if matched else 'TRADE_RECEIPT_WINDOW_INCOMPLETE_OR_CHANGED',
+          'start_ms':start_ms,'end_ms':end_ms,'received_count':len(rows),
+          'aggregate_record_count':len(observed),
+          'expected_count':count,'recomputed_buy_quote':str(b),
+          'recomputed_sell_quote':str(a),
+          'trade_receipts_latest':[{'trade_id':x[0],'trade_ms':x[1],
+              'side':x[2],'price':x[3],'token_qty':x[4],'quote_notional':x[5]}
+              for x in rows[-limit:]],
+          'all_received_trade_ids_in_packet':matched and len(rows)<=limit,
+          'unshown_trades':max(0,len(rows)-limit),
+          'public_WS_transport_not_exchange_audited':True}
+
     def window(self,now_ms,window_ms=300_000):
         if not self.connected or self.started_ms is None or self.started_ms>now_ms-window_ms:
             return {'status':'TAPE_WINDOW_NOT_CONTINUOUS'}
