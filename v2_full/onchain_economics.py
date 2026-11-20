@@ -9,6 +9,7 @@ label as a verified CEX withdrawal or LP withdrawal.
 """
 from __future__ import annotations
 from collections import Counter,defaultdict
+from concurrent.futures import ThreadPoolExecutor
 from decimal import Decimal,InvalidOperation
 import hashlib
 from .core import stamp, D
@@ -191,13 +192,25 @@ def observe(config,tail,market=None,verified_entities=None,prior=None,http=None,
             addr=old[k]['address']
             if addr not in chosen:chosen.append(addr)
         attempts=Counter()
-        for address in chosen[:MAX_NEW_CANDIDATES_PER_COIN+MAX_FOLLOW_UP_PER_COIN]:
+        chosen=chosen[:MAX_NEW_CANDIDATES_PER_COIN+MAX_FOLLOW_UP_PER_COIN]
+        def one_read(address):
+            try:
+                return _rpc_at(http,meta['provider'],c['token'],address,head)
+            except Exception as exc:
+                return None,'RPC_READ_FAIL_'+type(exc).__name__
+        # Bound public RPC load while avoiding serial one-by-one requests;
+        # each coin still has a small strict request budget.
+        if fresh and http is not None and chosen:
+            with ThreadPoolExecutor(max_workers=3) as workers:
+                reads=dict(zip(chosen,workers.map(one_read,chosen)))
+        else:reads={}
+        for address in chosen:
             key=sym+'|'+address;prior_read=old.get(key)
             if not fresh or http is None:
                 attempts['NO_VERIFIED_FRESH_CHAIN_OR_RPC']+=1
                 continue
             try:
-                current,reason=_rpc_at(http,meta['provider'],c['token'],address,head)
+                current,reason=reads[address]
                 if reason:
                     attempts[reason]+=1;continue
                 snapshots[key]={'coin':sym,'chain':ch,'address':address,'block':head,
@@ -274,7 +287,8 @@ def observe(config,tail,market=None,verified_entities=None,prior=None,http=None,
             for e in sorted(z['events'],key=lambda x:x['raw'],reverse=True):
                 if (e['classification'] in ('UNKNOWN_OWNER_TRANSFER','UNVERIFIED_EXCHANGE_LABEL_ROUTE') and
                     e['raw']*1000>=supply and
-                    _clean_eligible(sym,ch,e['to'],z,labels,pools)):
+                    _clean_eligible(sym,ch,e['to'],z,labels,pools) and
+                    sym+'|'+e['to'] in snapshots):
                     unexplained={'tx':e['tx'],'block':e['block'],
                         'amount_raw':str(e['raw']),
                         'amount_token_quantity':str(D(e['raw'])/(D(10)**int(c['decimals']))),
