@@ -66,7 +66,9 @@ def revalidate(config,report,chain,previous=None,now=None,http=None):
             # recipient might have sold newly received inventory meanwhile.
             # Reuse a proof only for the EXACT SAME finalized block.
             if prior.get('last_reverified_block')==meta.get('safe_head'):
-                episodes[key]=prior
+                # Exact immutable finalized block: the same old balance proof
+                # remains valid (do NOT reuse it for a later/new block).
+                episodes[key]={**prior,'last_reverified_ms':now}
                 continue
             try:
                 block=meta['safe_head'];url=meta['provider']
