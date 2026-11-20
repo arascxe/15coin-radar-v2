@@ -10,6 +10,7 @@ import json
 import pathlib
 import re
 import shutil
+from .packet_verify import validate_file
 
 SCHEMA='radar-v2-alarm-evidence-packet-1'
 ID=re.compile(r'^[a-f0-9]{22}$')
@@ -60,12 +61,16 @@ def stage(inbox_path,source_dir,dest_dir,repo=REPO):
             or packet.get('state')!=e.get('state')
             or packet.get('event_first_observed_ms')!=e.get('first_observed_ms')):
             raise ValueError('PACKET_EVENT_IDENTITY_MISMATCH')
+        # Independently recompute every replayable book/tape aggregate from the
+        # frozen packet, not from post-event mutable exchanges.
+        verification=validate_file(source,expected_event=name,sha=sha)
         if target.is_file() and target.read_bytes()!=raw:
             raise ValueError('IMMUTABLE_PACKET_CONFLICT_EXISTING_GITHUB_FILE')
         if not target.is_file():
             shutil.copyfile(source,target)
             written.append(name)
         ref['status']='PACKET_VERIFIED_READY_FOR_ATOMIC_GITHUB_PUBLISH'
+        ref['independent_replay_verification']=verification
         ref['url']='https://github.com/'+repo+'/blob/main/'+expected
     tmp=inbox_path.with_name(inbox_path.name+'.tmp')
     tmp.write_text(json.dumps(inbox,indent=2,ensure_ascii=False)+'\n')
