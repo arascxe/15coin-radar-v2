@@ -15,6 +15,7 @@ from .runner import evaluate, atomic_json
 from .identity import verify_all
 from .proofs import verify_transfers
 from .entities import load_entities
+from .prep_memory import revalidate
 
 def fresh_chain(src,now):
     if not src:return {'chains':{},'events':[]}
@@ -133,6 +134,8 @@ def main(argv=None):
     cap.start_gate();cap.start_bitget();cap.start_mexc()
     chain=load_chain_ledger(out/'verified_chain_recent.json.gz')
     dex={};proven={};newchain_at=0;newdex_at=0
+    prepfile=out/'preparation_memory.json'
+    prep_cache=json.loads(prepfile.read_text()) if prepfile.exists() else {'episodes':{}}
     eventfile=out/'economic_event_outbox.json'
     old=json.loads(eventfile.read_text()) if eventfile.exists() else {'events':[],'last_state':{}}
     events=old.get('events',[]);previous=old.get('last_state',{})
@@ -176,6 +179,16 @@ def main(argv=None):
             market=cap.report()
             result=evaluate(config,market,active_chain,entity,
                             proven.get('codeproofs'),proven.get('balanceproofs'),dex=dex)
+            # Preserve proven retained inventory over independently verified
+            # runner windows; check latest EOA balances before reuse.
+            if entity:
+                try:
+                    from radar_stage1 import HTTPClient
+                    result,prep_cache=revalidate(
+                        config,result,active_chain,prep_cache,now,HTTPClient(12))
+                    atomic_json(prepfile,prep_cache)
+                except Exception as exc:
+                    result['preparation_memory_error']=type(exc).__name__+':'+str(exc)[:150]
             result['stream_health']=[{
                 'coin':x['coin'],'venue':x['venue'],'pair':x['pair'],
                 'evidence_ready':x.get('evidence_ready',False),
