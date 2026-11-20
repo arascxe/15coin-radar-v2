@@ -270,6 +270,7 @@ def main(argv=None):
                     event={'coin':sym,'first_seen_ms':now,'evidence_state':st,
                            'spot_markets':row['market_evidence'],'preparation_proved':row['preparation_proved'],
                            'dex_active_quote':row['dex_pool'],
+                           'onchain_economics':row.get('onchain_economics',{}),
                            'buy_signal':False,'validated_future_10x':False}
                     events.append(event)
                     verified_event=st in ('INDEPENDENT_SPOT_IGNITION_OBSERVED',
