@@ -1,0 +1,33 @@
+{
+  "schema": "radar-v2-cex-entity-attribution-1",
+  "reviewed_utc": "2026-11-20T07:00:00Z",
+  "policy": "A chain-scoped public attribution is CEX entity evidence only; it does NOT prove a withdrawal, economic control of its recipient, or total token supply.",
+  "entities": {
+    "bsc|0x0d0707963952f2fba59dd06f2b425ace40b492fe": {
+      "entity": "Gate",
+      "chain": "bsc",
+      "address": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
+      "proof": "OFFICIAL_OR_TWO_INDEPENDENT_CHAIN_SPECIFIC",
+      "source_count": 2,
+      "sources": [
+        {
+          "publisher": "Arkham",
+          "url": "https://arkm.com/explorer/address/0x0d0707963952f2fba59dd06f2b425ace40b492fe",
+          "observation": "Gate Hot Wallet EVM attribution; includes BNB Smart Chain assets"
+        },
+        {
+          "publisher": "BscScan",
+          "url": "https://bscscan.com/tx/0x6b1353ff1c9d3062263f224d233f18bffb9a9529a2de5425972c4f53c0ad595e",
+          "observation": "BSC transaction source labeled Gate 1"
+        }
+      ],
+      "scope": "Publicly identified one Gate hot-wallet address on BSC; no other Gate/Bitget/KuCoin wallets approved.",
+      "withdrawal_verified": false,
+      "recipient_beneficial_owner_verified": false
+    }
+  },
+  "unverified_candidates_excluded": [
+    "bsc|0xc882b111a75c0c657fc507c04fbfcd2cc984f071"
+  ],
+  "note": "Do not automatically promote this attribution across other chains or infer the balance of all Gate customers."
+}
