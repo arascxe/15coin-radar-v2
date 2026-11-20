@@ -16,6 +16,7 @@ from .identity import verify_all
 from .proofs import verify_transfers
 from .entities import load_entities
 from .prep_memory import revalidate
+from .onchain_economics import observe as observe_economics
 
 def fresh_chain(src,now):
     if not src:return {'chains':{},'events':[]}
@@ -134,12 +135,15 @@ def main(argv=None):
     cap.start_gate();cap.start_bitget();cap.start_mexc()
     chain=load_chain_ledger(out/'verified_chain_recent.json.gz')
     dex={};proven={};newchain_at=0;newdex_at=0
+    economicfile=out/'onchain_snapshots.json'
+    economicprior=json.loads(economicfile.read_text()) if economicfile.exists() else {'snapshots':{},'episodes':{}}
+    economic_live=None;economic_error=None;economic_future=None
     prepfile=out/'preparation_memory.json'
     prep_cache=json.loads(prepfile.read_text()) if prepfile.exists() else {'episodes':{}}
     eventfile=out/'economic_event_outbox.json'
     old=json.loads(eventfile.read_text()) if eventfile.exists() else {'events':[],'last_state':{}}
     events=old.get('events',[]);previous=old.get('last_state',{})
-    started=time.monotonic();threadpool=concurrent.futures.ThreadPoolExecutor(max_workers=2)
+    started=time.monotonic();threadpool=concurrent.futures.ThreadPoolExecutor(max_workers=3)
     chain_future=None;dex_future=None;last_chain_snapshot_id=None
     print('RADAR_15COIN_LIVE_MONITOR_ACTIVE_NO_TRADE_EXECUTION',flush=True)
     try:
@@ -163,6 +167,30 @@ def main(argv=None):
                         proven=verify_transfers(config,chain,entity,out/'balance_proof_ledger.json')
                 except Exception as e:chain={'chains':{},'events':[],'error':str(e)[:200]}
                 chain_future=None
+            # On-chain snapshots are pinned to a *fresh confirmed tip* and
+            # obtained outside the fast spot-loop; only completed results can
+            # affect current research alert states.
+            if economic_future is None and chain_future is None:
+                heads=tuple((ch,meta.get('safe_head')) for ch,meta in sorted(chain.get('chains',{}).items()))
+                if any(h is not None for _,h in heads) and heads!=last_chain_snapshot_id:
+                    try:
+                        from radar_stage1 import HTTPClient
+                        econmarket=cap.report()
+                        economic_future=threadpool.submit(
+                            observe_economics,config,chain,econmarket,entity,economicprior,
+                            HTTPClient(12),now)
+                        last_chain_snapshot_id=heads
+                    except Exception as exc:
+                        economic_error='ECONOMIC_START_FAILED:'+type(exc).__name__
+            if economic_future is not None and economic_future.done():
+                try:
+                    economic_live,economicprior=economic_future.result()
+                    atomic_json(economicfile,economicprior)
+                    atomic_json(out/'onchain_economic_evidence.json',economic_live)
+                    economic_error=None
+                except Exception as exc:
+                    economic_error='ECONOMIC_PROCESSING_FAILED:'+type(exc).__name__+':'+str(exc)[:120]
+                economic_future=None
             active_chain=fresh_chain(chain,now)
             if dex_future is None and any(x.get('status')=='FRESH_CONTIGUOUS_TAIL' for x in active_chain.get('chains',{}).values()) and (not newdex_at or now-newdex_at>600_000):
                 dex_future=threadpool.submit(dex_snapshot,config,active_chain)
@@ -179,6 +207,27 @@ def main(argv=None):
             market=cap.report()
             result=evaluate(config,market,active_chain,entity,
                             proven.get('codeproofs'),proven.get('balanceproofs'),dex=dex)
+            if economic_live and 0<=now-economic_live.get('asof_ms',0)<=600000:
+                economics={c['coin']:c for c in economic_live.get('coins',[])}
+                for row in result['coins']:
+                    obs=economics.get(row['coin'])
+                    if obs is None:continue
+                    row['onchain_economics']=obs
+                    # Independent unknown-owner path is research ONLY, even when
+                    # a real spot ignition is also observed. No confirmed
+                    # ownership or causal market-making inference is made.
+                    research=obs.get('research_state')
+                    if research=='CLUSTER_ACCUMULATION_RESEARCH':
+                        if row['state']=='EVIDENCE_INSUFFICIENT_UNKNOWN':
+                            row['state']='UNVERIFIED_CLUSTER_ACCUMULATION_RESEARCH'
+                        elif row['state']=='INDEPENDENT_SPOT_IGNITION_OBSERVED':
+                            row['state']='UNVERIFIED_CLUSTER_WITH_SPOT_RESEARCH'
+                    elif research=='UNEXPLAINED_LARGE_TRANSFER_REVIEW':
+                        if row['state']=='EVIDENCE_INSUFFICIENT_UNKNOWN':
+                            row['state']='UNEXPLAINED_LARGE_TRANSFER_REVIEW'
+                result['onchain_economic_checked_ms']=economic_live['asof_ms']
+            else:
+                result['onchain_economic_error']=economic_error or 'NO_RECENT_COMPLETED_ONCHAIN_ECONOMIC_SNAPSHOT'
             # Preserve proven retained inventory over independently verified
             # runner windows; check latest EOA balances before reuse.
             if entity:
@@ -189,6 +238,7 @@ def main(argv=None):
                     atomic_json(prepfile,prep_cache)
                 except Exception as exc:
                     result['preparation_memory_error']=type(exc).__name__+':'+str(exc)[:150]
+            result['onchain_economic_engine_status']='COMPLETE_FRESH' if economic_live and 0<=now-economic_live.get('asof_ms',0)<=600000 else 'STALE_OR_UNAVAILABLE'
             result['stream_health']=[{
                 'coin':x['coin'],'venue':x['venue'],'pair':x['pair'],
                 'evidence_ready':x.get('evidence_ready',False),
