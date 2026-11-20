@@ -57,11 +57,15 @@ def revalidate(config,report,chain,previous=None,now=None,http=None):
                     address.startswith('0x')):continue
             if not safe or http is None:
                 health[coin]='STALE_OR_MISSING_RECHECK_CANNOT_PROMOTE'
+                episodes[key]=prior
+                continue
+            if 0<=now-int(prior.get('last_reverified_ms',0))<120000:
+                episodes[key]=prior
                 continue
             try:
                 block=meta['safe_head'];url=meta['provider']
                 if http.rpc(url,'eth_getCode',[address,hex(block)])!='0x':
-                    health[coin]='EOA_CODE_CHECK_FAILED';continue
+                    health[coin]='EOA_CODE_CHECK_FAILED';episodes[key]=prior;continue
                 bal=_balance(http,url,cfg['token'],address,block)
                 needed=(int(prior['retained_raw'])*7)//10
                 if bal<needed:
@@ -72,9 +76,10 @@ def revalidate(config,report,chain,previous=None,now=None,http=None):
                 episodes[key]=verified
             except Exception as ex:
                 health[coin]='RPC_RECHECK_FAILED:'+type(ex).__name__
+                episodes[key]=prior
                 continue
-        live=[e for e in episodes.values() if e['coin']==coin and
-              e['last_reverified_ms']==now]
+        live=[e for e in episodes.values() if e['coin']==coin and safe and
+              coin not in health and 0<=now-int(e.get('last_reverified_ms',0))<=180000]
         if live and not row.get('preparation_proved'):
             proof=max(live,key=lambda e:e['last_block_ms'])
             # Evidence of earlier receipt is refreshed, but not inferred from
