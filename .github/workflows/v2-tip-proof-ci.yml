@@ -1,0 +1,138 @@
+name: V2 near-tip transfer proof acceptance (read-only)
+on:
+  pull_request:
+    paths:
+      - 'v2/tip_ingest.py'
+      - 'v2/chain_v2.py'
+      - 'v2_full/**'
+      - 'tests/**'
+      - 'v2/tests/test_tip_ingest.py'
+      - '.github/workflows/radar-v2-stage1-hourly.yml'
+      - '.github/workflows/v2-tip-proof-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-tip-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run old V2 and integrated live-evidence unit tests
+        run: |
+          python -m unittest discover -s v2/tests -q
+          python -m unittest discover -s tests -q
+      - name: Verify live engine entrypoints without network
+        run: |
+          PYTHONPATH=.:v2 python -m v2_full.monitor --help
+          PYTHONPATH=.:v2 python -m v2_full.runner --help
+      - name: Public provider near-head smoke check, without API keys
+        shell: bash
+        run: |
+          mkdir -p /tmp/v2-proof
+          timeout --signal=TERM --kill-after=10s 260s python - <<'PY' || echo "SMOKE_SOURCE_UNAVAILABLE_NO_CLAIM_OF_LIVE_COVERAGE"
+          import json,sys
+          sys.path.insert(0,'v2')
+          from radar_stage1 import Store,now_ms
+          from tip_ingest import ingest
+          cfg=json.load(open('v2/config.json'))
+          s=Store('/tmp/v2-proof/probe.sqlite3')
+          rid=s.begin_run(now_ms())
+          report={'run_id':rid,'coins':len(cfg['coins']),
+                  'bsc':ingest(s,rid,cfg,'bsc',initial_blocks=80,max_blocks=80,deadline_seconds=110),
+                  'base':ingest(s,rid,cfg,'base',initial_blocks=80,max_blocks=80,deadline_seconds=80)}
+          s.close()
+          open('/tmp/v2-proof/provider_report.json','w').write(json.dumps(report,indent=2)+'\n')
+          print(json.dumps(report,indent=2))
+          PY
+      - name: Probe independent free Base RPC providers and Transfer logs
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,urllib.request,time,datetime
+          addresses=[
+            'https://base-mainnet.g.alchemy.com/public',
+            'https://base.drpc.org',
+            'https://public-base-mainnet.rpcnode.dev',
+            'https://base-rpc.publicnode.com',
+            'https://base.llamarpc.com']
+          contract='0x6cd905df2ed214b22e0d48ff17cd4200c1c6d8a3'
+          topic='0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+          def rpc(url,method,params):
+              body=json.dumps({'jsonrpc':'2.0','id':1,'method':method,'params':params}).encode()
+              req=urllib.request.Request(url,data=body,headers={
+                  'Content-Type':'application/json','User-Agent':'RadarV2-Research/0.3'})
+              with urllib.request.urlopen(req,timeout=7) as resp: answer=json.load(resp)
+              if 'error' in answer:raise RuntimeError(str(answer['error'])[:180])
+              return answer['result']
+          out=[]
+          for url in addresses:
+              row={'endpoint':url,'chain_id_8453':False,'logs_responded':False}
+              try:
+                  chain=int(rpc(url,'eth_chainId',[]),16)
+                  row['chain_id_8453']=chain==8453
+                  if chain!=8453:raise ValueError('WRONG_CHAIN')
+                  head=int(rpc(url,'eth_blockNumber',[]),16)-10
+                  row['head']=head
+                  logs=rpc(url,'eth_getLogs',[{'fromBlock':hex(head),
+                      'toBlock':hex(head),'address':contract,'topics':[topic]}])
+                  row['logs_responded']=isinstance(logs,list)
+                  row['logs_count']=len(logs)
+              except Exception as e:row['error']=str(e)[:200]
+              out.append(row)
+              print(json.dumps(row),flush=True)
+          import pathlib
+          pathlib.Path('/tmp/v2-proof').mkdir(parents=True,exist_ok=True)
+          pathlib.Path('/tmp/v2-proof/base_provider_probes.json').write_text(
+              json.dumps({'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                          'results':out},indent=2))
+          PY
+      - name: Test 15-coin live Gate/Bitget/MEXC and chain monitor with bounded public access
+        shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check websocket-client
+          mkdir -p /tmp/v2-proof/live
+          export PYTHONPATH=.:v2
+          set +e
+          timeout --signal=TERM --kill-after=10s 340s python -u -m v2_full.monitor \
+            --config v2/config.json --output-dir /tmp/v2-proof/live \
+            --interval-sec 10 --max-seconds 170
+          code=$?
+          echo "LIVE_MONITOR_EXIT_CODE=$code"
+          python - <<'PY'
+          import json,pathlib,collections
+          root=pathlib.Path('/tmp/v2-proof/live')
+          path=root/'live_15_coin_economic_state.json'
+          if not path.exists():
+              print('NO_LIVE_MARKET_REPORT: network or runtime failure; no verified early alert')
+          else:
+              report=json.loads(path.read_text())
+              m=report.get('stream_health',[])
+              print('LIVE_MARKETS',len(m),'COINS',len(report.get('coins',[])))
+              print('BOOK_STATUSES',dict(collections.Counter(x.get('book_status') for x in m)))
+              print('TAPE_STATUSES',dict(collections.Counter(x.get('tape_status') for x in m)))
+              print('MARKET_STATES',dict(collections.Counter(x.get('state') for x in report.get('coins',[]))))
+              print('IDENTITY_STATUS_COUNTS',dict(collections.Counter(report.get('exchange_pair_identity',{}).values())))
+              print('EARLY_90S_BOOK_STATUSES',dict(collections.Counter(x.get('early_book_status') for x in m)))
+              print('EARLY_90S_TAPE_STATUSES',dict(collections.Counter(x.get('early_tape_status') for x in m)))
+              print('EARLY_90S_READY',sum(bool(x.get('early_90s_ready')) for x in m))
+              print('COINS_WITH_AT_LEAST_ONE_IDENTIFIED_MARKET',len({
+                x.get('coin') for x in m if report.get('exchange_pair_identity',{}).get(x.get('coin')+'|'+x.get('venue')) in
+                ('VERIFIED_SAME_CONTRACT_NETWORK','VERIFIED_OFFICIAL_HISTORICAL_MEXC_SPOT_LISTING_WITH_ACTIVE_PAIR')}))
+              print('IDENTITY_VERIFIED',sum(x=='VERIFIED_SAME_CONTRACT_NETWORK' for x in report.get('exchange_pair_identity',{}).values()))
+          PY
+          exit 0
+      - name: Keep evidence of remote provider capabilities
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v2-provider-smoke-${{ github.run_id }}
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            /tmp/v2-proof/provider_report.json
+            /tmp/v2-proof/base_provider_probes.json
+            /tmp/v2-proof/live/**

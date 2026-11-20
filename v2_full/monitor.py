@@ -1,0 +1,223 @@
+"""Persistent local all-15-coin read-only monitor.
+
+Run on an always-on Windows/Linux PC using the original v2/config.json; unlike
+hourly GitHub jobs, this process retains continuous WS sessions and can emit
+research events as soon as an observed 90 s event satisfies the evidence checks.
+Never submits trades, never uses API keys, never modifies original V2 artifacts.
+"""
+from __future__ import annotations
+import argparse, concurrent.futures, datetime, gzip, json, pathlib, sys, time
+from .core import COINS, stamp, dec, D
+from .streams import StreamCapture
+from .chain_tail import scan_tip
+from .dex import probe_v3
+from .runner import evaluate, atomic_json
+from .identity import verify_all
+from .proofs import verify_transfers
+
+def fresh_chain(src,now):
+    if not src:return {'chains':{},'events':[]}
+    if now-int(src.get('observed_ms',0))<300_000:return src
+    return {'chains':{chain:{**info,'status':'STALE_CACHED_CHAIN_RESULT'}
+                      for chain,info in src.get('chains',{}).items()},
+            'events':[], 'observed_ms':src.get('observed_ms')}
+
+def dex_snapshot(config,chain):
+    try:from radar_stage1 import HTTPClient
+    except ImportError:return {'_error':'REPO_V2_PACKAGE_NOT_FOUND'}
+    http=HTTPClient(12);out={}
+    for p in config.get('dex_pools',[]):
+        sym=p['coin'];ch=chain.get('chains',{}).get(p['chain'],{})
+        if p.get('kind')!='v3':
+            out[sym]={'status':'POOL_TYPE_NOT_YET_SUPPORTED'};continue
+        if ch.get('status')!='FRESH_CONTIGUOUS_TAIL':
+            out[sym]={'status':'POOL_RPC_NOT_VERIFIED'};continue
+        coin=next(x for x in config['coins'] if x['symbol']==sym)
+        out[sym]=probe_v3(http,ch['provider'],p['pool'],coin['token'],ch['safe_head'])
+    return out
+
+def add_dex_cap_change(old,new):
+    for sym,x in new.items():
+        prior=old.get(sym,{})
+        if x.get('status')!='V3_ACTIVE_TICK_2PCT_RAW_QUOTE_ESTIMATED' or prior.get('status')!='V3_ACTIVE_TICK_2PCT_RAW_QUOTE_ESTIMATED':continue
+        if x['quote_token']!=prior['quote_token'] or x.get('pinned_finalized_block')==prior.get('pinned_finalized_block'):continue
+        oldv=dec(prior['quote_needed_for_2pct_price_impact']);newv=dec(x['quote_needed_for_2pct_price_impact'])
+        if oldv<=0:continue
+        x['relative_2pct_quote_capacity_change']=str((newv-oldv)/oldv)
+        x['less_liquid_in_native_quote']=newv<oldv*D('.7')
+        x['causality_unresolved']='Price/tick changes OR LP changes can alter this metric; do not call it confirmed liquidity withdrawal'
+
+def load_chain_ledger(path):
+    import gzip
+    try:
+        with gzip.open(path,'rt',encoding='utf-8') as f:return json.load(f)
+    except (OSError,ValueError):return {'chains':{},'events':[],'observed_ms':0}
+
+def merge_verified_chain(old,new,limit=80000):
+    """Only advance a chain cursor after full contiguous verification.
+    Persist past fills for retention proofs across repeated polling loops.
+    A failed update invalidates freshness, but does not erase previously proven events.
+    """
+    merged={'schema':'radar-v2-contiguous-near-tip-ledger-1',
+            'observed_ms':new.get('observed_ms',stamp()),
+            'chains':dict(old.get('chains',{})),
+            'events':list(old.get('events',[]))}
+    new_by={x:[] for x in ('bsc','base')}
+    for row in new.get('events',[]):
+        ch='base' if row.get('coin')=='TRUST' else 'bsc'
+        new_by[ch].append(row)
+    for ch,meta in new.get('chains',{}).items():
+        former=merged['chains'].get(ch,{})
+        if meta.get('status')!='FRESH_CONTIGUOUS_TAIL':
+            merged['chains'][ch]={**former,'status':'UNVERIFIED_LATEST_REFRESH',
+                    'refresh_failure':meta.get('status'),'last_attempt_ms':new.get('observed_ms')}
+            continue
+        start=meta.get('from_block');last=former.get('safe_head')
+        if (last is not None and start!=last+1):
+            # A restart/reset must not concatenate disjoint histories.
+            merged['events']=[e for e in merged['events']
+                              if ('base' if e.get('coin')=='TRUST' else 'bsc')!=ch]
+            former={}
+        others=[e for e in merged['events'] if ('base' if e.get('coin')=='TRUST' else 'bsc')!=ch]
+        curr=[e for e in merged['events'] if ('base' if e.get('coin')=='TRUST' else 'bsc')==ch]
+        seen={(e.get('tx'),e.get('log_index'),e.get('coin')) for e in curr}
+        for e in new_by[ch]:
+            k=(e.get('tx'),e.get('log_index'),e.get('coin'))
+            if k not in seen:curr.append(e);seen.add(k)
+        if len(curr)>limit:
+            curr=sorted(curr,key=lambda r:(r['block'],r['tx'],r['log_index']))[-limit:]
+            # Ensure we do not claim coverage for the discarded boundary block.
+            new_start=min(r['block'] for r in curr)
+            curr=[r for r in curr if r['block']>new_start]
+            cutoff=new_start+1
+        else:cutoff=former.get('from_block',start)
+        merged['events']=others+curr
+        merged['chains'][ch]={**meta,'from_block':int(cutoff),
+                             'complete':True}
+    return merged
+
+def save_chain_ledger(path,ledger):
+    import gzip
+    path=pathlib.Path(path);path.parent.mkdir(parents=True,exist_ok=True)
+    temp=path.with_name(path.name+'.tmp')
+    with gzip.open(temp,'wt',encoding='utf-8',compresslevel=6) as f:
+        json.dump(ledger,f,separators=(',',':'))
+    temp.replace(path)
+
+def maybe_notify(msg,enabled):
+    print('EARLY_RADAR_RESEARCH_EVENT '+json.dumps(msg,ensure_ascii=False),flush=True)
+    if enabled and sys.platform=='win32':
+        try:
+            import winsound
+            winsound.MessageBeep(winsound.MB_ICONEXCLAMATION)
+        except Exception:pass
+
+def main(argv=None):
+    p=argparse.ArgumentParser()
+    p.add_argument('--config',default='v2/config.json')
+    p.add_argument('--output-dir',default='v2_local_live')
+    p.add_argument('--verified-cex')
+    p.add_argument('--notify-local',action='store_true')
+    p.add_argument('--interval-sec',type=int,default=10)
+    p.add_argument('--max-seconds',type=int,default=0,help='0 = continuous until Ctrl+C')
+    a=p.parse_args(argv)
+    config=json.loads(pathlib.Path(a.config).read_text())
+    if tuple(c['symbol'] for c in config['coins'])!=COINS:raise SystemExit('WRONG_COIN_UNIVERSE')
+    out=pathlib.Path(a.output_dir);out.mkdir(parents=True,exist_ok=True)
+    entity=json.loads(pathlib.Path(a.verified_cex).read_text()) if a.verified_cex else {}
+    # Official metadata verified on startup. Failed metadata fetches remain unverified.
+    status=verify_all(config)
+    atomic_json(out/'official_contract_identity.json',status)
+    cap=StreamCapture(config,status['statuses'])
+    cap.start_gate();cap.start_bitget();cap.start_mexc()
+    chain=load_chain_ledger(out/'verified_chain_recent.json.gz')
+    dex={};proven={};newchain_at=0;newdex_at=0
+    eventfile=out/'economic_event_outbox.json'
+    old=json.loads(eventfile.read_text()) if eventfile.exists() else {'events':[],'last_state':{}}
+    events=old.get('events',[]);previous=old.get('last_state',{})
+    started=time.monotonic();threadpool=concurrent.futures.ThreadPoolExecutor(max_workers=2)
+    chain_future=None;dex_future=None;last_chain_snapshot_id=None
+    print('RADAR_15COIN_LIVE_MONITOR_ACTIVE_NO_TRADE_EXECUTION',flush=True)
+    try:
+        while a.max_seconds==0 or time.monotonic()-started<a.max_seconds:
+            now=stamp()
+            if chain_future is None and (not newchain_at or now-newchain_at>180_000):
+                cursors={ch:int(meta['safe_head']) for ch,meta in chain.get('chains',{}).items()
+                         if isinstance(meta.get('safe_head'),int)}
+                chain_future=threadpool.submit(scan_tip,config,700,300,cursors)
+                newchain_at=now
+            if chain_future is not None and chain_future.done():
+                try:
+                    recent=chain_future.result()
+                    chain=merge_verified_chain(chain,recent)
+                    save_chain_ledger(out/'verified_chain_recent.json.gz',chain)
+                    atomic_json(out/'latest_chain_tail.json',
+                                {'schema':chain['schema'],'observed_ms':chain['observed_ms'],
+                                 'chains':chain['chains'],'total_retained_events':len(chain['events'])})
+                    # Persist exact balance proof ledger; query only if entity attribution provided.
+                    if entity:
+                        proven=verify_transfers(config,chain,entity,out/'balance_proof_ledger.json')
+                except Exception as e:chain={'chains':{},'events':[],'error':str(e)[:200]}
+                chain_future=None
+            active_chain=fresh_chain(chain,now)
+            if dex_future is None and any(x.get('status')=='FRESH_CONTIGUOUS_TAIL' for x in active_chain.get('chains',{}).values()) and (not newdex_at or now-newdex_at>600_000):
+                dex_future=threadpool.submit(dex_snapshot,config,active_chain)
+                newdex_at=now
+            if dex_future is not None and dex_future.done():
+                try:
+                    update=dex_future.result();add_dex_cap_change(dex,update);dex=update
+                    atomic_json(out/'dex_active_tick_quote.json',dex)
+                except Exception as e:dex={'_error':str(e)[:200]}
+                dex_future=None
+            # A single lost depth sequence must not permanently disable a market.
+            # Recovery demands a fresh exchange-aligned book and a new trade window.
+            cap.recover_unsynced_books()
+            market=cap.report()
+            result=evaluate(config,market,active_chain,entity,
+                            proven.get('codeproofs'),proven.get('balanceproofs'),dex=dex)
+            result['stream_health']=[{
+                'coin':x['coin'],'venue':x['venue'],'pair':x['pair'],
+                'evidence_ready':x.get('evidence_ready',False),
+                'early_90s_ready':x.get('early_ready',False),
+                'book_status':x.get('book',{}).get('status'),
+                'tape_status':x.get('tape',{}).get('status'),
+                'early_book_status':x.get('layers',{}).get('early_90s',{}).get('book',{}).get('status'),
+                'early_tape_status':x.get('layers',{}).get('early_90s',{}).get('tape',{}).get('status'),
+                'early_blockers':x.get('layers',{}).get('early_90s',{}).get('blockers',[]),
+                'early_buy_quote':x.get('layers',{}).get('early_90s',{}).get('tape',{}).get('buy_quote'),
+                'early_sell_quote':x.get('layers',{}).get('early_90s',{}).get('tape',{}).get('sell_quote'),
+                'early_depletion':x.get('layers',{}).get('early_90s',{}).get('book',{}).get('fraction_depleted'),
+                'blockers':x.get('blockers',[])
+                } for x in market.get('markets',[])]
+            result['exchange_pair_identity']=status['statuses']
+            result['balance_proof_health']={k:v for k,v in proven.items() if k not in ('codeproofs','balanceproofs')}
+            atomic_json(out/'live_15_coin_economic_state.json',result)
+            # Durable source/coverage observations for later out-of-sample test.
+            day=datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d')
+            with gzip.open(out/f'evidence_{day}.jsonl.gz','at',encoding='utf-8') as f:
+                f.write(json.dumps({'ms':now,'coins':[{'coin':c['coin'],'state':c['state'],
+                    'markets':c['market_evidence'],'prep':c['preparation_proved'],
+                    'dex':c['dex_pool']} for c in result['coins']]},separators=(',',':'))+'\n')
+            for row in result['coins']:
+                sym,st=row['coin'],row['state']
+                if st!='EVIDENCE_INSUFFICIENT_UNKNOWN' and previous.get(sym)!=st:
+                    event={'coin':sym,'first_seen_ms':now,'evidence_state':st,
+                           'spot_markets':row['market_evidence'],'preparation_proved':row['preparation_proved'],
+                           'dex_active_quote':row['dex_pool'],
+                           'buy_signal':False,'validated_future_10x':False}
+                    events.append(event)
+                    verified_event=st in ('INDEPENDENT_SPOT_IGNITION_OBSERVED',
+                        'VERIFIED_INVENTORY_PREPARATION_OBSERVED','COMBINED_PREP_THEN_SPOT_OBSERVED')
+                    event['evidence_only_not_future_10x_prediction']=True
+                    event['only_review_candidate']=not verified_event
+                    maybe_notify(event,a.notify_local and verified_event)
+                previous[sym]=st
+            atomic_json(eventfile,{'schema':'radar-v2-live-evidence-events-1',
+                                   'asof_ms':now,'events':events[-1000:],'last_state':previous})
+            time.sleep(max(1,a.interval_sec))
+    except KeyboardInterrupt:
+        print('RADAR_MONITOR_STOPPED_BY_USER',flush=True)
+    finally:
+        threadpool.shutdown(wait=False,cancel_futures=True)
+    return 0
+if __name__=='__main__':raise SystemExit(main())

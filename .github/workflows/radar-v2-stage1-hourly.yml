@@ -76,6 +76,19 @@ jobs:
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
           echo "COLLECTOR_EXIT_CODE=$code"
           exit 0
+      - name: Verify current-chain Transfer logs independently from delayed archive
+        id: tip
+        shell: bash
+        run: |
+          set +e
+          timeout --signal=TERM --kill-after=10s 360s \
+            python -u v2/tip_ingest.py --db v2_runtime/live.sqlite3 \
+              --config v2/config.json --deadline-seconds 150 \
+              --out v2_runtime/tip_state.json
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          echo "NEAR_TIP_EXIT_CODE=$code"
+          exit 0
       - name: Bounded independent missing spot minute repair
         id: repair
         shell: bash
@@ -249,6 +262,7 @@ jobs:
           trap 'rm -rf "$SNAP"' EXIT
           cp -a v2_runtime/segment_store "$SNAP/store"
           cp v2_runtime/audit.json "$SNAP/audit.json"
+          if test -f v2_runtime/tip_state.json; then cp v2_runtime/tip_state.json "$SNAP/tip_state.json"; fi
           cp v2_runtime/preparation_research.json "$SNAP/preparation_research.json"
           cp v2_runtime/economic_brain.json "$SNAP/economic_brain.json"
           cp v2_runtime/flow_discovery.json "$SNAP/flow_discovery.json"
@@ -287,6 +301,7 @@ jobs:
           cp -n "$SNAP/store"/segments/* v2_archive/segments/ 2>/dev/null || true
           cp "$SNAP/store/manifest.json" v2_archive/manifest.json
           cp "$SNAP/audit.json" v2_state/audit.json
+          if test -f "$SNAP/tip_state.json"; then cp "$SNAP/tip_state.json" v2_state/tip_state.json; fi
           cp "$SNAP/preparation_research.json" v2_state/preparation_research.json
           cp "$SNAP/economic_brain.json" v2_state/economic_brain.json
           cp "$SNAP/flow_discovery.json" v2_state/flow_discovery.json
@@ -337,6 +352,7 @@ jobs:
           if test -f "$SNAP/last_run.json"; then cp "$SNAP/last_run.json" v2_state/last_run.json; fi
           git add v2_archive v2_state/audit.json v2_state/preparation_research.json v2_state/economic_brain.json v2_state/flow_discovery.json v2_state/transfer_trace.json v2_state/last_run.json
           if test -f v2_state/dynamic_wallets.json; then git add v2_state/dynamic_wallets.json; fi
+          if test -f v2_state/tip_state.json; then git add v2_state/tip_state.json; fi
           if test -f v2_state/spot_microstructure.json; then git add v2_state/spot_microstructure.json; fi
           if test -f v2_state/economic_fusion.json; then git add v2_state/economic_fusion.json; fi
           git add v2_state/technical_confirmation.json v2_state/prospective_validation.json

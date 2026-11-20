@@ -10,7 +10,10 @@ TRANSFER_TOPIC='0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3
 ENDPOINTS={
  'bsc':('https://bsc-rpc.publicnode.com','https://bsc-dataseed.bnbchain.org',
         'https://bsc-dataseed-public.bnbchain.org'),
- 'base':('https://rpc.swiftnodes.io/rpc/base','https://api.zan.top/base-mainnet',
+ 'base':('https://base-mainnet.g.alchemy.com/public',
+         'https://base.drpc.org',
+         'https://base-rpc.publicnode.com',
+         'https://rpc.swiftnodes.io/rpc/base','https://api.zan.top/base-mainnet',
          'https://base-rpc.blockreq.com/v1/rpc/public',
          'https://base-mainnet.public.blastapi.io','https://mainnet.base.org',
          'https://base.publicnode.com')
