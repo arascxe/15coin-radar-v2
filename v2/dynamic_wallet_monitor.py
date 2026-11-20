@@ -27,6 +27,34 @@ HISTORY_MS = 7 * 86400000
 RECENT_RETRY_MS = 3600000
 MAX_PER_COIN = 3
 
+TIP_MAX_AGE_MS = 20 * 60 * 1000
+
+def fresh_tip_heads(report,ts_ms):
+    """Live finalized heads replace lagging archive cursors for RPC snapshots only.
+
+    Token transfer provenance remains governed by the original contiguous-log
+    checks: observing a balance at tip NEVER fills a historic chain gap.
+    """
+    if not isinstance(report,dict) or report.get('schema')!='v2-verified-independent-chain-tip-1':
+        return {}
+    try:
+        when=int(datetime.datetime.fromisoformat(
+            report['created_utc'].replace('Z','+00:00')).timestamp()*1000)
+    except (KeyError,TypeError,ValueError):
+        return {}
+    if not 0<=ts_ms-when<=TIP_MAX_AGE_MS:return {}
+    result={}
+    for row in report.get('chains',[]):
+        chain=row.get('chain')
+        head=row.get('verified_to')
+        if chain not in ('bsc','base') or row.get('status')!='OK':
+            continue
+        if not isinstance(head,int) or head<1 or row.get('head')!=head:
+            continue
+        if row.get('lag_blocks',0) not in (0,None):continue
+        result[chain]=head
+    return result
+
 def propose(conn, config, ts_ms=None, per_coin=MAX_PER_COIN):
     """Rank for follow-up, *not* economic signals or whale identities."""
     validate_config(config)
@@ -167,7 +195,7 @@ def read_same_block(http, coin, address, block):
     return {'status':'ERROR','detail':FAIL+':'+('|'.join(errors))[:155],
             'block':block,'raw':None,'provider':None}
 
-def monitor(store,config,http,ts_ms=None,max_workers=5,per_coin=MAX_PER_COIN):
+def monitor(store,config,http,ts_ms=None,max_workers=5,per_coin=MAX_PER_COIN,tip_report=None):
     if ts_ms is None:ts_ms=int(time.time()*1000)
     plan=propose(store.db,config,ts_ms,per_coin)
     last=store.db.execute('SELECT run_id FROM runs ORDER BY started_ms DESC LIMIT 1').fetchone()
@@ -175,6 +203,16 @@ def monitor(store,config,http,ts_ms=None,max_workers=5,per_coin=MAX_PER_COIN):
         return {'schema':plan['schema'],'status':'NO_COLLECTOR_RUN',
                 'coins':plan['coins'],'results':[],'strong_alert':False}
     run_id=last[0]
+    tip_heads=fresh_tip_heads(tip_report,ts_ms)
+    for row in plan['coins']:
+        archive=row.get('cursor_block')
+        tip=tip_heads.get(row['chain'])
+        if isinstance(tip,int) and isinstance(archive,int) and tip>=archive:
+            row['snapshot_block']=tip
+            row['snapshot_origin']='FRESH_INDEPENDENT_VERIFIED_TIP_NOT_ARCHIVE_COVERAGE'
+        else:
+            row['snapshot_block']=archive
+            row['snapshot_origin']='ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE'
     config_by_symbol={c['symbol']:c for c in config['coins']}
     jobs=[(item,coin_config,addr)
           for item in plan['coins']
@@ -184,7 +222,7 @@ def monitor(store,config,http,ts_ms=None,max_workers=5,per_coin=MAX_PER_COIN):
     results=[]
     def query(job):
         row,coin,a=job
-        return row,coin,a,read_same_block(http,coin,a['address'],row['cursor_block'])
+        return row,coin,a,read_same_block(http,coin,a['address'],row['snapshot_block'])
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as pool:
         for row,coin,addr,reading in pool.map(query,jobs):
             address=addr['address'];block=reading['block']
@@ -216,13 +254,16 @@ def monitor(store,config,http,ts_ms=None,max_workers=5,per_coin=MAX_PER_COIN):
        'run_id':run_id,'source':'FREE_EXISTING_CHAIN_RPCS_AND_SQLITE',
        'owner_attribution_verified':False,'strong_alert':False,'buy_signal':False,
        'purpose':'Discover new wallet balance time series for later corroboration; no immediate trade inference',
-       'planned':plan['coins'],'check_status_counts':states,'results':results}
+       'planned':plan['coins'],'check_status_counts':states,'results':results,
+       'snapshot_tip_chains':tip_heads,
+       'stale_archival_transfer_gap_not_repaired_by_balance_snapshots':True}
 
 def main():
     p=argparse.ArgumentParser()
     p.add_argument('--db',required=True);p.add_argument('--config',required=True)
     p.add_argument('--out',required=True);p.add_argument('--propose-only',action='store_true')
     p.add_argument('--per-coin',type=int,default=MAX_PER_COIN)
+    p.add_argument('--tip-report',default=None)
     a=p.parse_args()
     if not 1<=a.per_coin<=6:raise ValueError('PER_COIN_OUT_OF_BOUNDS')
     config=json.loads(pathlib.Path(a.config).read_text())
@@ -234,7 +275,8 @@ def main():
         finally:conn.close()
     else:
         store=Store(a.db)
-        try:result=monitor(store,config,HTTPClient(config['limits']['request_timeout_seconds']),per_coin=a.per_coin)
+        try:result=monitor(store,config,HTTPClient(config['limits']['request_timeout_seconds']),per_coin=a.per_coin,
+                tip_report=json.loads(pathlib.Path(a.tip_report).read_text()) if a.tip_report and pathlib.Path(a.tip_report).exists() else None)
         finally:store.close()
     dest=pathlib.Path(a.out);dest.parent.mkdir(parents=True,exist_ok=True)
     temporary=dest.with_suffix(dest.suffix+'.tmp')
