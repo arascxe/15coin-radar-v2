@@ -90,6 +90,16 @@ jobs:
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
           echo "NEAR_TIP_EXIT_CODE=$code"
           exit 0
+      - name: Independent current-head Transfer discovery; never replace archive backfill
+        id: fresh_tip
+        shell: bash
+        run: |
+          set +e
+          timeout --signal=TERM --kill-after=10s 210s             python -u v2/tip_ingest.py --db v2_runtime/live.sqlite3               --config v2/config.json --head-only --initial-blocks 600               --deadline-seconds 75 --out v2_runtime/fresh_tip_state.json
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          echo "CURRENT_HEAD_DISCOVERY_EXIT_CODE=$code"
+          exit 0
       - name: Bounded independent missing spot minute repair
         id: repair
         shell: bash
@@ -110,7 +120,7 @@ jobs:
           timeout --signal=TERM --kill-after=10s 480s \
             python -u v2/dynamic_wallet_monitor.py --db v2_runtime/live.sqlite3 \
               --config v2/config.json --out v2_runtime/dynamic_wallets.json \
-              --tip-report v2_runtime/tip_state.json
+              --tip-report v2_runtime/tip_state.json               --recent-tip-report v2_runtime/fresh_tip_state.json
           code=$?
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
           echo "DYNAMIC_EOA_EXIT_CODE=$code"
@@ -268,6 +278,7 @@ jobs:
           cp -a v2_runtime/segment_store "$SNAP/store"
           cp v2_runtime/audit.json "$SNAP/audit.json"
           if test -f v2_runtime/tip_state.json; then cp v2_runtime/tip_state.json "$SNAP/tip_state.json"; fi
+          if test -f v2_runtime/fresh_tip_state.json; then cp v2_runtime/fresh_tip_state.json "$SNAP/fresh_tip_state.json"; fi
           cp v2_runtime/preparation_research.json "$SNAP/preparation_research.json"
           cp v2_runtime/economic_brain.json "$SNAP/economic_brain.json"
           cp v2_runtime/accumulation_history.json "$SNAP/accumulation_history.json"
@@ -308,6 +319,7 @@ jobs:
           cp "$SNAP/store/manifest.json" v2_archive/manifest.json
           cp "$SNAP/audit.json" v2_state/audit.json
           if test -f "$SNAP/tip_state.json"; then cp "$SNAP/tip_state.json" v2_state/tip_state.json; fi
+          if test -f "$SNAP/fresh_tip_state.json"; then cp "$SNAP/fresh_tip_state.json" v2_state/fresh_tip_state.json; fi
           cp "$SNAP/preparation_research.json" v2_state/preparation_research.json
           cp "$SNAP/economic_brain.json" v2_state/economic_brain.json
           cp "$SNAP/accumulation_history.json" v2_state/accumulation_history.json
@@ -360,6 +372,7 @@ jobs:
           git add v2_archive v2_state/audit.json v2_state/preparation_research.json v2_state/economic_brain.json v2_state/accumulation_history.json v2_state/flow_discovery.json v2_state/transfer_trace.json v2_state/last_run.json
           if test -f v2_state/dynamic_wallets.json; then git add v2_state/dynamic_wallets.json; fi
           if test -f v2_state/tip_state.json; then git add v2_state/tip_state.json; fi
+          if test -f v2_state/fresh_tip_state.json; then git add v2_state/fresh_tip_state.json; fi
           if test -f v2_state/spot_microstructure.json; then git add v2_state/spot_microstructure.json; fi
           if test -f v2_state/economic_fusion.json; then git add v2_state/economic_fusion.json; fi
           git add v2_state/technical_confirmation.json v2_state/prospective_validation.json
