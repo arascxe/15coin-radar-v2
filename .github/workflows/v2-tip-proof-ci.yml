@@ -39,6 +39,48 @@ jobs:
           open('/tmp/v2-proof/provider_report.json','w').write(json.dumps(report,indent=2)+'\n')
           print(json.dumps(report,indent=2))
           PY
+      - name: Probe independent free Base RPC providers and Transfer logs
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,urllib.request,time,datetime
+          addresses=[
+            'https://base-mainnet.g.alchemy.com/public',
+            'https://base.drpc.org',
+            'https://public-base-mainnet.rpcnode.dev',
+            'https://base-rpc.publicnode.com',
+            'https://base.llamarpc.com']
+          contract='0x6cd905df2ed214b22e0d48ff17cd4200c1c6d8a3'
+          topic='0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+          def rpc(url,method,params):
+              body=json.dumps({'jsonrpc':'2.0','id':1,'method':method,'params':params}).encode()
+              req=urllib.request.Request(url,data=body,headers={
+                  'Content-Type':'application/json','User-Agent':'RadarV2-Research/0.3'})
+              with urllib.request.urlopen(req,timeout=7) as resp: answer=json.load(resp)
+              if 'error' in answer:raise RuntimeError(str(answer['error'])[:180])
+              return answer['result']
+          out=[]
+          for url in addresses:
+              row={'endpoint':url,'chain_id_8453':False,'logs_responded':False}
+              try:
+                  chain=int(rpc(url,'eth_chainId',[]),16)
+                  row['chain_id_8453']=chain==8453
+                  if chain!=8453:raise ValueError('WRONG_CHAIN')
+                  head=int(rpc(url,'eth_blockNumber',[]),16)-10
+                  row['head']=head
+                  logs=rpc(url,'eth_getLogs',[{'fromBlock':hex(head),
+                      'toBlock':hex(head),'address':contract,'topics':[topic]}])
+                  row['logs_responded']=isinstance(logs,list)
+                  row['logs_count']=len(logs)
+              except Exception as e:row['error']=str(e)[:200]
+              out.append(row)
+              print(json.dumps(row),flush=True)
+          import pathlib
+          pathlib.Path('/tmp/v2-proof').mkdir(parents=True,exist_ok=True)
+          pathlib.Path('/tmp/v2-proof/base_provider_probes.json').write_text(
+              json.dumps({'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                          'results':out},indent=2))
+          PY
       - name: Keep evidence of remote provider capabilities
         if: always()
         uses: actions/upload-artifact@v4
@@ -46,4 +88,6 @@ jobs:
           name: v2-provider-smoke-${{ github.run_id }}
           retention-days: 7
           if-no-files-found: warn
-          path: /tmp/v2-proof/provider_report.json
+          path: |
+            /tmp/v2-proof/provider_report.json
+            /tmp/v2-proof/base_provider_probes.json
