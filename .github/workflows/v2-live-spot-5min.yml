@@ -32,6 +32,7 @@ jobs:
             /tmp/v2-live/verified_chain_recent.json.gz
             /tmp/v2-live/balance_proof_ledger.json
             /tmp/v2-live/preparation_memory.json
+            /tmp/v2-live/onchain_snapshots.json
             /tmp/v2-live/economic_event_outbox.json
           key: v2-live-proof-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: |
@@ -79,6 +80,7 @@ jobs:
             /tmp/v2-live/verified_chain_recent.json.gz
             /tmp/v2-live/balance_proof_ledger.json
             /tmp/v2-live/preparation_memory.json
+            /tmp/v2-live/onchain_snapshots.json
             /tmp/v2-live/economic_event_outbox.json
           key: v2-live-proof-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Publish compact research inbox for authorized ChatGPT alert task
@@ -162,7 +164,9 @@ jobs:
             /tmp/v2-live/live_15_coin_economic_state.json
             /tmp/v2-live/economic_event_outbox.json
             /tmp/v2-live/preparation_memory.json
+            /tmp/v2-live/onchain_snapshots.json
             /tmp/v2-live/balance_proof_ledger.json
+            /tmp/v2-live/onchain_economic_evidence.json
             /tmp/v2-live/live_alert_inbox.json
             /tmp/v2-live/latest_chain_tail.json
             /tmp/v2-live/official_contract_identity.json
