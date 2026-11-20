@@ -47,7 +47,7 @@ def revalidate(config,report,chain,previous=None,now=None,http=None):
                 previous_valid=old.get(key)
                 if previous_valid and previous_valid.get('last_block_ms')==event['last_block_ms']:
                     event['first_verified_ms']=int(previous_valid.get('first_verified_ms',now))
-                if safe and now-event['last_block_ms']<=MAX_AGE_MS:episodes[key]=event
+                if safe and event['baseline_raw'] is not None and now-event['last_block_ms']<=MAX_AGE_MS:episodes[key]=event
         for key,prior in old.items():
             if key in episodes or prior.get('coin')!=coin:continue
             ts=prior.get('last_block_ms')
@@ -68,7 +68,9 @@ def revalidate(config,report,chain,previous=None,now=None,http=None):
                 if http.rpc(url,'eth_getCode',[address,hex(block)])!='0x':
                     health[coin]='EOA_CODE_CHECK_FAILED';episodes[key]=prior;continue
                 bal=_balance(http,url,cfg['token'],address,block)
-                needed=(int(prior['retained_raw'])*7)//10
+                if prior.get('baseline_raw') is None:
+                    health[coin]='MISSING_ORIGINAL_RECIPIENT_BASELINE';continue
+                needed=int(prior['baseline_raw'])+(int(prior['retained_raw'])*7)//10
                 if bal<needed:
                     health[coin]='RETENTION_NO_LONGER_PROVED';continue
                 verified={**prior,'last_reverified_ms':now,
