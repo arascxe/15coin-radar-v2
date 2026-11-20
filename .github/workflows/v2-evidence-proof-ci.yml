@@ -31,11 +31,11 @@ jobs:
           mkdir -p /tmp/v2-evidence-smoke
           export PYTHONPATH=.:v2
           set +e
-          timeout --signal=TERM --kill-after=10s 185s \
+          timeout --signal=TERM --kill-after=10s 310s \
             python -u -m v2_full.monitor --config v2/config.json \
               --verified-cex v2/verified_cex_entities.json \
               --output-dir /tmp/v2-evidence-smoke \
-              --interval-sec 10 --max-seconds 150
+              --interval-sec 10 --max-seconds 280
           code=$?
           echo "MONITOR_EXIT_CODE=$code"
           python - <<'PY'
@@ -48,11 +48,17 @@ jobs:
           states=collections.Counter(c['state'] for c in d['coins'])
           print('COINS',len(d['coins']),'STATES',dict(states))
           print('CEX_AUDITED_SOURCE_ADDRESSES',d.get('verified_exchange_source_addresses'))
+          print('ONCHAIN_ECONOMIC_ENGINE',d.get('onchain_economic_engine_status'))
+          print('ONCHAIN_EVIDENCE',[(c['coin'],c.get('onchain_economics',{}).get('research_state')) for c in d['coins']])
           print('PROOF_HEALTH',d.get('balance_proof_health'))
           print('CHAINS',d.get('chain_health'))
           print('IDENTITY_STATUS',collections.Counter(d.get('exchange_pair_identity',{}).values()))
           assert len(d['coins'])==15
-          assert d.get('verified_exchange_source_addresses')==1
+          assert d.get('onchain_economic_engine_status')=='COMPLETE_FRESH', 'ONCHAIN_ECONOMICS_NOT_LIVE_ACCEPTED'
+          assert all(c.get('onchain_economics',{}).get('coin')==c.get('coin') for c in d['coins'])
+          from v2_full.entities import load_entities
+          assert d.get('verified_exchange_source_addresses')==len(load_entities('v2/verified_cex_entities.json'))
+          assert d.get('verified_exchange_source_addresses')>=1
           PY
           test "$code" -eq 0
       - name: Preserve raw acceptance evidence

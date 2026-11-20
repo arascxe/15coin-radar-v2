@@ -57,6 +57,7 @@ class Tests(unittest.TestCase):
             got=proof['balanceproofs']['ON|'+DST]
             self.assertTrue(got['source_balance_reconciled'])
             self.assertEqual(got['retained_raw'],'300')
+            self.assertEqual(got['recipient_baseline_raw'],'10')
             self.assertEqual(got['source_net_decrease_raw'][SRC],'300')
             self.assertEqual(got['snapshot_method'],
                              'HISTORICAL_FINALIZED_BALANCE_AT_FIRST_CEX_OUTFLOW_MINUS_ONE')
@@ -73,12 +74,37 @@ class Tests(unittest.TestCase):
             proof=verify_transfers(CONFIG,chain,ENTITY,pathlib.Path(td)/'proofs.json')
         self.assertEqual(proof['reconciled_destinations'],0)
 
+    def test_retention_cannot_be_faked_by_old_large_recipient_balance(self):
+        # Receiver initially held 1000 and received 100; it has since sold all
+        # 100 newly received. Absolute balance=1000 would pass a broken
+        # "70% of post balance" check but MUST fail original-baseline-relative.
+        class RPCAtBaseline:
+            def rpc(self,url,method,params):
+                if method=='eth_getCode':return '0x'
+                if method=='eth_call':return hex(1000)
+                raise AssertionError(method)
+        coin={'symbol':'ON','chain':'bsc','token':TOKEN}
+        chain={'chains':{'bsc':{'status':'FRESH_CONTIGUOUS_TAIL',
+                               'complete':True,'safe_head':200,
+                               'safe_head_ms':T-10000,'provider':'https://test'}}}
+        row={'coins':[{'coin':'ON','state':'EVIDENCE_INSUFFICIENT_UNKNOWN',
+                       'preparation_proved':False,'coin_inventory':{},
+                       'first_spot_pressure_observed':False,'market_evidence':[]}]}
+        old={'episodes':{'ON|'+DST:{
+            'coin':'ON','chain':'bsc','recipient':DST,'baseline_raw':'1000',
+            'retained_raw':'100','last_block_ms':T-100000,
+            'last_reverified_ms':T-90000}}}
+        _,new=revalidate({'coins':[coin]},row,chain,old,now=T,http=RPCAtBaseline())
+        self.assertEqual(row['coins'][0]['state'],'EVIDENCE_INSUFFICIENT_UNKNOWN')
+        self.assertEqual(len(new['episodes']),0)
+
     def test_memorized_preparation_rechecked_then_combined(self):
         cfg={'coins':[{'symbol':s,'chain':'base' if s=='TRUST' else 'bsc','token':TOKEN} for s in COINS]}
         report={'coins':[{'coin':s,'preparation_proved':s=='ON',
                          'coin_inventory':{'independent_recipients':[{
                              'address':DST,'raw':'300','last_block_ms':T-300000,
                              'source_balance_reconciled':True,
+                             'baseline_raw':'0',
                              'source_net_decrease_raw':{SRC:'300'}}] if s=='ON' else []},
                          'first_spot_pressure_observed':False,'market_evidence':[],
                          'state':'VERIFIED_INVENTORY_PREPARATION_OBSERVED' if s=='ON' else 'EVIDENCE_INSUFFICIENT_UNKNOWN'} for s in COINS]}

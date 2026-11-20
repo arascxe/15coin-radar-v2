@@ -65,6 +65,7 @@ def analyze(config,tail,verified_entities=None,codeproofs=None,balanceproofs=Non
             if not (bals and bals.get('reconciled') is True and
                     bals.get('two_distinct_finalized_block_snapshots') is True and
                     bals.get('source_balance_reconciled') is True and
+                    bals.get('recipient_baseline_raw') is not None and
                     int(bals.get('retained_raw',0))>=amt*7//10):
                 z['blocked'].append('CEX_SOURCE_AND_EOA_RETENTION_NOT_JOINTLY_PROVED');continue
             if not all(isinstance(x.get('block_ms'),int) for x in rows[(sym,to)]):
@@ -75,6 +76,7 @@ def analyze(config,tail,verified_entities=None,codeproofs=None,balanceproofs=Non
                 'last_block_ms':max(x['block_ms'] for x in rows[(sym,to)]),
                 'source_net_decrease_raw':bals['source_net_decrease_raw'],
                 'source_balance_reconciled':True,
+                'baseline_raw':bals.get('recipient_baseline_raw'),
                 'txs':sorted({x['tx'] for x in rows[(sym,to)]})})
         z['verified_retained_eoa_count']=len(z['independent_recipients'])
         z['verified_cex_external_net_raw']=str(sum(int(r['raw']) for r in z['independent_recipients']))

@@ -1,6 +1,6 @@
 {
   "schema": "radar-v2-cex-entity-attribution-1",
-  "reviewed_utc": "2026-11-20T07:00:00Z",
+  "reviewed_utc": "2026-11-20T07:49:00Z",
   "policy": "A chain-scoped public attribution is CEX entity evidence only; it does NOT prove a withdrawal, economic control of its recipient, or total token supply.",
   "entities": {
     "bsc|0x0d0707963952f2fba59dd06f2b425ace40b492fe": {
@@ -24,10 +24,74 @@
       "scope": "Publicly identified one Gate hot-wallet address on BSC; no other Gate/Bitget/KuCoin wallets approved.",
       "withdrawal_verified": false,
       "recipient_beneficial_owner_verified": false
+    },
+    "bsc|0xc882b111a75c0c657fc507c04fbfcd2cc984f071": {
+      "entity": "Gate",
+      "chain": "bsc",
+      "address": "0xc882b111a75c0c657fc507c04fbfcd2cc984f071",
+      "proof": "OFFICIAL_OR_TWO_INDEPENDENT_CHAIN_SPECIFIC",
+      "source_count": 2,
+      "sources": [
+        {
+          "publisher": "Arkham",
+          "url": "https://arkm.com/explorer/address/0xc882b111a75c0c657fc507c04fbfcd2cc984f071",
+          "observation": "Gate Cold Wallet; Arkham EVM address entity label"
+        },
+        {
+          "publisher": "BscScan",
+          "url": "https://bscscan.com/tx/0x7165878a738418a48dea860651bac928af052506bbee40b60d7cc9d954b7e012",
+          "observation": "BNB Chain Gate 5 address attribution on on-chain transfer"
+        }
+      ],
+      "scope": "BSC Gate cold reserve address; internal movement Gate hot<->Gate cold must not count as independent exit",
+      "withdrawal_verified": false,
+      "recipient_beneficial_owner_verified": false
+    },
+    "bsc|0x0639556f03714a74a5feeaf5736a4a64ff70d206": {
+      "entity": "Bitget",
+      "chain": "bsc",
+      "address": "0x0639556f03714a74a5feeaf5736a4a64ff70d206",
+      "proof": "OFFICIAL_OR_TWO_INDEPENDENT_CHAIN_SPECIFIC",
+      "source_count": 2,
+      "sources": [
+        {
+          "publisher": "Arkham",
+          "url": "https://arkm.com/explorer/address/0x0639556f03714a74a5feeaf5736a4a64ff70d206",
+          "observation": "Bitget Hot Wallet entity label with BSC assets"
+        },
+        {
+          "publisher": "BscScan",
+          "url": "https://bscscan.com/tx/0x7e1eb4184e536ef85c017e5b3d53f3edd9f16048b2d172e77e7c4513ab5f7c1e",
+          "observation": "BSC transaction address labeled Bitget 4"
+        }
+      ],
+      "scope": "Single verified Bitget BSC custody address only; NOT all Bitget wallets",
+      "withdrawal_verified": false,
+      "recipient_beneficial_owner_verified": false
+    },
+    "bsc|0x53f78a071d04224b8e254e243fffc6d9f2f3fa23": {
+      "entity": "KuCoin",
+      "chain": "bsc",
+      "address": "0x53f78a071d04224b8e254e243fffc6d9f2f3fa23",
+      "proof": "OFFICIAL_OR_TWO_INDEPENDENT_CHAIN_SPECIFIC",
+      "source_count": 2,
+      "sources": [
+        {
+          "publisher": "Arkham",
+          "url": "https://arkm.com/explorer/address/0x53f78a071d04224b8e254e243fffc6d9f2f3fa23",
+          "observation": "KuCoin EVM Hot Wallet, BNB Smart Chain assets and STBL holdings confirmed by Arkham"
+        },
+        {
+          "publisher": "BscScan",
+          "url": "https://bscscan.com/address/0x53f78a071d04224b8e254e243fffc6d9f2f3fa23",
+          "observation": "BSC explorer label KuCoin Hot Wallet 2"
+        }
+      ],
+      "scope": "One KuCoin BSC hot wallet, not global KuCoin sellable inventory",
+      "withdrawal_verified": false,
+      "recipient_beneficial_owner_verified": false
     }
   },
-  "unverified_candidates_excluded": [
-    "bsc|0xc882b111a75c0c657fc507c04fbfcd2cc984f071"
-  ],
-  "note": "Do not automatically promote this attribution across other chains or infer the balance of all Gate customers."
+  "unverified_candidates_excluded": [],
+  "note": "Four independent source-labeled BSC CEX wallets (Gate hot+cold, Bitget hot, KuCoin hot). CEX internal or CEX-to-CEX transfers are not proof of independent EOA accumulation."
 }

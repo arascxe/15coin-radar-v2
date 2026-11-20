@@ -60,6 +60,38 @@ def v3_raw_ask_quote(sqrt_x96,L,ticks,token_is_0,up_pct=D('.02')):
                 if L<0:raise ValueError('NEGATIVE_POST_TICK_LIQUIDITY')
         return needed
 
+
+def v3_raw_ask_token_quantity(sqrt_x96,L,ticks,token_is_0,up_pct=D('.02')):
+    """Verified V3 curve's target-token output for a +up_pct token-price move.
+
+    LiquidityNet is crossed at every initialized tick in the direction of the
+    token purchase. No inference about off-chain CEX supply, fees or LP intent.
+    """
+    with localcontext() as ctx:
+        ctx.prec=70
+        s=D(sqrt_x96)/Q96;L=D(L);up=dec(up_pct)
+        if s<=0 or L<=0 or up<=0:raise ValueError('INVALID_POOL_STATE')
+        target=s*(D(1)+up).sqrt() if token_is_0 else s/(D(1)+up).sqrt()
+        direction=1 if token_is_0 else -1
+        barriers=sorted([(tick_sqrt(tick),tick,dec(net)) for tick,net in ticks.items()
+                         if (direction==1 and s<tick_sqrt(tick)<target)
+                         or (direction==-1 and target<tick_sqrt(tick)<s)],
+                        reverse=direction==-1)
+        barriers.append((target,None,None))
+        received=D(0);current=s
+        for next_s,tick,net in barriers:
+            if L<=0:raise ValueError('ZERO_ACTIVE_LIQUIDITY')
+            if direction==1:
+                received+=L*(D(1)/current-D(1)/next_s)  # token0 out
+            else:
+                received+=L*(current-next_s)             # token1 out
+            current=next_s
+            if tick is not None:
+                L+=(net if direction==1 else -net)
+                if L<0:raise ValueError('NEGATIVE_POST_TICK_LIQUIDITY')
+        return received
+
+
 def probe_v3(http,url,pool,token_address,block,expected_factory=FACTORY_PANCAKE_V3_BSC):
     try:
         factory=addr_from_word(selector_int(http,url,pool,'factory',block=block)[1][2:66])
@@ -102,11 +134,15 @@ def probe_v3(http,url,pool,token_address,block,expected_factory=FACTORY_PANCAKE_
         quote=t1 if token_is_0 else t0
         dec_quote=d1 if token_is_0 else d0
         gross=v3_raw_ask_quote(sqrt_x96,L,active,token_is_0)
+        token_qty=v3_raw_ask_token_quantity(sqrt_x96,L,active,token_is_0)
+        dec_token=d0 if token_is_0 else d1
         result={'status':'V3_ACTIVE_TICK_2PCT_RAW_QUOTE_ESTIMATED',
                 'pool':pool,'factory':factory,'token0':t0,'token1':t1,'target':token,
                 'quote_token':quote,'quote_token_decimals':dec_quote,'quote_needed_for_2pct_price_impact':str(gross/(D(10)**dec_quote)),
+                'token_qty_out_before_2pct_price_impact':str(token_qty/(D(10)**dec_token)),
+                'token_qty_source':'PINNED_V3_FULL_INITIALIZED_TICKS_WITHIN_2PCT',
                 'onchain_liquidity_raw':str(L),'sqrt_price_x96':str(sqrt_x96),'active_tick':tick,
-                'initialized_ticks_in_band':len(active),'scope':'Current eth_call state; no historical liquidity proof; no USD quote and swap fees excluded',
+                'initialized_ticks_in_band':len(active),'scope':'Current pool curve only; does not include other pools/CEX asks, no USD conversion, swap fees excluded; quote capacity variation alone does not prove LP withdrawal',
                 'collected_ms':stamp(),'pinned_finalized_block':block}
         return result
     except Exception as e:

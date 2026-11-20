@@ -58,6 +58,25 @@ class DynamicMonitorTests(unittest.TestCase):
             dos=next(z for z in brain['coins'] if z['coin']=='DOS')
             self.assertFalse(dos['strong_signal'])
             self.assertFalse(dos['buy_signal'])
+    def test_fresh_tip_overrides_unqueryable_old_archive_block(self):
+        import datetime
+        with tempfile.TemporaryDirectory() as d:
+            st=setup_db(pathlib.Path(d)/'s.db')
+            current=datetime.datetime.fromtimestamp(NOW/1000,datetime.timezone.utc).isoformat()
+            tip={'schema':'v2-verified-independent-chain-tip-1','created_utc':current,
+                 'chains':[{'chain':'bsc','status':'OK','verified_to':2100,'head':2100,'lag_blocks':0}]}
+            http=FakeHTTP(amount=1800)
+            out=monitor(st,CONFIG,http,NOW,max_workers=1,tip_report=tip)
+            dos=next(x for x in out['planned'] if x['coin']=='DOS')
+            self.assertEqual(dos['snapshot_block'],2100)
+            self.assertEqual(dos['cursor_block'],1100)  # historic gap remains!
+            self.assertIn(('eth_getCode',[DEST,hex(2100)]),http.calls)
+            result=st.db.execute('SELECT block FROM wallet_balances WHERE coin=? AND address=?',
+                                 ('DOS',DEST)).fetchone()
+            self.assertEqual(result,(2100,))
+            self.assertTrue(out['stale_archival_transfer_gap_not_repaired_by_balance_snapshots'])
+            st.close()
+
     def test_contract_is_not_added_as_holder(self):
         with tempfile.TemporaryDirectory() as d:
             st=setup_db(pathlib.Path(d)/'s.db')

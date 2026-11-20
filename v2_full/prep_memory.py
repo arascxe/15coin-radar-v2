@@ -38,6 +38,7 @@ def revalidate(config,report,chain,previous=None,now=None,http=None):
                     'coin':coin,'chain':ch,'recipient':dest['address'].lower(),
                     'source_net_decrease_raw':dest.get('source_net_decrease_raw',{}),
                     'retained_raw':dest['raw'],
+                    'baseline_raw':dest.get('baseline_raw'),
                     'last_block_ms':dest['last_block_ms'],
                     'first_verified_ms':now,
                     'last_reverified_ms':now,
@@ -46,7 +47,7 @@ def revalidate(config,report,chain,previous=None,now=None,http=None):
                 previous_valid=old.get(key)
                 if previous_valid and previous_valid.get('last_block_ms')==event['last_block_ms']:
                     event['first_verified_ms']=int(previous_valid.get('first_verified_ms',now))
-                if safe and now-event['last_block_ms']<=MAX_AGE_MS:episodes[key]=event
+                if safe and event['baseline_raw'] is not None and now-event['last_block_ms']<=MAX_AGE_MS:episodes[key]=event
         for key,prior in old.items():
             if key in episodes or prior.get('coin')!=coin:continue
             ts=prior.get('last_block_ms')
@@ -55,19 +56,28 @@ def revalidate(config,report,chain,previous=None,now=None,http=None):
             address=prior.get('recipient','')
             if not (isinstance(address,str) and len(address)==42 and
                     address.startswith('0x')):continue
+            if prior.get('baseline_raw') is None:
+                health[coin]='PREVIOUS_EPISODE_MISSING_PRE_TRANSFER_BALANCE';continue
             if not safe or http is None:
                 health[coin]='STALE_OR_MISSING_RECHECK_CANNOT_PROMOTE'
                 episodes[key]=prior
                 continue
-            if 0<=now-int(prior.get('last_reverified_ms',0))<120000:
-                episodes[key]=prior
+            # Never skip proof merely because its clock age is short: the
+            # recipient might have sold newly received inventory meanwhile.
+            # Reuse a proof only for the EXACT SAME finalized block.
+            if prior.get('last_reverified_block')==meta.get('safe_head'):
+                # Exact immutable finalized block: the same old balance proof
+                # remains valid (do NOT reuse it for a later/new block).
+                episodes[key]={**prior,'last_reverified_ms':now}
                 continue
             try:
                 block=meta['safe_head'];url=meta['provider']
                 if http.rpc(url,'eth_getCode',[address,hex(block)])!='0x':
                     health[coin]='EOA_CODE_CHECK_FAILED';episodes[key]=prior;continue
                 bal=_balance(http,url,cfg['token'],address,block)
-                needed=(int(prior['retained_raw'])*7)//10
+                if prior.get('baseline_raw') is None:
+                    health[coin]='MISSING_ORIGINAL_RECIPIENT_BASELINE';continue
+                needed=int(prior['baseline_raw'])+(int(prior['retained_raw'])*7)//10
                 if bal<needed:
                     health[coin]='RETENTION_NO_LONGER_PROVED';continue
                 verified={**prior,'last_reverified_ms':now,
