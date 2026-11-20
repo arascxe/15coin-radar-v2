@@ -57,6 +57,7 @@ class Tests(unittest.TestCase):
             got=proof['balanceproofs']['ON|'+DST]
             self.assertTrue(got['source_balance_reconciled'])
             self.assertEqual(got['retained_raw'],'300')
+            self.assertEqual(got['recipient_baseline_raw'],'10')
             self.assertEqual(got['source_net_decrease_raw'][SRC],'300')
             self.assertEqual(got['snapshot_method'],
                              'HISTORICAL_FINALIZED_BALANCE_AT_FIRST_CEX_OUTFLOW_MINUS_ONE')
@@ -79,6 +80,7 @@ class Tests(unittest.TestCase):
                          'coin_inventory':{'independent_recipients':[{
                              'address':DST,'raw':'300','last_block_ms':T-300000,
                              'source_balance_reconciled':True,
+                             'baseline_raw':'0',
                              'source_net_decrease_raw':{SRC:'300'}}] if s=='ON' else []},
                          'first_spot_pressure_observed':False,'market_evidence':[],
                          'state':'VERIFIED_INVENTORY_PREPARATION_OBSERVED' if s=='ON' else 'EVIDENCE_INSUFFICIENT_UNKNOWN'} for s in COINS]}
