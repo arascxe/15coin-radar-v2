@@ -83,7 +83,8 @@ def spot_interval(row,now):
         before=book.get('from_ms');after=book.get('to_ms')
         if not (isinstance(lo,int) and isinstance(hi,int)
                 and isinstance(before,int) and isinstance(after,int)
-                and lo<=before<after<=hi+5000 and _recent(now,hi,MAX_LIVE_AGE_MS)):
+                and lo-10000<=before<=lo+5000 and before<after<=hi+5000
+                and _recent(now,hi,MAX_LIVE_AGE_MS)):
             continue
         old=positive(book.get('ask_before_quote'))
         new=positive(book.get('ask_after_quote'))
