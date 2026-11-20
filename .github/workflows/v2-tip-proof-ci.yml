@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'v2/tip_ingest.py'
+      - 'v2_full/**'
+      - 'tests/**'
       - 'v2/tests/test_tip_ingest.py'
       - '.github/workflows/radar-v2-stage1-hourly.yml'
       - '.github/workflows/v2-tip-proof-ci.yml'
@@ -18,8 +20,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Run original V2 plus independent tip unit tests
-        run: python -m unittest discover -s v2/tests -q
+      - name: Run old V2 and integrated live-evidence unit tests
+        run: |
+          python -m unittest discover -s v2/tests -q
+          python -m unittest discover -s tests -q
+      - name: Verify live engine entrypoints without network
+        run: |
+          PYTHONPATH=.:v2 python -m v2_full.monitor --help
+          PYTHONPATH=.:v2 python -m v2_full.runner --help
       - name: Public provider near-head smoke check, without API keys
         shell: bash
         run: |
