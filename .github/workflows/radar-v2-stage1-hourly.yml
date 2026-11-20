@@ -109,7 +109,8 @@ jobs:
           set +e
           timeout --signal=TERM --kill-after=10s 480s \
             python -u v2/dynamic_wallet_monitor.py --db v2_runtime/live.sqlite3 \
-              --config v2/config.json --out v2_runtime/dynamic_wallets.json
+              --config v2/config.json --out v2_runtime/dynamic_wallets.json \
+              --tip-report v2_runtime/tip_state.json
           code=$?
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
           echo "DYNAMIC_EOA_EXIT_CODE=$code"
