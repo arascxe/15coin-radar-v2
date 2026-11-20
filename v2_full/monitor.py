@@ -175,6 +175,14 @@ def main(argv=None):
             market=cap.report()
             result=evaluate(config,market,active_chain,entity,
                             proven.get('codeproofs'),proven.get('balanceproofs'),dex=dex)
+            result['stream_health']=[{
+                'coin':x['coin'],'venue':x['venue'],'pair':x['pair'],
+                'evidence_ready':x.get('evidence_ready',False),
+                'early_90s_ready':x.get('early_ready',False),
+                'book_status':x.get('book',{}).get('status'),
+                'tape_status':x.get('tape',{}).get('status'),
+                'blockers':x.get('blockers',[])
+                } for x in market.get('markets',[])]
             result['exchange_pair_identity']=status['statuses']
             result['balance_proof_health']={k:v for k,v in proven.items() if k not in ('codeproofs','balanceproofs')}
             atomic_json(out/'live_15_coin_economic_state.json',result)
