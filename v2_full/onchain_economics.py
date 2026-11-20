@@ -277,6 +277,7 @@ def observe(config,tail,market=None,verified_entities=None,prior=None,http=None,
                     _clean_eligible(sym,ch,e['to'],z,labels,pools)):
                     unexplained={'tx':e['tx'],'block':e['block'],
                         'amount_raw':str(e['raw']),
+                        'amount_token_quantity':str(D(e['raw'])/(D(10)**int(c['decimals']))),
                         'fraction_of_onchain_total_supply':str(D(e['raw'])/D(supply)),
                         'owner_unknown':True,'no_cex_or_buy_inference':True}
                     break
@@ -294,7 +295,9 @@ def observe(config,tail,market=None,verified_entities=None,prior=None,http=None,
             'recipient_evidence':accepted[:5],
             'multi_receiver_unknown_owner_cluster':two_receiver_cluster,
             'research_state':research,'unknown_owner_not_independent_buyer_proof':True,
-            'accumulation_raw':str(amount),'fraction_of_total_onchain_supply':ratio_supply,
+            'accumulation_raw':str(amount),
+            'accumulation_token_quantity':str(D(amount)/(D(10)**int(c['decimals']))),
+            'fraction_of_total_onchain_supply':ratio_supply,
             'visible_spot_2pct_ask_token_capacity':ask,
             'accumulation_to_visible_ask_ratio':ratio_ask,
             'unexplained_transfer':unexplained,
