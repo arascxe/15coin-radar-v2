@@ -6,14 +6,16 @@ ROOT=pathlib.Path(__file__).resolve().parents[1]
 GATE_HOT='0x0d0707963952f2fba59dd06f2b425ace40b492fe'
 GATE_COLD='0xc882b111a75c0c657fc507c04fbfcd2cc984f071'
 BITGET_HOT='0x0639556f03714a74a5feeaf5736a4a64ff70d206'
+KUCOIN_HOT='0x53f78a071d04224b8e254e243fffc6d9f2f3fa23'
 CFG={'coins':[{'symbol':'ON','chain':'bsc','token':'0x'+'1'*40}], 'wallets':[]}
 class ClusterTests(unittest.TestCase):
     def test_three_independently_labeled_wallets_available(self):
         entities=load_entities(ROOT/'v2/verified_cex_entities.json')
-        self.assertEqual(len(entities),3)
+        self.assertEqual(len(entities),4)
         self.assertEqual(entities['bsc|'+GATE_HOT]['entity'],'Gate')
         self.assertEqual(entities['bsc|'+GATE_COLD]['entity'],'Gate')
         self.assertEqual(entities['bsc|'+BITGET_HOT]['entity'],'Bitget')
+        self.assertEqual(entities['bsc|'+KUCOIN_HOT]['entity'],'KuCoin')
     def test_hot_to_cold_is_not_off_exchange_inventory(self):
         entities=load_entities(ROOT/'v2/verified_cex_entities.json')
         chain={'chains':{'bsc':{'status':'FRESH_CONTIGUOUS_TAIL','complete':True}},
