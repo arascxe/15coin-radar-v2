@@ -7,6 +7,11 @@ from __future__ import annotations
 import argparse, datetime, hashlib, json, pathlib
 
 SEVERITY={
+    'FUSION_PREPARATION_THEN_SPOT_IGNITION_RESEARCH':'EARLY_PREPARATION_THEN_SPOT_RESEARCH',
+    'FUSION_SPOT_IGNITION_WITH_PREPARATION_TIMING_UNKNOWN':'EARLY_SPOT_AND_PREPARATION_TIMING_UNKNOWN',
+    'FUSION_SPOT_IGNITION_RESEARCH':'EARLY_SPOT_IGNITION_RESEARCH',
+    'FUSION_PREPARATION_RESEARCH':'OBSERVED_ACCUMULATION_PREPARATION_RESEARCH',
+    'FUSION_DEX_ACTIVE_LIQUIDITY_REDUCTION_REVIEW':'DEX_POOL_LIQUIDITY_SCOPE_REVIEW',
     'COMBINED_PREP_THEN_SPOT_OBSERVED':'EARLY_COMBINED_ECONOMIC_EVENT',
     'INDEPENDENT_SPOT_IGNITION_OBSERVED':'EARLY_INDEPENDENT_SPOT_EVENT',
     'VERIFIED_INVENTORY_PREPARATION_OBSERVED':'VERIFIED_CEX_INVENTORY_WATCH',
@@ -36,12 +41,15 @@ def build(report,outbox,workflow_id=None,now=None):
             (coin+'|'+state+'|'+str(observed)).encode()).hexdigest()[:22]
         onchain=event.get('onchain_economics',{})
         if not isinstance(onchain,dict):onchain={}
+        fusion=event.get('unified_economic_evidence',{})
+        if not isinstance(fusion,dict):fusion={}
         entries.append({
             'event_id':ident,'coin':coin,'state':state,'urgency':SEVERITY[state],
             'first_observed_ms':observed,
             'age_minutes_at_publication':round((now-observed)/60000,1),
             'evidence_only_not_10x_prediction':True,
             'verified_combined':state=='COMBINED_PREP_THEN_SPOT_OBSERVED',
+            'unified_economic_evidence':fusion,
             'evidence_summary':{
                 'economic_classification':onchain.get('classified_transfer_counts',{}),
                 'onchain_research_state':onchain.get('research_state'),
@@ -79,6 +87,10 @@ def build(report,outbox,workflow_id=None,now=None):
         'stream_markets':len(report.get('stream_health',[])),
         'research_events_72h':entries,
         'onchain_engine_health':report.get('onchain_economic_engine_status','UNAVAILABLE'),
+        'unified_economic_fusion_status':report.get('unified_economic_fusion',{}),
+        'unified_economic_states':{
+            c['coin']:c.get('unified_economic_evidence',{}).get('phase','NOT_EVALUATED')
+            for c in coins},
         'onchain_research_states':{c['coin']:c.get('onchain_economics',{}).get('research_state','UNKNOWN') for c in coins},
         'note':'Only the pre-existing ChatGPT application task can generate a notification. No Telegram, email, SMS or external message is sent.'}
 
