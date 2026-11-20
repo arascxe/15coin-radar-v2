@@ -14,7 +14,7 @@ import pathlib
 import sqlite3
 import time
 
-from radar_stage1 import Store, HTTPClient, CHAINS, validate_config
+from radar_stage1 import Store, HTTPClient, CHAINS, validate_config, confirmed_head
 from flow_discovery import final_contiguous_interval
 
 GOOD = 'DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN'
@@ -23,9 +23,9 @@ CONTRACT = 'DYNAMIC_CONTRACT_CODE_SKIP'
 ZERO = '0x' + '0'*40
 RECENT_BLOCKS = 6000
 ACTIVE_BLOCKS = 1800
-HISTORY_MS = 7 * 86400000
+HISTORY_MS = 45 * 86400000
 RECENT_RETRY_MS = 3600000
-MAX_PER_COIN = 3
+MAX_PER_COIN = 8
 
 TIP_MAX_AGE_MS = 20 * 60 * 1000
 
@@ -144,14 +144,15 @@ def propose(conn, config, ts_ms=None, per_coin=MAX_PER_COIN):
                  'reason':'FOLLOW_UP_PREVIOUS_EOA_BALANCE_OBSERVATION'}
                 for a,seen in sorted(history.items(),key=lambda x:x[1])
                 if a not in cooldown and a not in known_contracts]
-        selected=sticky[:min(2,per_coin)]
+        # Retain older verified EOAs for month-long history; reserve two slots for fresh discoveries.
+        selected=sticky[:max(0,per_coin-2)]
         seen={x['address'] for x in selected}
         for x in eligible:
             if len(selected)>=per_coin:break
             if x['address'] in seen or x['address'] in cooldown or x['address'] in history:continue
             selected.append(x);seen.add(x['address'])
         if len(selected)<per_coin:
-            for x in sticky[min(2,per_coin):]:
+            for x in sticky[max(0,per_coin-2):]:
                 if len(selected)>=per_coin:break
                 if x['address'] not in seen:selected.append(x);seen.add(x['address'])
         base['address_candidates']=selected
@@ -195,6 +196,33 @@ def read_same_block(http, coin, address, block):
     return {'status':'ERROR','detail':FAIL+':'+('|'.join(errors))[:155],
             'block':block,'raw':None,'provider':None}
 
+def independently_verified_heads(http,tip_report,ts_ms):
+    """Query fresh finalized RPC heads NOW, not a lagging historical log cursor.
+
+    The near-tip *transfer scanner* may be PARTIAL without preventing fresh
+    balance observations. A current balance never fills missing transfer logs.
+    Fail closed rather than falling back to an unqueryable archival block.
+    """
+    prior=fresh_tip_heads(tip_report,ts_ms)
+    heads={};errors={}
+    for chain in ('bsc','base'):
+        try:
+            provider,head=confirmed_head(http,chain)
+            if not isinstance(head,int) or head<1:
+                raise RuntimeError('NO_CONFIRMED_LIVE_HEAD')
+            # A fresh and independently verified tip can be ahead of this RPC.
+            # read_same_block will still validate every provider against target.
+            block=max(head,prior.get(chain,0))
+            heads[chain]={'block':block,'source':'LIVE_RPC_CURRENT_FINALIZED_HEAD',
+                          'provider':provider,'prior_verified_tip':prior.get(chain)}
+        except Exception as exc:
+            if chain in prior:
+                heads[chain]={'block':prior[chain],
+                    'source':'FRESH_INDEPENDENT_VERIFIED_TIP_FALLBACK','provider':None}
+            else:
+                errors[chain]=type(exc).__name__+':'+str(exc)[:180]
+    return heads,errors
+
 def monitor(store,config,http,ts_ms=None,max_workers=5,per_coin=MAX_PER_COIN,tip_report=None):
     if ts_ms is None:ts_ms=int(time.time()*1000)
     plan=propose(store.db,config,ts_ms,per_coin)
@@ -203,16 +231,12 @@ def monitor(store,config,http,ts_ms=None,max_workers=5,per_coin=MAX_PER_COIN,tip
         return {'schema':plan['schema'],'status':'NO_COLLECTOR_RUN',
                 'coins':plan['coins'],'results':[],'strong_alert':False}
     run_id=last[0]
-    tip_heads=fresh_tip_heads(tip_report,ts_ms)
+    fresh_heads,head_errors=independently_verified_heads(http,tip_report,ts_ms)
     for row in plan['coins']:
-        archive=row.get('cursor_block')
-        tip=tip_heads.get(row['chain'])
-        if isinstance(tip,int) and isinstance(archive,int) and tip>=archive:
-            row['snapshot_block']=tip
-            row['snapshot_origin']='FRESH_INDEPENDENT_VERIFIED_TIP_NOT_ARCHIVE_COVERAGE'
-        else:
-            row['snapshot_block']=archive
-            row['snapshot_origin']='ARCHIVE_CURSOR_MAY_NOT_BE_RPC_HISTORICALLY_AVAILABLE'
+        proof=fresh_heads.get(row['chain'])
+        row['snapshot_block']=proof['block'] if proof else None
+        row['snapshot_origin']=proof['source'] if proof else 'DATA_GAP_NO_CURRENT_CHAIN_HEAD'
+        row['archive_cursor_not_used_for_rpc_balance']=True
     config_by_symbol={c['symbol']:c for c in config['coins']}
     jobs=[(item,coin_config,addr)
           for item in plan['coins']
@@ -222,6 +246,9 @@ def monitor(store,config,http,ts_ms=None,max_workers=5,per_coin=MAX_PER_COIN,tip
     results=[]
     def query(job):
         row,coin,a=job
+        if row['snapshot_block'] is None:
+            return row,coin,a,{'status':'ERROR','provider':None,
+                'detail':'DYNAMIC_NO_LIVE_VERIFIED_CHAIN_HEAD','raw':None,'block':None}
         return row,coin,a,read_same_block(http,coin,a['address'],row['snapshot_block'])
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as pool:
         for row,coin,addr,reading in pool.map(query,jobs):
@@ -255,7 +282,10 @@ def monitor(store,config,http,ts_ms=None,max_workers=5,per_coin=MAX_PER_COIN,tip
        'owner_attribution_verified':False,'strong_alert':False,'buy_signal':False,
        'purpose':'Discover new wallet balance time series for later corroboration; no immediate trade inference',
        'planned':plan['coins'],'check_status_counts':states,'results':results,
-       'snapshot_tip_chains':tip_heads,
+       'snapshot_tip_chains':{ch:d['block'] for ch,d in fresh_heads.items()},
+       'snapshot_head_provenance':fresh_heads,
+       'snapshot_head_errors':head_errors,
+       'previous_near_tip_log_heads':fresh_tip_heads(tip_report,ts_ms),
        'stale_archival_transfer_gap_not_repaired_by_balance_snapshots':True}
 
 def main():
@@ -265,7 +295,7 @@ def main():
     p.add_argument('--per-coin',type=int,default=MAX_PER_COIN)
     p.add_argument('--tip-report',default=None)
     a=p.parse_args()
-    if not 1<=a.per_coin<=6:raise ValueError('PER_COIN_OUT_OF_BOUNDS')
+    if not 1<=a.per_coin<=12:raise ValueError('PER_COIN_OUT_OF_BOUNDS')
     config=json.loads(pathlib.Path(a.config).read_text())
     if a.propose_only:
         conn=sqlite3.connect('file:'+pathlib.Path(a.db).resolve().as_posix()+'?mode=ro',uri=True)
