@@ -3,8 +3,14 @@ on:
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'v2_full/**'
+      - 'v2/verified_cex_entities.json'
+      - '.github/workflows/v2-live-spot-5min.yml'
 permissions:
-  contents: read
+  contents: write
 concurrency:
   group: v2-live-public-spot
   cancel-in-progress: false
@@ -19,6 +25,24 @@ jobs:
           python-version: '3.11'
       - name: Install public WebSocket client, no credentials
         run: python -m pip install --disable-pip-version-check --quiet websocket-client
+      - name: Restore verified cached chain and wallet proof state
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            /tmp/v2-live/verified_chain_recent.json.gz
+            /tmp/v2-live/balance_proof_ledger.json
+            /tmp/v2-live/preparation_memory.json
+            /tmp/v2-live/economic_event_outbox.json
+          key: v2-live-proof-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            v2-live-proof-
+      - name: Recover last published dedupe record when cache is evicted
+        shell: bash
+        run: |
+          mkdir -p /tmp/v2-live
+          if ! test -s /tmp/v2-live/economic_event_outbox.json && test -s v2_state/live_economic_event_outbox.json; then
+            cp v2_state/live_economic_event_outbox.json /tmp/v2-live/economic_event_outbox.json
+          fi
       - name: Observe 15 coins with live spot chain and DEX
         shell: bash
         run: |
@@ -27,6 +51,7 @@ jobs:
           set +e
           timeout --signal=TERM --kill-after=15s 335s \
             python -u -m v2_full.monitor --config v2/config.json \
+              --verified-cex v2/verified_cex_entities.json \
               --output-dir /tmp/v2-live --interval-sec 10 --max-seconds 270
           code=$?
           echo "MONITOR_EXIT_CODE=$code"
@@ -34,6 +59,70 @@ jobs:
             echo "::warning title=V2 monitoring source failure::Monitoring did not complete. This window cannot be treated as complete."
           fi
           exit 0
+      - name: Create auditable notification handoff from live proof only
+        shell: bash
+        run: |
+          if test -s /tmp/v2-live/live_15_coin_economic_state.json && test -s /tmp/v2-live/economic_event_outbox.json; then
+            python -m v2_full.delivery_index \
+              --report /tmp/v2-live/live_15_coin_economic_state.json \
+              --outbox /tmp/v2-live/economic_event_outbox.json \
+              --run-id ${{ github.run_id }} \
+              --out /tmp/v2-live/live_alert_inbox.json
+          else
+            echo "::warning title=V2 delivery disabled::No complete 15 coin report or outbox"
+          fi
+      - name: Save ephemeral chain proof and verified-preparation ledger for next 5-minute run
+        if: success()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            /tmp/v2-live/verified_chain_recent.json.gz
+            /tmp/v2-live/balance_proof_ledger.json
+            /tmp/v2-live/preparation_memory.json
+            /tmp/v2-live/economic_event_outbox.json
+          key: v2-live-proof-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Publish compact research inbox for authorized ChatGPT alert task
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! test -s /tmp/v2-live/live_alert_inbox.json; then
+            echo "::warning title=V2 no inbox::Missing live proof report; no notification inbox published"
+            exit 0
+          fi
+          python - <<'PY'
+          import json,pathlib
+          src=pathlib.Path('/tmp/v2-live/economic_event_outbox.json')
+          if src.exists():
+              data=json.loads(src.read_text())
+              data['events']=data.get('events',[])[-100:]
+              pathlib.Path('/tmp/v2-live/published_event_outbox.json').write_text(
+                  json.dumps(data,indent=2,ensure_ascii=False)+'\n')
+          PY
+          git config user.name "v2-live-evidence-bot"
+          git config user.email "v2-live-evidence-bot@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git checkout -B live-inbox-publish origin/main
+            mkdir -p v2_state
+            cp /tmp/v2-live/live_alert_inbox.json v2_state/live_alert_inbox.json
+            if test -s /tmp/v2-live/published_event_outbox.json; then
+              cp /tmp/v2-live/published_event_outbox.json v2_state/live_economic_event_outbox.json
+            fi
+            git add v2_state/live_alert_inbox.json v2_state/live_economic_event_outbox.json
+            if git diff --cached --quiet; then
+              echo "NO_NEW_PUBLISHABLE_INBOX"
+              exit 0
+            fi
+            git commit -m "V2 live evidence-only notification inbox ${{ github.run_id }}" --quiet
+            if git push origin HEAD:main; then
+              echo "V2_NOTIFICATION_INBOX_PUBLISHED_NOT_A_CHATGPT_MESSAGE"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "::error title=V2 delivery inbox publish failed::Evidence artifacts remain available"
+          exit 1
       - name: Publish evidence and gaps in workflow summary
         if: always()
         shell: bash
@@ -72,6 +161,9 @@ jobs:
           path: |
             /tmp/v2-live/live_15_coin_economic_state.json
             /tmp/v2-live/economic_event_outbox.json
+            /tmp/v2-live/preparation_memory.json
+            /tmp/v2-live/balance_proof_ledger.json
+            /tmp/v2-live/live_alert_inbox.json
             /tmp/v2-live/latest_chain_tail.json
             /tmp/v2-live/official_contract_identity.json
             /tmp/v2-live/dex_active_tick_quote.json
