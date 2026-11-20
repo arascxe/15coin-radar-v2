@@ -84,6 +84,7 @@ jobs:
           timeout --signal=TERM --kill-after=10s 360s \
             python -u v2/tip_ingest.py --db v2_runtime/live.sqlite3 \
               --config v2/config.json --deadline-seconds 150 \
+              --prior v2_state/tip_state.json \
               --out v2_runtime/tip_state.json
           code=$?
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
