@@ -181,6 +181,12 @@ def main(argv=None):
                 'early_90s_ready':x.get('early_ready',False),
                 'book_status':x.get('book',{}).get('status'),
                 'tape_status':x.get('tape',{}).get('status'),
+                'early_book_status':x.get('layers',{}).get('early_90s',{}).get('book',{}).get('status'),
+                'early_tape_status':x.get('layers',{}).get('early_90s',{}).get('tape',{}).get('status'),
+                'early_blockers':x.get('layers',{}).get('early_90s',{}).get('blockers',[]),
+                'early_buy_quote':x.get('layers',{}).get('early_90s',{}).get('tape',{}).get('buy_quote'),
+                'early_sell_quote':x.get('layers',{}).get('early_90s',{}).get('tape',{}).get('sell_quote'),
+                'early_depletion':x.get('layers',{}).get('early_90s',{}).get('book',{}).get('fraction_depleted'),
                 'blockers':x.get('blockers',[])
                 } for x in market.get('markets',[])]
             result['exchange_pair_identity']=status['statuses']
