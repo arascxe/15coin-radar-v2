@@ -63,3 +63,33 @@ class TipTests(unittest.TestCase):
             row=ingest(store,'a',CFG,'bsc',http=object(),ts=11)
         self.assertEqual(row['status'],'ERROR_CURSOR_AHEAD')
         self.assertEqual(store.db.execute('SELECT last_complete_block FROM chain_tip_cursor').fetchone()[0],1050)
+
+    def test_tip_scratch_schema_removed_before_archive(self):
+        import json, tempfile, pathlib, sys
+        from unittest.mock import patch
+        from tip_ingest import main
+        from radar_stage1 import Store, now_ms
+        repo=pathlib.Path(__file__).resolve().parents[2]
+        with tempfile.TemporaryDirectory() as td:
+            base=pathlib.Path(td);db=base/'live.db'
+            st=Store(db);st.begin_run(now_ms());st.close()
+            prior=base/'prior.json'
+            prior.write_text(json.dumps({
+                'schema':'v2-verified-independent-chain-tip-1',
+                'chains':[{'chain':'bsc','verified_to':1000}]}))
+            out=base/'tip.json'
+            args=['tip_ingest','--db',str(db),'--config',str(repo/'v2/config.json'),
+                  '--prior',str(prior),'--out',str(out)]
+            with patch.object(sys,'argv',args), patch('tip_ingest.ingest',
+                side_effect=lambda store,rid,cfg,ch,**kw:
+                    {'chain':ch,'status':'OK','verified_to':1001 if ch=='bsc' else None}):
+                main()
+            import sqlite3
+            con=sqlite3.connect(db)
+            names={r[0] for r in con.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+            con.close()
+            self.assertNotIn('chain_tip_checks',names)
+            self.assertNotIn('chain_tip_cursor',names)
+            self.assertIn('token_transfers',names)
+            self.assertTrue(json.loads(out.read_text())['archive_schema_unchanged'])
+
