@@ -92,6 +92,7 @@ def verify_transfers(config,chain,verified_entities,ledger_file,cap=50):
             balanceproofs[key]={'reconciled':True,
                 'two_distinct_finalized_block_snapshots':True,
                 'retained_raw':str(delta),
+                'recipient_baseline_raw':str(previous),
                 'source_balance_reconciled':True,
                 'source_net_decrease_raw':source_net_decreases,
                 'snapshot_method':snapshot_method,
