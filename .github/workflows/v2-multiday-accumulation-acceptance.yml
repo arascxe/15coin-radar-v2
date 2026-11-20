@@ -1,0 +1,70 @@
+name: V2 observed multi-day accumulation and live-head acceptance
+on:
+  pull_request:
+    paths:
+      - 'v2/dynamic_wallet_monitor.py'
+      - 'v2/accumulation_history.py'
+      - 'v2/tests/**'
+      - '.github/workflows/radar-v2-stage1-hourly.yml'
+      - '.github/workflows/v2-multiday-accumulation-acceptance.yml'
+  push:
+    branches:
+      - v2-durable-multiday-accumulation-20261120
+permissions:
+  contents: read
+jobs:
+  independent-offline-and-real-archive-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run all old and new 15 coin unit regression cases
+        env:
+          PYTHONPATH: '.:v2'
+        run: |
+          python -m unittest discover -s v2/tests -v
+          python -m unittest discover -s tests -q
+      - name: Restore real archived wallet history without changing original
+        env:
+          PYTHONPATH: '.:v2'
+        run: |
+          mkdir -p /tmp/v2-accumulation-proof
+          if test -f v2_archive/manifest.json; then
+            python v2/storage_segments.py restore v2_archive /tmp/v2-accumulation-proof/real_archive.sqlite3
+          else
+            python v2/backup_restore.py restore v2_state/checkpoint.sqlite.gz /tmp/v2-accumulation-proof/real_archive.sqlite3
+          fi
+          python v2/accumulation_history.py \
+            --db /tmp/v2-accumulation-proof/real_archive.sqlite3 \
+            --config v2/config.json --verified-cex v2/verified_cex_entities.json \
+            --out /tmp/v2-accumulation-proof/report.json
+          python - <<'PY'
+          import json
+          p='/tmp/v2-accumulation-proof/report.json'
+          x=json.load(open(p))
+          assert x['coin_count']==15
+          assert set(c['coin'] for c in x['coins'])==set('ON DOS HANA COLLECT LIGHT APR IN TRUST B2 CYS STBL BSB AIO STAR LYN'.split())
+          assert x['buy_signal'] is False
+          for c in x['coins']:
+            for w in c['wallets']:
+              assert w['beneficial_owner_verified'] is False
+              for k in ('1d','7d','30d'):
+                assert k in w['periods']
+                p=w['periods'][k]
+                if p.get('regular_multi_day_increase_observed'):
+                  assert p['state']=='COMPLETE_OBSERVED_WINDOW'
+                  assert p['current_snapshot_fresh']
+                  assert p['positive_observed_daily_intervals']>=4
+          print('REAL_ARCHIVE_MULTI_DAY_ACCEPTANCE',[(c['coin'],c['recent_regular_7d_wallets_unknown_owners'],c['regular_30d_wallets_unknown_owners']) for c in x['coins']])
+          PY
+      - name: Preserve real-data output and unknowns
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v2-multiday-real-evidence-RUN
+          path: /tmp/v2-accumulation-proof/report.json
+          retention-days: 7
+          if-no-files-found: warn

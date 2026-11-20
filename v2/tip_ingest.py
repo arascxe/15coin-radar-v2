@@ -125,6 +125,9 @@ def main():
     ap.add_argument('--prior',default=None,
                     help='Previous independent tip JSON report, not archive SQLite')
     ap.add_argument('--deadline-seconds',type=int,default=150)
+    ap.add_argument('--head-only',action='store_true',
+                    help='Separate recent head window; DO NOT resume or replace historical tip cursor')
+    ap.add_argument('--initial-blocks',type=int,default=600)
     a=ap.parse_args()
     cfg=json.loads(pathlib.Path(a.config).read_text())
     validate_config(cfg)
@@ -133,11 +136,17 @@ def main():
     try:
         row=store.db.execute('SELECT run_id FROM runs ORDER BY started_ms DESC LIMIT 1').fetchone()
         if not row:raise RuntimeError('NO_COLLECTOR_RUN_TO_ATTACH')
-        restore_prior_cursor(store,a.prior)
+        if not a.head_only:
+            restore_prior_cursor(store,a.prior)
+        if not 1<=a.initial_blocks<=4000:
+            raise ValueError('FRESH_HEAD_WINDOW_BOUNDS')
         report={'schema':'v2-verified-independent-chain-tip-1',
                 'created_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
                 'run_id':row[0],'signals':False,'buy_signal':False,
-                'chains':[ingest(store,row[0],cfg,chain,deadline_seconds=a.deadline_seconds) for chain in ('bsc','base')]}
+                'head_only_window':bool(a.head_only),
+                'archive_history_not_claimed_complete_by_head_window':True,
+                'chains':[ingest(store,row[0],cfg,chain,initial_blocks=a.initial_blocks,
+                                 deadline_seconds=a.deadline_seconds) for chain in ('bsc','base')]}
         # The archive is an immutable-schema incremental SQLite ledger.
         # These two scratch tip tables would break its lossless restore.
         # Retain verified transfers in the original token_transfers table

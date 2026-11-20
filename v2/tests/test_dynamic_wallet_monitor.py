@@ -14,13 +14,13 @@ def xfer(i,b,src,to,amt):
     return {'coin':'DOS','token':DOS['token'],'tx':'0x'+str(i).zfill(64),
       'log_index':0,'block':b,'from':src,'to':to,'raw':str(amt)}
 class FakeHTTP:
-    def __init__(self,contract=False,fail=False,amount=1800):
-        self.contract=contract;self.fail=fail;self.amount=amount;self.calls=[]
+    def __init__(self,contract=False,fail=False,amount=1800,head=3000):
+        self.contract=contract;self.fail=fail;self.amount=amount;self.head=head;self.calls=[]
     def rpc(self,url,method,args):
         self.calls.append((method,args))
         if self.fail:raise RuntimeError('PROVIDER_OFFLINE')
         if method=='eth_chainId':return hex(8453 if 'base' in url else 56)
-        if method=='eth_blockNumber':return hex(3000)
+        if method=='eth_blockNumber':return hex(self.head)
         if method=='eth_getCode':return '0x60016000' if self.contract else '0x'
         if method=='eth_call':return hex(self.amount)
         raise AssertionError(method)
@@ -48,11 +48,11 @@ class DynamicMonitorTests(unittest.TestCase):
                                 for x in outcome['results']))
             check=st.db.execute('SELECT status,detail,block FROM wallet_checks WHERE coin=? AND address=?',
                 ('DOS',DEST)).fetchone()
-            self.assertEqual(check,('OK',GOOD,1100))
+            self.assertEqual(check,('OK',GOOD,2985))
             balance=st.db.execute('SELECT raw_amount,block FROM wallet_balances WHERE coin=? AND address=?',
                   ('DOS',DEST)).fetchone()
-            self.assertEqual(balance,('1800',1100))
-            self.assertIn(('eth_getCode',[DEST,hex(1100)]),rpc.calls)
+            self.assertEqual(balance,('1800',2985))
+            self.assertIn(('eth_getCode',[DEST,hex(2985)]),rpc.calls)
             st.close()
             brain=build(path,CONFIG)
             dos=next(z for z in brain['coins'] if z['coin']=='DOS')
@@ -68,12 +68,12 @@ class DynamicMonitorTests(unittest.TestCase):
             http=FakeHTTP(amount=1800)
             out=monitor(st,CONFIG,http,NOW,max_workers=1,tip_report=tip)
             dos=next(x for x in out['planned'] if x['coin']=='DOS')
-            self.assertEqual(dos['snapshot_block'],2100)
+            self.assertEqual(dos['snapshot_block'],2985)
             self.assertEqual(dos['cursor_block'],1100)  # historic gap remains!
-            self.assertIn(('eth_getCode',[DEST,hex(2100)]),http.calls)
+            self.assertIn(('eth_getCode',[DEST,hex(2985)]),http.calls)
             result=st.db.execute('SELECT block FROM wallet_balances WHERE coin=? AND address=?',
                                  ('DOS',DEST)).fetchone()
-            self.assertEqual(result,(2100,))
+            self.assertEqual(result,(2985,))
             self.assertTrue(out['stale_archival_transfer_gap_not_repaired_by_balance_snapshots'])
             st.close()
 
@@ -112,11 +112,13 @@ class DynamicMonitorTests(unittest.TestCase):
             st=setup_db(pathlib.Path(d)/'s.db')
             monitor(st,CONFIG,FakeHTTP(amount=1800),NOW,max_workers=1)
             rid=st.begin_run(NOW+3700000)
-            st.chain_save(rid,'bsc',1200,1101,1200,
-                [xfer(3,1170,A,DEST,300),xfer(4,1180,B,DEST,200)],'OK',
+            # Confirm all logs between the actual two finalized balance blocks.
+            # The old archival interval 1101..1200 cannot prove a 2985..3385 delta.
+            st.chain_save(rid,'bsc',3400,2986,3385,
+                [xfer(3,3170,A,DEST,300),xfer(4,3180,B,DEST,200)],'PARTIAL',
                 observed_ms=NOW+3700000)
             st.finish_run(rid,NOW+3700000)
-            next_result=monitor(st,CONFIG,FakeHTTP(amount=2300),NOW+3700000,max_workers=1)
+            next_result=monitor(st,CONFIG,FakeHTTP(amount=2300,head=3400),NOW+3700000,max_workers=1)
             self.assertTrue(any(z['coin']=='DOS' and z['address']==DEST and z['status']=='OK'
                 for z in next_result['results']))
             count=st.db.execute('SELECT COUNT(*) FROM wallet_balances WHERE coin=? AND address=?',
@@ -133,4 +135,75 @@ class DynamicMonitorTests(unittest.TestCase):
             r=monitor(st,CONFIG,FakeHTTP(),NOW,max_workers=1)
             self.assertEqual(r['status'],'NO_COLLECTOR_RUN')
             st.close()
+
+    def test_partial_tip_cannot_force_old_archive_balance(self):
+        with tempfile.TemporaryDirectory() as d:
+            st=setup_db(pathlib.Path(d)/'s.db')
+            current=__import__('datetime').datetime.fromtimestamp(NOW/1000,__import__('datetime').timezone.utc).isoformat()
+            tip={'schema':'v2-verified-independent-chain-tip-1','created_utc':current,
+                'chains':[{'chain':'bsc','status':'PARTIAL',
+                           'verified_to':1200,'head':8000,'lag_blocks':6800}]}
+            http=FakeHTTP(head=8000)
+            out=monitor(st,CONFIG,http,NOW,max_workers=1,tip_report=tip)
+            dos=next(z for z in out['planned'] if z['coin']=='DOS')
+            self.assertEqual(dos['cursor_block'],1100)
+            self.assertEqual(dos['snapshot_block'],7985)
+            self.assertEqual(dos['snapshot_origin'],'LIVE_RPC_CURRENT_FINALIZED_HEAD')
+            self.assertTrue(any(x['coin']=='DOS' and x['status']=='OK' for x in out['results']))
+            st.close()
+
+    def test_fresh_rpc_unavailable_must_not_fall_back_to_old_archive(self):
+        with tempfile.TemporaryDirectory() as d:
+            st=setup_db(pathlib.Path(d)/'s.db')
+            out=monitor(st,CONFIG,FakeHTTP(fail=True),NOW,max_workers=1)
+            self.assertEqual(out['snapshot_head_errors'].keys(),{'bsc','base'})
+            self.assertTrue(any(x['status']=='ERROR' and x['detail']=='DYNAMIC_NO_LIVE_VERIFIED_CHAIN_HEAD'
+                                for x in out['results']))
+            self.assertEqual(st.db.execute('SELECT COUNT(*) FROM wallet_balances').fetchone()[0],0)
+            st.close()
+
+    def test_continued_tracking_45_days_without_rewriting_history(self):
+        from dynamic_wallet_monitor import HISTORY_MS,MAX_PER_COIN
+        self.assertGreaterEqual(HISTORY_MS,40*86400000)
+        self.assertGreaterEqual(MAX_PER_COIN,6)
+        with tempfile.TemporaryDirectory() as d:
+            st=setup_db(pathlib.Path(d)/'s.db')
+            monitor(st,CONFIG,FakeHTTP(),NOW,max_workers=1)
+            rid=st.begin_run(NOW+30*86400000)
+            st.chain_save(rid,'bsc',1500,1101,1500,[],'OK',
+                          observed_ms=NOW+30*86400000)
+            st.finish_run(rid,NOW+30*86400000)
+            dos=next(z for z in propose(st.db,CONFIG,NOW+30*86400000)['coins']
+                     if z['coin']=='DOS')
+            self.assertIn(DEST,[x['address'] for x in dos['address_candidates']])
+            st.close()
+
+
+    def test_fresh_recent_transfer_window_finds_new_receiver_despite_old_archive(self):
+        import datetime
+        from dynamic_wallet_monitor import fresh_recent_transfer_intervals
+        with tempfile.TemporaryDirectory() as d:
+            st=setup_db(pathlib.Path(d)/'s.db')
+            fresh_address='0x'+'f'*40
+            with st.db:
+                for item in [xfer(40,2820,A,fresh_address,1700),xfer(41,2850,B,fresh_address,1300)]:
+                    st.db.execute('''INSERT OR IGNORE INTO token_transfers
+                        VALUES(?,?,?,?,?,?,?,?,?,?,?)''',(
+                        'bsc',56,item['token'],item['coin'],item['tx'],item['log_index'],
+                        item['block'],item['from'],item['to'],item['raw'],NOW))
+            timestamp=datetime.datetime.fromtimestamp(NOW/1000,datetime.timezone.utc).isoformat()
+            report={'schema':'v2-verified-independent-chain-tip-1',
+                    'created_utc':timestamp,'head_only_window':True,
+                    'chains':[{'chain':'bsc','status':'OK','from':2801,
+                               'verified_to':3000,'head':3000,'lag_blocks':0}]}
+            self.assertEqual(fresh_recent_transfer_intervals(report,NOW)['bsc'],(2801,3000))
+            dos=next(x for x in propose(st.db,CONFIG,NOW,recent_tip_report=report)['coins']
+                     if x['coin']=='DOS')
+            self.assertEqual(dos['cursor_block'],1100)
+            self.assertEqual(dos['fresh_head_window'],[2801,3000])
+            self.assertIn(fresh_address,[a['address'] for a in dos['address_candidates']])
+            report['created_utc']=datetime.datetime.fromtimestamp((NOW-7200000)/1000,datetime.timezone.utc).isoformat()
+            self.assertEqual(fresh_recent_transfer_intervals(report,NOW),{})
+            st.close()
+
 if __name__=='__main__':unittest.main()
