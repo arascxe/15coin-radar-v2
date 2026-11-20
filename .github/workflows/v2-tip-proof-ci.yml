@@ -1,0 +1,49 @@
+name: V2 near-tip transfer proof acceptance (read-only)
+on:
+  pull_request:
+    paths:
+      - 'v2/tip_ingest.py'
+      - 'v2/tests/test_tip_ingest.py'
+      - '.github/workflows/radar-v2-stage1-hourly.yml'
+      - '.github/workflows/v2-tip-proof-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-tip-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run original V2 plus independent tip unit tests
+        run: python -m unittest discover -s v2/tests -q
+      - name: Public provider near-head smoke check, without API keys
+        shell: bash
+        run: |
+          mkdir -p /tmp/v2-proof
+          timeout --signal=TERM --kill-after=10s 260s python - <<'PY' || echo "SMOKE_SOURCE_UNAVAILABLE_NO_CLAIM_OF_LIVE_COVERAGE"
+          import json,sys
+          sys.path.insert(0,'v2')
+          from radar_stage1 import Store,now_ms
+          from tip_ingest import ingest
+          cfg=json.load(open('v2/config.json'))
+          s=Store('/tmp/v2-proof/probe.sqlite3')
+          rid=s.begin_run(now_ms())
+          report={'run_id':rid,'coins':len(cfg['coins']),
+                  'bsc':ingest(s,rid,cfg,'bsc',initial_blocks=80,max_blocks=80,deadline_seconds=110),
+                  'base':ingest(s,rid,cfg,'base',initial_blocks=80,max_blocks=80,deadline_seconds=80)}
+          s.close()
+          open('/tmp/v2-proof/provider_report.json','w').write(json.dumps(report,indent=2)+'\n')
+          print(json.dumps(report,indent=2))
+          PY
+      - name: Keep evidence of remote provider capabilities
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v2-provider-smoke-${{ github.run_id }}
+          retention-days: 7
+          if-no-files-found: warn
+          path: /tmp/v2-proof/provider_report.json
