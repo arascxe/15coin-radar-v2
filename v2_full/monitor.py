@@ -14,6 +14,7 @@ from .dex import probe_v3
 from .runner import evaluate, atomic_json
 from .identity import verify_all
 from .proofs import verify_transfers
+from .entities import load_entities
 
 def fresh_chain(src,now):
     if not src:return {'chains':{},'events':[]}
@@ -124,7 +125,7 @@ def main(argv=None):
     config=json.loads(pathlib.Path(a.config).read_text())
     if tuple(c['symbol'] for c in config['coins'])!=COINS:raise SystemExit('WRONG_COIN_UNIVERSE')
     out=pathlib.Path(a.output_dir);out.mkdir(parents=True,exist_ok=True)
-    entity=json.loads(pathlib.Path(a.verified_cex).read_text()) if a.verified_cex else {}
+    entity=load_entities(a.verified_cex) if a.verified_cex else {}
     # Official metadata verified on startup. Failed metadata fetches remain unverified.
     status=verify_all(config)
     atomic_json(out/'official_contract_identity.json',status)
@@ -191,6 +192,8 @@ def main(argv=None):
                 } for x in market.get('markets',[])]
             result['exchange_pair_identity']=status['statuses']
             result['balance_proof_health']={k:v for k,v in proven.items() if k not in ('codeproofs','balanceproofs')}
+            result['verified_exchange_source_addresses']=len(entity)
+            result['verified_exchange_entity_scope']='ONLY_AUDITED_PUBLIC_WALLET_ADDRESSES_NOT_COMPLETE_CEX_INVENTORY'
             atomic_json(out/'live_15_coin_economic_state.json',result)
             # Durable source/coverage observations for later out-of-sample test.
             day=datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d')
