@@ -89,6 +89,11 @@ class L2:
         cap=dec(reference)*(1+D(bps)/10000)
         return sum((p*q for p,q in asks if p<=cap),D(0))
     @staticmethod
+    def token_depth(asks,reference,bps=200):
+        """Raw target-token amount on the displayed ask side in an anchored band."""
+        cap=dec(reference)*(1+D(bps)/10000)
+        return sum((q for p,q in asks if p<=cap),D(0))
+    @staticmethod
     def is_covered(asks,reference,bps=200):
         # If outermost observed level is below cap, ask depth MAY be truncated.
         return bool(asks and asks[-1][0]>=dec(reference)*(1+D(bps)/10000))
@@ -109,11 +114,16 @@ class L2:
         if not self.is_covered(before[2],reference) or not self.is_covered(after[2],reference):
             return {'status':'TRUNCATED_2PCT_ASK_RANGE'}
         old,new=self.depth(before[2],reference),self.depth(after[2],reference)
+        old_qty,new_qty=self.token_depth(before[2],reference),self.token_depth(after[2],reference)
         if old<=0:return {'status':'ZERO_REFERENCE_DEPTH'}
-        # compare anchored price band to avoid 'depth vanished' illusion after price rises
+        # Fixed reference band: order-book quantity is visible CEX supply only,
+        # not exchange inventory, not all global sellable token supply.
         return {'status':'VERIFIED_SEQUENCED_BOOK_INTERVAL','from_ms':before[0],'to_ms':after[0],
                 'reference_price':str(reference),'ask_before_quote':str(old),
-                'ask_after_quote':str(new),'fraction_depleted':str((old-new)/old),
+                'ask_after_quote':str(new),'ask_before_token_qty':str(old_qty),
+                'ask_after_token_qty':str(new_qty),
+                'depth_reference':'FIXED_PRE_EVENT_MID_2PCT_VERIFIED_BOOK_COVERAGE',
+                'fraction_depleted':str((old-new)/old),
                 'visible_slippage_cost_at_before':str(self.cost_for_size(before[2],D('100'))) if self.cost_for_size(before[2],D('100')) is not None else None}
 
 @dataclass

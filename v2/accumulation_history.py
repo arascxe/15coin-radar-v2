@@ -20,7 +20,7 @@ from economic_brain import covered, net_transfers
 
 D = decimal.Decimal
 DAY = 86400000
-WINDOWS = (1, 7, 30)
+WINDOWS = (1, 3, 7, 30)
 RECENT_MS = 3 * 3600000
 MAX_SNAPSHOT_HEAD_GAP = {'bsc': 3600, 'base': 10000}
 EXCLUDED_ROLES = {'dex_pool','dex_vault','pool_address_unverified',
@@ -85,7 +85,8 @@ def series_stats(samples,days,now_ms,decimals):
     complete=bool(baseline_near and fresh and
                   max(gaps,default=1e10)<=48 and
                   len(day_readings)>=min(days+1,3 if days==1 else days//2))
-    regular=bool(days>=7 and complete and delta>0 and positive>=4
+    min_positive=2 if days==3 else 4
+    regular=bool(days>=3 and complete and delta>0 and positive>=min_positive
                  and positive>=max(1,len(daily_deltas)*0.6))
     return {'state':'COMPLETE_OBSERVED_WINDOW' if complete else 'PARTIAL_OBSERVED_WINDOW',
             'requested_days':days,'observed_hours':round(observed_hours,2),
@@ -175,18 +176,24 @@ def build(db_path,config,asof_ms=None,verified_cex_path=None):
                  and w['periods']['7d']['current_snapshot_fresh']]
             thirty=[w for w in wallets if
                  w['periods']['30d'].get('regular_multi_day_increase_observed',False)]
+            early3=[w for w in wallets if
+                 w['periods']['3d'].get('regular_multi_day_increase_observed',False)
+                 and w['periods']['3d']['current_snapshot_fresh']]
             # Add wallet balances, never sum transaction inflows (which double
             # count hops). Still NOT evidence of distinct beneficial owners.
             sum_7d=sum((D(w['periods']['7d']['net_delta']) for w in material),D(0))
             coins.append({'coin':sym,'chain':chain,'registered_or_discovered_address_count':len(tracked),
                 'observed_non_infrastructure_wallet_count':len(wallets),
+                'recent_regular_3d_wallets_unknown_owners':len(early3),
                 'recent_regular_7d_wallets_unknown_owners':len(material),
                 'regular_30d_wallets_unknown_owners':len(thirty),
                 'candidate_7d_net_observed_change_token':str(sum_7d),
                 'long_term_status':'MULTI_WALLET_BALANCE_ACCUMULATION_RESEARCH'
                     if len(material)>=2 and sum_7d>0 else
                     'SINGLE_WALLET_BALANCE_ACCUMULATION_RESEARCH'
-                    if material else 'NO_VERIFIED_MULTIDAY_ACCUMULATION_OR_DATA_INSUFFICIENT',
+                    if material else
+                    'EARLY_3D_BALANCE_ACCUMULATION_RESEARCH'
+                    if early3 else 'NO_VERIFIED_MULTIDAY_ACCUMULATION_OR_DATA_INSUFFICIENT',
                 'no_independent_beneficial_owner_proof':True,
                 'transfer_full_period_provenance':'INDIVIDUAL_WALLET_WINDOW_DEPENDENT',
                 'relative_to_total_sellable_supply':'UNKNOWN_NO_COMPLETE_SELLABLE_SUPPLY',
