@@ -213,6 +213,28 @@ def main(argv=None):
                     obs=economics.get(row['coin'])
                     if obs is None:continue
                     row['onchain_economics']=obs
+                    dex_row=row.get('dex_pool',{})
+                    if dex_row.get('status')=='V3_ACTIVE_TICK_2PCT_RAW_QUOTE_ESTIMATED':
+                        try:
+                            tip_time=int(dex_row.get('collected_ms',0))
+                            capacity=dec(dex_row['token_qty_out_before_2pct_price_impact'])
+                            accumulation=dec(obs.get('accumulation_token_quantity','0'))
+                            if 0<=now-tip_time<=900000 and capacity>0:
+                                obs['observed_dex_2pct_token_ask_capacity']={
+                                    'pool':dex_row['pool'],
+                                    'pinned_block':dex_row['pinned_finalized_block'],
+                                    'available_token_quantity':str(capacity),
+                                    'ratio_of_verified_eoa_delta_to_pool_ask_capacity':str(accumulation/capacity),
+                                    'scope':'ONE_VERIFIED_V3_POOL_ONLY_NOT_ALL_SPOT_SUPPLY'}
+                                if (obs.get('multi_receiver_unknown_owner_cluster') and
+                                    accumulation/capacity>=D('.5') and
+                                    obs.get('research_state')=='CLUSTER_ACCUMULATION_SMALL_OR_MATERIALITY_UNKNOWN'):
+                                    obs['research_state']='CLUSTER_ACCUMULATION_RESEARCH'
+                            if dex_row.get('less_liquid_in_native_quote'):
+                                obs['dex_quote_capacity_decline']='OBSERVED_QUOTE_CAPACITY_THINNER_CAUSE_UNKNOWN_NOT_PROVEN_LP_WITHDRAWAL'
+                        except (KeyError,ValueError,TypeError,ZeroDivisionError):
+                            obs['dex_capacity']={'status':'UNCOMPARABLE_POOL_QUOTE_OR_STALE'}
+
                     # Independent unknown-owner path is research ONLY, even when
                     # a real spot ignition is also observed. No confirmed
                     # ownership or causal market-making inference is made.
