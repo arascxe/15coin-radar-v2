@@ -1,6 +1,6 @@
 {
   "schema": "radar-v2-cex-entity-attribution-1",
-  "reviewed_utc": "2026-11-20T07:45:00Z",
+  "reviewed_utc": "2026-11-20T07:49:00Z",
   "policy": "A chain-scoped public attribution is CEX entity evidence only; it does NOT prove a withdrawal, economic control of its recipient, or total token supply.",
   "entities": {
     "bsc|0x0d0707963952f2fba59dd06f2b425ace40b492fe": {
@@ -68,8 +68,30 @@
       "scope": "Single verified Bitget BSC custody address only; NOT all Bitget wallets",
       "withdrawal_verified": false,
       "recipient_beneficial_owner_verified": false
+    },
+    "bsc|0x53f78a071d04224b8e254e243fffc6d9f2f3fa23": {
+      "entity": "KuCoin",
+      "chain": "bsc",
+      "address": "0x53f78a071d04224b8e254e243fffc6d9f2f3fa23",
+      "proof": "OFFICIAL_OR_TWO_INDEPENDENT_CHAIN_SPECIFIC",
+      "source_count": 2,
+      "sources": [
+        {
+          "publisher": "Arkham",
+          "url": "https://arkm.com/explorer/address/0x53f78a071d04224b8e254e243fffc6d9f2f3fa23",
+          "observation": "KuCoin EVM Hot Wallet, BNB Smart Chain assets and STBL holdings confirmed by Arkham"
+        },
+        {
+          "publisher": "BscScan",
+          "url": "https://bscscan.com/address/0x53f78a071d04224b8e254e243fffc6d9f2f3fa23",
+          "observation": "BSC explorer label KuCoin Hot Wallet 2"
+        }
+      ],
+      "scope": "One KuCoin BSC hot wallet, not global KuCoin sellable inventory",
+      "withdrawal_verified": false,
+      "recipient_beneficial_owner_verified": false
     }
   },
   "unverified_candidates_excluded": [],
-  "note": "Three chain-scoped CEX source addresses reviewed: Gate BSC hot, Gate BSC cold, Bitget BSC hot. Never treat Gate hot<->cold as an outside exchange withdrawal; unknown EOA owner unresolved."
+  "note": "Four independent source-labeled BSC CEX wallets (Gate hot+cold, Bitget hot, KuCoin hot). CEX internal or CEX-to-CEX transfers are not proof of independent EOA accumulation."
 }
