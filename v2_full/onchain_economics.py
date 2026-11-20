@@ -240,6 +240,7 @@ def observe(config,tail,market=None,verified_entities=None,prior=None,http=None,
                 if poolamount*2>=sum(e['raw'] for e in inflow):continue
                 event={'coin':sym,'chain':ch,'address':address,
                     'delta_raw':str(delta),'retained_post_raw':str(current),
+                    'baseline_raw':str(prior_read['raw']),
                     'first_block':prevblock,'last_block':head,
                     'last_observed_ms':now,
                     'source_addresses':sorted(sources),
@@ -259,7 +260,8 @@ def observe(config,tail,market=None,verified_entities=None,prior=None,http=None,
             newer=snapshots.get(key)
             if (newer and fresh and newer.get('block')==head and
                 newer.get('observed_ms')==now and
-                int(newer['raw'])>=int(episode['retained_post_raw'])*7//10):
+                'baseline_raw' in episode and 'delta_raw' in episode and
+                int(newer['raw'])>=int(episode['baseline_raw'])+int(episode['delta_raw'])*7//10):
                 episodes[key]={**episode,'last_reverified_ms':now,
                                'retained_current_raw':newer['raw']}
         accepted=[e for e in episodes.values() if e['coin']==sym and
