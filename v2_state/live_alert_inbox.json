@@ -1,23 +1,24 @@
 {
-  "schema": "radar-v2-telegram-chatgpt-readonly-inbox-1",
-  "published_event_unix_ms": 1795160734821,
-  "generated_utc": "2026-11-20T07:45:34.821000+00:00",
-  "github_workflow_run_id": "44696728490",
+  "schema": "radar-v2-chatgpt-readonly-inbox-2",
+  "published_event_unix_ms": 1795169468426,
+  "generated_utc": "2026-11-20T10:11:08.426000+00:00",
+  "github_workflow_run_id": "44716357545",
   "source_kind": "LIVE_READ_ONLY_RUNNER_SNAPSHOT",
   "delivery_status": "NOT_SENT_BY_GITHUB_ACTIONS",
   "scope": "ALL_15_MONITORED_NOT_ALL_15_VERIFIED",
-  "verified_exchange_source_address_count": 1,
+  "delivery_channel": "CHATGPT_TASK_ONLY_NO_EXTERNAL_PUSH",
+  "verified_exchange_source_address_count": 4,
   "chain_health": [
     {
       "chain": "bsc",
       "status": "FRESH_CONTIGUOUS_TAIL",
-      "safe_head": 134657359,
+      "safe_head": 134676755,
       "complete": true
     },
     {
       "chain": "base",
       "status": "FRESH_CONTIGUOUS_TAIL",
-      "safe_head": 59851423,
+      "safe_head": 59895083,
       "complete": true
     }
   ],
@@ -32,13 +33,94 @@
     "TRUST": "EVIDENCE_INSUFFICIENT_UNKNOWN",
     "B2": "EVIDENCE_INSUFFICIENT_UNKNOWN",
     "CYS": "EVIDENCE_INSUFFICIENT_UNKNOWN",
-    "STBL": "EVIDENCE_INSUFFICIENT_UNKNOWN",
+    "STBL": "UNEXPLAINED_LARGE_TRANSFER_REVIEW",
     "BSB": "EVIDENCE_INSUFFICIENT_UNKNOWN",
     "AIO": "EVIDENCE_INSUFFICIENT_UNKNOWN",
-    "STAR": "EVIDENCE_INSUFFICIENT_UNKNOWN",
+    "STAR": "CEX_FLOW_ATTRIBUTION_REVIEW",
     "LYN": "EVIDENCE_INSUFFICIENT_UNKNOWN"
   },
   "stream_markets": 34,
-  "research_events_72h": [],
-  "note": "A ChatGPT task must check freshness, compare event_id to prior deliveries, and send via its connected notification tool."
+  "research_events_72h": [
+    {
+      "event_id": "0b8f1ff346981b319532df",
+      "coin": "STAR",
+      "state": "CEX_FLOW_ATTRIBUTION_REVIEW",
+      "urgency": "UNVERIFIED_CUSTODY_REVIEW",
+      "first_observed_ms": 1795169247868,
+      "age_minutes_at_publication": 3.7,
+      "evidence_only_not_10x_prediction": true,
+      "verified_combined": false,
+      "evidence_summary": {
+        "economic_classification": {},
+        "onchain_research_state": null,
+        "balance_verified_eoa_receivers_unknown_owner": 0,
+        "recent_confirmed_token_accumulation": null,
+        "fraction_of_total_supply_not_circulating": null,
+        "fraction_of_visible_ask_depth_proxy": null,
+        "unexplained_transfer": null,
+        "recipient_evidence": []
+      },
+      "verification_limitations": [
+        "Past performance uncalibrated; not a buy instruction.",
+        "Observed ask depth is not total CEX/DEX sellable inventory."
+      ]
+    },
+    {
+      "event_id": "5e43ca86c36781b4c2b858",
+      "coin": "STBL",
+      "state": "UNEXPLAINED_LARGE_TRANSFER_REVIEW",
+      "urgency": "UNEXPLAINED_TRANSFER_REVIEW",
+      "first_observed_ms": 1795169257961,
+      "age_minutes_at_publication": 3.5,
+      "evidence_only_not_10x_prediction": true,
+      "verified_combined": false,
+      "evidence_summary": {
+        "economic_classification": {
+          "DEX_SWAP_OR_LP_INTERACTION_UNRESOLVED": 2071,
+          "CONTRACT_OR_ROUTER_INTERACTION_UNRESOLVED": 1017,
+          "UNKNOWN_OWNER_TRANSFER": 1950,
+          "UNVERIFIED_EXCHANGE_LABEL_ROUTE": 1,
+          "UNKNOWN_TO_VERIFIED_CEX_POSSIBLE_DEPOSIT": 1
+        },
+        "onchain_research_state": "UNEXPLAINED_LARGE_TRANSFER_REVIEW",
+        "balance_verified_eoa_receivers_unknown_owner": 0,
+        "recent_confirmed_token_accumulation": "0",
+        "fraction_of_total_supply_not_circulating": null,
+        "fraction_of_visible_ask_depth_proxy": null,
+        "unexplained_transfer": {
+          "tx": "0x8a3c0f0a78eabf57d6c5f9dc53644fe320e9f92a0369b50f193359175cb3a610",
+          "block": 134675802,
+          "amount_raw": "837945000000000000000000",
+          "amount_token_quantity": "837945",
+          "fraction_of_onchain_total_supply": "0.001197064285714285714285714286",
+          "owner_unknown": true,
+          "no_cex_or_buy_inference": true
+        },
+        "recipient_evidence": []
+      },
+      "verification_limitations": [
+        "Past performance uncalibrated; not a buy instruction.",
+        "Observed ask depth is not total CEX/DEX sellable inventory."
+      ]
+    }
+  ],
+  "onchain_engine_health": "COMPLETE_FRESH",
+  "onchain_research_states": {
+    "ON": "NO_RESEARCH_TRIGGER_OBSERVED",
+    "DOS": "NO_RESEARCH_TRIGGER_OBSERVED",
+    "HANA": "NO_RESEARCH_TRIGGER_OBSERVED",
+    "COLLECT": "NO_RESEARCH_TRIGGER_OBSERVED",
+    "LIGHT": "NO_RESEARCH_TRIGGER_OBSERVED",
+    "APR": "NO_RESEARCH_TRIGGER_OBSERVED",
+    "IN": "NO_RESEARCH_TRIGGER_OBSERVED",
+    "TRUST": "NO_RESEARCH_TRIGGER_OBSERVED",
+    "B2": "NO_RESEARCH_TRIGGER_OBSERVED",
+    "CYS": "NO_RESEARCH_TRIGGER_OBSERVED",
+    "STBL": "UNEXPLAINED_LARGE_TRANSFER_REVIEW",
+    "BSB": "NO_RESEARCH_TRIGGER_OBSERVED",
+    "AIO": "NO_RESEARCH_TRIGGER_OBSERVED",
+    "STAR": "NO_RESEARCH_TRIGGER_OBSERVED",
+    "LYN": "NO_RESEARCH_TRIGGER_OBSERVED"
+  },
+  "note": "Only the pre-existing ChatGPT application task can generate a notification. No Telegram, email, SMS or external message is sent."
 }
