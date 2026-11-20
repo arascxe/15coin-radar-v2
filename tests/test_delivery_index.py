@@ -42,4 +42,23 @@ class DeliveryTests(unittest.TestCase):
                          'UNVERIFIED_CUSTODY_REVIEW')
         self.assertFalse(result['research_events_72h'][0]['verified_combined'])
         self.assertTrue(result['research_events_72h'][0]['evidence_only_not_10x_prediction'])
+    def test_new_combined_fusion_event_keeps_real_evidence_and_delivery_uncertain(self):
+        r=report()
+        r['coins'][0]['state']='FUSION_PREPARATION_THEN_SPOT_IGNITION_RESEARCH'
+        r['coins'][0]['unified_economic_evidence']={'phase':'PREPARATION_THEN_SPOT_IGNITION_RESEARCH',
+            'orders_cancelled_vs_consumed_exactly_known':False,
+            'spot_windows':[{'venue':'gate','proved_ask_execution_lower_bound_quote':'0'}]}
+        r['unified_economic_fusion']={'schema':'radar-v2-live-economic-fusion-1'}
+        ev={'coin':'ON','evidence_state':'FUSION_PREPARATION_THEN_SPOT_IGNITION_RESEARCH',
+            'first_seen_ms':T-60000,
+            'unified_economic_evidence':r['coins'][0]['unified_economic_evidence']}
+        inbox=build(r,{'events':[ev]},workflow_id=123)
+        self.assertEqual(len(inbox['research_events_72h']),1)
+        item=inbox['research_events_72h'][0]
+        self.assertEqual(item['urgency'],'EARLY_PREPARATION_THEN_SPOT_RESEARCH')
+        self.assertFalse(item['verified_combined'])
+        self.assertEqual(item['unified_economic_evidence']['spot_windows'][0]['venue'],'gate')
+        self.assertEqual(inbox['unified_economic_states']['ON'],'PREPARATION_THEN_SPOT_IGNITION_RESEARCH')
+        self.assertEqual(inbox['delivery_status'],'NOT_SENT_BY_GITHUB_ACTIONS')
+
 if __name__=='__main__':unittest.main()
