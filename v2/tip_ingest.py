@@ -106,6 +106,7 @@ def main():
     ap.add_argument('--db',required=True)
     ap.add_argument('--config',required=True)
     ap.add_argument('--out',required=True)
+    ap.add_argument('--deadline-seconds',type=int,default=150)
     a=ap.parse_args()
     cfg=json.loads(pathlib.Path(a.config).read_text())
     validate_config(cfg)
@@ -116,7 +117,7 @@ def main():
         report={'schema':'v2-verified-independent-chain-tip-1',
                 'created_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
                 'run_id':row[0],'signals':False,'buy_signal':False,
-                'chains':[ingest(store,row[0],cfg,chain) for chain in ('bsc','base')]}
+                'chains':[ingest(store,row[0],cfg,chain,deadline_seconds=a.deadline_seconds) for chain in ('bsc','base')]}
     finally:store.close()
     target=pathlib.Path(a.out);target.parent.mkdir(parents=True,exist_ok=True)
     tmp=target.with_name(target.name+'.tmp')
