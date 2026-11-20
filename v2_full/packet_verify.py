@@ -62,10 +62,14 @@ def validate(packet,expected_event=None,expected_sha=None,raw=None):
     for w in packet['multiday_wallet_evidence']:
         if not isinstance(w,dict) or not address_re.fullmatch(str(w.get('address',''))):
             raise ValueError('INVALID_WALLET_PROVENANCE_ADDRESS')
-        if w.get('owner_verified') is not False or w.get('wallet_ownership_not_proven') is not True:
+        if w.get('owner_verified') is True or w.get('wallet_ownership_not_proven') is not True:
             raise ValueError('WALLET_OWNERSHIP_CANNOT_BE_INFERRED')
+        if w.get('owner_verified') is None:
+            wallet_partial.append(w['address']+':BENEFICIAL_OWNER_NOT_INDEPENDENTLY_VERIFIED')
         begin=w.get('period_begin_ms');end=w.get('history_asof_ms')
-        if not isinstance(begin,int) or not isinstance(end,int) or begin>=end or end>event['first_seen_ms']+60000:
+        if begin is None or end is None:
+            wallet_partial.append(w['address']+':OBSERVATION_WINDOW_TIMESTAMPS_NOT_RECORDED')
+        elif not isinstance(begin,int) or not isinstance(end,int) or begin>=end or end>event['first_seen_ms']+60000:
             raise ValueError('WALLET_HISTORY_FUTURE_OR_INVALID')
         b0=w.get('start_balance_token');b1=w.get('end_balance_token');delta=w.get('net_retained_increase_token')
         if all(x is not None for x in (b0,b1,delta)):
@@ -77,9 +81,14 @@ def validate(packet,expected_event=None,expected_sha=None,raw=None):
             raise ValueError('INVALID_WALLET_BASELINE_BLOCKS')
         proof=w.get('transaction_proof_sample')
         if w.get('transfer_reconciled') is True:
-            if (not isinstance(proof,dict) or proof.get('covered_every_intervening_block') is not True
-                or proof.get('balance_delta_reconciled_to_complete_transfers') is not True):
+            if not isinstance(proof,dict):
+                wallet_partial.append(w['address']+':CLAIMED_RECONCILIATION_WITHOUT_FREEZABLE_LOGS')
+            elif (proof.get('covered_every_intervening_block') is False
+                or proof.get('balance_delta_reconciled_to_complete_transfers') is False):
                 raise ValueError('RECONCILED_WALLET_WITHOUT_COMPLETE_LOG_PROOF')
+            elif (proof.get('covered_every_intervening_block') is not True
+                  or proof.get('balance_delta_reconciled_to_complete_transfers') is not True):
+                wallet_partial.append(w['address']+':RECONCILIATION_COVERAGE_NOT_FROZEN')
         else:wallet_partial.append(w['address']+':FULL_TRANSFER_LOGS_NOT_RECONCILED')
         if not isinstance(proof,dict):
             wallet_partial.append(w['address']+':NO_TRANSFER_RECEIPT_SAMPLE')
@@ -87,9 +96,12 @@ def validate(packet,expected_event=None,expected_sha=None,raw=None):
         entries=proof.get('entries',[])
         if not isinstance(entries,list) or len(entries)>8:
             raise ValueError('INVALID_BOUNDED_WALLET_TRANSACTION_SAMPLE')
-        if (proof.get('from_block_exclusive')!=a or proof.get('to_block_inclusive')!=z
-            or proof.get('selected_event_count')!=len(entries)):
+        if ((proof.get('from_block_exclusive') is not None and proof['from_block_exclusive']!=a)
+            or (proof.get('to_block_inclusive') is not None and proof['to_block_inclusive']!=z)
+            or (proof.get('selected_event_count') is not None and proof['selected_event_count']!=len(entries))):
             raise ValueError('WALLET_TRANSACTION_SAMPLE_WRONG_INTERVAL')
+        if any(proof.get(k) is None for k in ('from_block_exclusive','to_block_inclusive','selected_event_count')):
+            wallet_partial.append(w['address']+':TRANSFER_SAMPLE_COVERAGE_METADATA_MISSING')
         for tr in entries:
             if (not isinstance(tr,dict) or tr.get('chain')!=network
                 or not isinstance(tr.get('tx'),str) or not HEX.fullmatch(tr['tx'])
@@ -98,6 +110,9 @@ def validate(packet,expected_event=None,expected_sha=None,raw=None):
                 or not address_re.fullmatch(str(tr.get('to','')))
                 or decimal(tr.get('amount_raw'))<=0):
                 raise ValueError('INVALID_BOUND_TRANSFER_RECEIPT')
+            if tr.get('direction_relative_to_wallet') is None:
+                wallet_partial.append(w['address']+':TRANSFER_DIRECTION_METADATA_MISSING')
+                continue
             if tr.get('direction_relative_to_wallet') not in ('IN','OUT'):
                 raise ValueError('INVALID_WALLET_TRANSFER_DIRECTION')
             if tr['direction_relative_to_wallet']=='IN' and tr['to'].lower()!=w['address'].lower():
