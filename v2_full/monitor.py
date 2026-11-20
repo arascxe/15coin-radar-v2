@@ -207,11 +207,16 @@ def main(argv=None):
             market=cap.report()
             result=evaluate(config,market,active_chain,entity,
                             proven.get('codeproofs'),proven.get('balanceproofs'),dex=dex)
-            if economic_live and 0<=now-economic_live.get('asof_ms',0)<=600000:
+            if economic_live and 0<=now-economic_live.get('asof_ms',0)<=300000:
                 economics={c['coin']:c for c in economic_live.get('coins',[])}
                 for row in result['coins']:
                     obs=economics.get(row['coin'])
                     if obs is None:continue
+                    live_chain=active_chain.get('chains',{}).get(obs['chain'],{})
+                    if live_chain.get('status')!='FRESH_CONTIGUOUS_TAIL' or not obs.get('chain_fresh_contiguous'):
+                        row['onchain_economics']={'coin':row['coin'],'research_state':'DATA_GAP_UNKNOWN',
+                            'status':'CHAIN_NOT_CURRENT_NO_ECONOMIC_ALERT'}
+                        continue
                     row['onchain_economics']=obs
                     dex_row=row.get('dex_pool',{})
                     if dex_row.get('status')=='V3_ACTIVE_TICK_2PCT_RAW_QUOTE_ESTIMATED':
