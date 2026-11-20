@@ -115,6 +115,13 @@ jobs:
               print('BOOK_STATUSES',dict(collections.Counter(x.get('book_status') for x in m)))
               print('TAPE_STATUSES',dict(collections.Counter(x.get('tape_status') for x in m)))
               print('MARKET_STATES',dict(collections.Counter(x.get('state') for x in report.get('coins',[]))))
+              print('IDENTITY_STATUS_COUNTS',dict(collections.Counter(report.get('exchange_pair_identity',{}).values())))
+              print('EARLY_90S_BOOK_STATUSES',dict(collections.Counter(x.get('early_book_status') for x in m)))
+              print('EARLY_90S_TAPE_STATUSES',dict(collections.Counter(x.get('early_tape_status') for x in m)))
+              print('EARLY_90S_READY',sum(bool(x.get('early_90s_ready')) for x in m))
+              print('COINS_WITH_AT_LEAST_ONE_IDENTIFIED_MARKET',len({
+                x.get('coin') for x in m if report.get('exchange_pair_identity',{}).get(x.get('coin')+'|'+x.get('venue')) in
+                ('VERIFIED_SAME_CONTRACT_NETWORK','VERIFIED_OFFICIAL_HISTORICAL_MEXC_SPOT_LISTING_WITH_ACTIVE_PAIR')}))
               print('IDENTITY_VERIFIED',sum(x=='VERIFIED_SAME_CONTRACT_NETWORK' for x in report.get('exchange_pair_identity',{}).values()))
           PY
           exit 0
