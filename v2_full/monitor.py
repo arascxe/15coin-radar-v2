@@ -17,6 +17,7 @@ from .proofs import verify_transfers
 from .entities import load_entities
 from .prep_memory import revalidate
 from .onchain_economics import observe as observe_economics
+from .economic_fusion_live import enrich as unify_economics
 
 def fresh_chain(src,now):
     if not src:return {'chains':{},'events':[]}
@@ -43,12 +44,25 @@ def add_dex_cap_change(old,new):
     for sym,x in new.items():
         prior=old.get(sym,{})
         if x.get('status')!='V3_ACTIVE_TICK_2PCT_RAW_QUOTE_ESTIMATED' or prior.get('status')!='V3_ACTIVE_TICK_2PCT_RAW_QUOTE_ESTIMATED':continue
-        if x['quote_token']!=prior['quote_token'] or x.get('pinned_finalized_block')==prior.get('pinned_finalized_block'):continue
+        if (x['quote_token']!=prior['quote_token']
+            or x.get('pool')!=prior.get('pool')
+            or not isinstance(prior.get('pinned_finalized_block'),int)
+            or not isinstance(x.get('pinned_finalized_block'),int)
+            or x['pinned_finalized_block']<=prior['pinned_finalized_block']
+            or not isinstance(prior.get('collected_ms'),int)
+            or not isinstance(x.get('collected_ms'),int)
+            or x['collected_ms']-prior['collected_ms']>20*60000
+            or x['collected_ms']<prior['collected_ms']):continue
         oldv=dec(prior['quote_needed_for_2pct_price_impact']);newv=dec(x['quote_needed_for_2pct_price_impact'])
         if oldv<=0:continue
         x['relative_2pct_quote_capacity_change']=str((newv-oldv)/oldv)
         x['less_liquid_in_native_quote']=newv<oldv*D('.7')
-        x['causality_unresolved']='Price/tick changes OR LP changes can alter this metric; do not call it confirmed liquidity withdrawal'
+        if x.get('active_tick')==prior.get('active_tick'):
+            before=dec(prior['onchain_liquidity_raw'])
+            after=dec(x['onchain_liquidity_raw'])
+            x['active_liquidity_delta_same_tick']=str(after-before)
+            x['active_liquidity_fraction_change_same_tick']=str((after-before)/before) if before>0 else None
+        x['causality_unresolved']='Capacity may change from pool price/ticks and LP actions; no decoded burn/mint logs, so LP withdrawal is NOT proven'
 
 def load_chain_ledger(path):
     import gzip
@@ -120,6 +134,8 @@ def main(argv=None):
     p.add_argument('--config',default='v2/config.json')
     p.add_argument('--output-dir',default='v2_local_live')
     p.add_argument('--verified-cex')
+    p.add_argument('--accumulation-report',
+                   help='Latest published hourly 1d/7d/30d report (read-only; freshness checked)')
     p.add_argument('--notify-local',action='store_true')
     p.add_argument('--interval-sec',type=int,default=10)
     p.add_argument('--max-seconds',type=int,default=0,help='0 = continuous until Ctrl+C')
@@ -134,7 +150,14 @@ def main(argv=None):
     cap=StreamCapture(config,status['statuses'])
     cap.start_gate();cap.start_bitget();cap.start_mexc()
     chain=load_chain_ledger(out/'verified_chain_recent.json.gz')
-    dex={};proven={};newchain_at=0;newdex_at=0
+    # Cache persists only last observed V3 state; no claim of uninterrupted LP event history.
+    dexfile=out/'dex_active_tick_quote.json'
+    try:
+        dex=json.loads(dexfile.read_text()) if dexfile.exists() else {}
+        if not isinstance(dex,dict):dex={}
+    except (OSError,ValueError):dex={}
+    proven={};newchain_at=0;newdex_at=0
+    hourly_history=None;history_mtime=None
     economicfile=out/'onchain_snapshots.json'
     economicprior=json.loads(economicfile.read_text()) if economicfile.exists() else {'snapshots':{},'episodes':{}}
     economic_live=None;economic_error=None;economic_future=None
@@ -265,6 +288,22 @@ def main(argv=None):
                     atomic_json(prepfile,prep_cache)
                 except Exception as exc:
                     result['preparation_memory_error']=type(exc).__name__+':'+str(exc)[:150]
+            # Reload hourly proof only when the user-owned V2 report actually exists.
+            # GitHub five-minute runners read the last published main snapshot.
+            if a.accumulation_report:
+                try:
+                    path=pathlib.Path(a.accumulation_report)
+                    mtime=path.stat().st_mtime_ns
+                    if mtime!=history_mtime:
+                        hourly_history=json.loads(path.read_text())
+                        history_mtime=mtime
+                except (OSError,ValueError,TypeError) as exc:
+                    hourly_history=None
+                    result['multiday_history_read_error']=type(exc).__name__
+            try:
+                result=unify_economics(result,hourly_history,now)
+            except Exception as exc:
+                result['unified_economic_fusion_error']=type(exc).__name__+':'+str(exc)[:140]
             result['onchain_economic_engine_status']='COMPLETE_FRESH' if economic_live and 0<=now-economic_live.get('asof_ms',0)<=600000 else 'STALE_OR_UNAVAILABLE'
             result['stream_health']=[{
                 'coin':x['coin'],'venue':x['venue'],'pair':x['pair'],
@@ -298,6 +337,7 @@ def main(argv=None):
                            'spot_markets':row['market_evidence'],'preparation_proved':row['preparation_proved'],
                            'dex_active_quote':row['dex_pool'],
                            'onchain_economics':row.get('onchain_economics',{}),
+                           'unified_economic_evidence':row.get('unified_economic_evidence',{}),
                            'buy_signal':False,'validated_future_10x':False}
                     events.append(event)
                     verified_event=st in ('INDEPENDENT_SPOT_IGNITION_OBSERVED',
