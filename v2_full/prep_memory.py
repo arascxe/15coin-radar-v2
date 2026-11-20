@@ -38,6 +38,7 @@ def revalidate(config,report,chain,previous=None,now=None,http=None):
                     'coin':coin,'chain':ch,'recipient':dest['address'].lower(),
                     'source_net_decrease_raw':dest.get('source_net_decrease_raw',{}),
                     'retained_raw':dest['raw'],
+                    'baseline_raw':dest.get('baseline_raw'),
                     'last_block_ms':dest['last_block_ms'],
                     'first_verified_ms':now,
                     'last_reverified_ms':now,
