@@ -70,6 +70,7 @@ jobs:
             python -m v2_full.delivery_index \
               --report /tmp/v2-live/live_15_coin_economic_state.json \
               --outbox /tmp/v2-live/economic_event_outbox.json \
+              --packet-dir /tmp/v2-live/evidence_packets \
               --run-id ${{ github.run_id }} \
               --out /tmp/v2-live/live_alert_inbox.json
           else
@@ -110,12 +111,53 @@ jobs:
           for attempt in 1 2 3; do
             git fetch origin main
             git checkout -B live-inbox-publish origin/main
-            mkdir -p v2_state
+            mkdir -p v2_state/evidence_packets
+            python - <<'PY'
+          import hashlib,json,pathlib,re,shutil
+          inbox_path=pathlib.Path('/tmp/v2-live/live_alert_inbox.json')
+          inbox=json.loads(inbox_path.read_text())
+          for e in inbox.get('research_events_72h',[]):
+              ref=e.get('evidence_packet',{})
+              name=e.get('event_id','')
+              if not re.fullmatch(r'[a-f0-9]{22}',name):
+                  raise RuntimeError('UNSAFE_EVENT_PACKET_NAME')
+              if not isinstance(ref,dict) or not ref.get('sha256'):
+                  continue
+              if ref.get('id')!=name:
+                  raise RuntimeError('EVENT_PACKET_ID_MISMATCH')
+              raw_sha=ref['sha256']
+              if not re.fullmatch(r'[a-f0-9]{64}',raw_sha):
+                  raise RuntimeError('INVALID_EVIDENCE_PACKET_DIGEST')
+              dest=pathlib.Path('v2_state/evidence_packets')/(name+'.json')
+              fresh=pathlib.Path('/tmp/v2-live/evidence_packets')/(name+'.json')
+              source=fresh if fresh.is_file() else dest
+              if not source.is_file():
+                  ref['status']='NOT_PUBLISHED_SOURCE_PACKET_MISSING'
+                  ref['url']=None
+                  continue
+              raw=source.read_bytes()
+              if len(raw)>250000 or hashlib.sha256(raw).hexdigest()!=raw_sha:
+                  raise RuntimeError('EVENT_PACKET_BYTES_OR_SHA_MISMATCH')
+              doc=json.loads(raw)
+              if (doc.get('schema')!='radar-v2-alarm-evidence-packet-1'
+                  or doc.get('event_id')!=name
+                  or doc.get('coin')!=e['coin']
+                  or doc.get('state')!=e['state']
+                  or doc.get('event_first_observed_ms')!=e['first_observed_ms']):
+                  raise RuntimeError('EVENT_PACKET_EVENT_IDENTITY_MISMATCH')
+              if dest.is_file() and dest.read_bytes()!=raw:
+                  raise RuntimeError('IMMUTABLE_GITHUB_PACKET_CONFLICT')
+              if fresh.is_file() and not dest.is_file():
+                  shutil.copyfile(fresh,dest)
+              ref['status']='PACKET_VERIFIED_READY_FOR_ATOMIC_GITHUB_PUBLISH'
+              ref['url']='https://github.com/arascxe/15coin-radar-v2/blob/main/'+ref['path']
+          inbox_path.write_text(json.dumps(inbox,indent=2,ensure_ascii=False)+'\n')
+          PY
             cp /tmp/v2-live/live_alert_inbox.json v2_state/live_alert_inbox.json
             if test -s /tmp/v2-live/published_event_outbox.json; then
               cp /tmp/v2-live/published_event_outbox.json v2_state/live_economic_event_outbox.json
             fi
-            git add v2_state/live_alert_inbox.json v2_state/live_economic_event_outbox.json
+            git add v2_state/live_alert_inbox.json v2_state/live_economic_event_outbox.json v2_state/evidence_packets
             if git diff --cached --quiet; then
               echo "NO_NEW_PUBLISHABLE_INBOX"
               exit 0
@@ -176,3 +218,4 @@ jobs:
             /tmp/v2-live/official_contract_identity.json
             /tmp/v2-live/dex_active_tick_quote.json
             /tmp/v2-live/evidence_*.jsonl.gz
+            /tmp/v2-live/evidence_packets/*.json
