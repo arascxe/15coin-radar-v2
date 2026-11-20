@@ -151,6 +151,33 @@ def build(db_path,config,asof_ms=None,verified_cex_path=None):
                         if matched else 'NET_BALANCE_TRANSFER_MISMATCH')
                     window['verified_incoming_transactions']=flow['incoming_transactions']
                     window['verified_inflow_source_count']=flow['distinct_incoming_sources']
+                # Freeze a bounded, real transaction sample for the longest
+                # proven multi-day window. A sample never claims all transfers.
+                transaction_proof=None
+                for days in (30,7,3):
+                    window=periods[str(days)+'d']
+                    if window.get('regular_multi_day_increase_observed') is not True:
+                        continue
+                    lo,hi=window['start_block'],window['end_block']
+                    txs=list(conn.execute("""
+                        SELECT tx_hash,block,from_address,to_address,amount_raw
+                        FROM token_transfers
+                        WHERE coin=? AND chain=? AND block>? AND block<=?
+                        AND (from_address=? OR to_address=?)
+                        ORDER BY block DESC,tx_hash DESC LIMIT 9
+                        """,(sym,chain,lo,hi,address,address)))
+                    transaction_proof={
+                       'window_days':days,'from_block_exclusive':lo,
+                       'to_block_inclusive':hi,'selected_event_count':min(8,len(txs)),
+                       'more_events_may_exist':len(txs)>8,
+                       'covered_every_intervening_block':window.get('transfer_proof_status')!='CHAIN_INTERVAL_NOT_COMPLETE',
+                       'balance_delta_reconciled_to_complete_transfers':window.get('transfer_flow_reconciled_across_full_period') is True,
+                       'entries':[{'tx':tx,'block':block,'from':frm,'to':to,
+                            'amount_raw':str(amount),'chain':chain,
+                            'direction_relative_to_wallet':'IN' if to==address else 'OUT'}
+                         for tx,block,frm,to,amount in txs[:8]],
+                       'scope':'BOUNDED_REAL_TOKEN_TRANSFER_SAMPLE_NOT_FULL_HISTORY'}
+                    break
                 latest=snaps[-1]
                 direct_cex=[]
                 for frm,raw,tx,block in conn.execute("""
@@ -167,6 +194,7 @@ def build(db_path,config,asof_ms=None,verified_cex_path=None):
                     'latest_balance':number(latest['raw'],decimals),
                     'latest_observed_ms':latest['seen_ms'],'latest_block':latest['block'],
                     'validated_snapshot_count':len(snaps),'periods':periods,
+                    'transaction_proof_sample':transaction_proof,
                     'direct_verified_cex_address_sources':direct_cex[:5],
                     'cex_sources_completeness':'PARTIAL_NOT_ALL_CEX_ADDRESSES'})
             wallets.sort(key=lambda x:(x['periods']['30d'].get('regular_multi_day_increase_observed',False),
