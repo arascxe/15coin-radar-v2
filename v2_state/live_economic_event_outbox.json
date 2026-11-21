@@ -1,6 +1,6 @@
 {
   "schema": "radar-v2-live-evidence-events-1",
-  "asof_ms": 1795284878466,
+  "asof_ms": 1795303163425,
   "events": [
     {
       "coin": "STAR",
@@ -1572,6 +1572,115 @@
       "packet_path": "v2_state/evidence_packets/eacdcc92ea1773bbe83254.json",
       "evidence_only_not_future_10x_prediction": true,
       "only_review_candidate": false
+    },
+    {
+      "coin": "LIGHT",
+      "first_seen_ms": 1795303153415,
+      "evidence_state": "INDEPENDENT_SPOT_IGNITION_OBSERVED",
+      "spot_markets": [
+        {
+          "venue": "gate",
+          "pair": "LIGHT_USDT",
+          "phase": "early_90s",
+          "buy_quote": "300.58964",
+          "sell_quote": "46.72060",
+          "window_start_ms": 1795303063415,
+          "window_end_ms": 1795303153415,
+          "ask_depleted_fraction": "0.2300914834284145737772672161",
+          "book_from_ms": 1795303061685,
+          "book_to_ms": 1795303151363,
+          "book_from_seq": 975129792,
+          "book_to_seq": 975130220,
+          "book_observed": {
+            "status": "VERIFIED_SEQUENCED_BOOK_INTERVAL",
+            "from_ms": 1795303061685,
+            "to_ms": 1795303151363,
+            "from_seq": 975129792,
+            "to_seq": 975130220,
+            "reference_price": "0.199185",
+            "ask_before_quote": "2210.30632",
+            "ask_after_quote": "1701.73366",
+            "ask_before_token_qty": "11023",
+            "ask_after_token_qty": "8491",
+            "depth_reference": "FIXED_PRE_EVENT_MID_2PCT_VERIFIED_BOOK_COVERAGE",
+            "fraction_depleted": "0.2300914834284145737772672161",
+            "visible_slippage_cost_at_before": "19.95920"
+          },
+          "tape_observed": {
+            "status": "LIVE_TRANSPORT_CONTINUOUS_NOT_EXCHANGE_AUDITED",
+            "buy_quote": "300.58964",
+            "sell_quote": "46.72060",
+            "quote_total": "347.31024",
+            "buy_fraction": "0.8654787719475244956785610467",
+            "trades": 12,
+            "window_start_ms": 1795303063415,
+            "window_end_ms": 1795303153415,
+            "strict_sequence_supported": false
+          },
+          "identity_verified": true,
+          "blockers": []
+        }
+      ],
+      "preparation_proved": false,
+      "dex_active_quote": {
+        "status": "V3_ACTIVE_TICK_2PCT_RAW_QUOTE_ESTIMATED",
+        "pool": "0xae02717e94c9b5bae817601a49b4584f58324015",
+        "factory": "0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865",
+        "token0": "0x477c2c0459004e3354ba427fa285d7c053203c0e",
+        "token1": "0x55d398326f99059ff775485246999027b3197955",
+        "target": "0x477c2c0459004e3354ba427fa285d7c053203c0e",
+        "quote_token": "0x55d398326f99059ff775485246999027b3197955",
+        "quote_token_decimals": 18,
+        "quote_needed_for_2pct_price_impact": "6402.600717017736667020255295",
+        "token_qty_out_before_2pct_price_impact": "30568.54603559089767179580027",
+        "token_qty_source": "PINNED_V3_FULL_INITIALIZED_TICKS_WITHIN_2PCT",
+        "onchain_liquidity_raw": "1412931178422809481",
+        "sqrt_price_x96": "36080318203287762929798384613046712",
+        "active_tick": 260591,
+        "initialized_ticks_in_band": 0,
+        "scope": "Current pool curve only; does not include other pools/CEX asks, no USD conversion, swap fees excluded; quote capacity variation alone does not prove LP withdrawal",
+        "collected_ms": 1795177716950,
+        "pinned_finalized_block": 134695150
+      },
+      "onchain_economics": {},
+      "unified_economic_evidence": {
+        "phase": "DATA_INSUFFICIENT_UNKNOWN",
+        "preparation_present": false,
+        "historical_wallet_report_status": "STALE_OR_FUTURE_MULTI_DAY_REPORT",
+        "observed_multiday_wallet_count_unknown_owners": 0,
+        "multiday_wallet_evidence": [],
+        "wallet_3d_7d_30d_net_retained_delta_token": "0",
+        "full_period_transfer_reconciled_wallets": 0,
+        "existing_verified_cex_inventory_preparation": false,
+        "onchain_short_window_cluster_unknown_owner": false,
+        "spot_ignition_observed": false,
+        "spot_windows": [],
+        "preparation_before_spot_proved_in_observation_time": false,
+        "dex_scope": {
+          "status": "NO_FRESH_SUPPORTED_V3_POOL"
+        },
+        "visible_ask_token_qty_across_observed_independent_venues_and_one_pool": null,
+        "relative_retained_balance_change_to_partial_observed_ask_depth": null,
+        "sellable_supply_denominator_complete": false,
+        "orders_cancelled_vs_consumed_exactly_known": false,
+        "price_pump_predicted_or_buy_recommended": false,
+        "evidence_uncertainty": [
+          "NO_FULL_CEX_OR_DEX_GLOBAL_SELLABLE_SUPPLY",
+          "UNKNOWN_BENEFICIAL_OWNER_AND_POSSIBLE_INTERNAL_HOPS",
+          "L2_ASK_REMOVAL_MAY_BE_CANCELS_OR_TAKER_CONSUMPTION",
+          "HISTORICAL_TX_IDS_NOT_AVAILABLE_WHEN_ARCHIVE_COVERAGE_MISSING",
+          "NO_BACKTESTED_FALSE_ALARM_RATE"
+        ]
+      },
+      "buy_signal": false,
+      "validated_future_10x": false,
+      "evidence_packet_id": "22f4202590d6c517f8cc9a",
+      "evidence_packet_sha256": "671f6edac83949c106fcd31b8653eb51c895b2b900b33da8d8b59466edafb3b8",
+      "evidence_packet_schema": "radar-v2-alarm-evidence-packet-1",
+      "evidence_packet_scope": "BOUND_REAL_OBSERVATIONS_MAY_BE_PARTIAL",
+      "packet_path": "v2_state/evidence_packets/22f4202590d6c517f8cc9a.json",
+      "evidence_only_not_future_10x_prediction": true,
+      "only_review_candidate": false
     }
   ],
   "last_state": {
@@ -1579,7 +1688,7 @@
     "DOS": "EVIDENCE_INSUFFICIENT_UNKNOWN",
     "HANA": "EVIDENCE_INSUFFICIENT_UNKNOWN",
     "COLLECT": "EVIDENCE_INSUFFICIENT_UNKNOWN",
-    "LIGHT": "EVIDENCE_INSUFFICIENT_UNKNOWN",
+    "LIGHT": "INDEPENDENT_SPOT_IGNITION_OBSERVED",
     "APR": "EVIDENCE_INSUFFICIENT_UNKNOWN",
     "IN": "EVIDENCE_INSUFFICIENT_UNKNOWN",
     "TRUST": "EVIDENCE_INSUFFICIENT_UNKNOWN",
