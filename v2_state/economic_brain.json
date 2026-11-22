@@ -1,7 +1,7 @@
 {
   "schema": "radar-v2-economic-brain-1",
-  "generated_utc": "2026-11-22T07:41:05.251402+00:00",
-  "last_run_id": "bc1dd7da5caaffed94",
+  "generated_utc": "2026-11-22T15:53:11.972786+00:00",
+  "last_run_id": "eb2d01dc42fb8195a3",
   "last_run_status": "PARTIAL_OR_FAILED_SOURCE_OBSERVATIONS",
   "ready_for_automated_strong_alerts": false,
   "meaning": "preliminary observed on-chain accumulation watch; no verified whale owner or buying recommendation",
@@ -14,83 +14,178 @@
       "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
       "strong_signal": false,
       "buy_signal": false,
-      "chain_cursor": 134732300,
+      "chain_cursor": 134744300,
       "latest_chain_status": "PARTIAL",
-      "chain_head": 135039554,
+      "chain_head": 135105043,
       "chain_currently_complete": false,
       "verified_cex_wallet_count": 0,
       "exchange_tag_unverified_count": 5,
       "dynamically_monitored_eoa_addresses": 5,
-      "observed_events_last_5000_blocks": 0,
-      "flow_event_type_counts": {},
-      "largest_movements": [],
-      "wallet_accumulation_candidates": [],
-      "wallet_observations_not_corrobated": [],
-      "other_holder_increases_excluded": [
+      "observed_events_last_5000_blocks": 76,
+      "flow_event_type_counts": {
+        "DEX_SWAP_OR_LP_UNRESOLVED": 68,
+        "CONTRACT_OR_PROXY_UNRESOLVED": 3,
+        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 5
+      },
+      "largest_movements": [
         {
-          "address": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
-          "wallet_kind": "EXCHANGE_TAG_UNVERIFIED",
-          "label": "Gate.io hot",
-          "identity_confidence": "radar_label_or_external_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "151266.989659429621973541",
-          "balance_after": "770701.572277084",
-          "balance_increase": "619434.582617654378026459",
-          "relative_increase_pct": "409.50",
-          "history_hours": 28.678,
+          "tx": "0xf1be95fc817e10b8bd215d8a5e655d8603eef1e5df4009585a236ffc5b046e4a",
+          "block": 134743041,
+          "kind": "CONTRACT_OR_PROXY_UNRESOLVED",
+          "from": "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db",
+          "to": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
+          "amount_raw": "6301219590000000000000"
+        },
+        {
+          "tx": "0xdbf1e1ca049830dc871495598eacd877b16e001531d9dfb408750d9294a665ad",
+          "block": 134743049,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x4620f5c127a6055fbebb1f71327d60ff079c9060",
+          "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+          "amount_raw": "3913095899384573502164"
+        },
+        {
+          "tx": "0xca3e2efd4251502177112eb8e5845c58c2430130b4ba3f7e04d6062e65ee4ff4",
+          "block": 134743048,
+          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
+          "from": "0xaaeb9be7cbd81ca3a1418f2e525e03aa081bccb6",
+          "to": "0x7a7ad9aa93cd0a2d0255326e5fb145cec14997ff",
+          "amount_raw": "3500000000000000000000"
+        },
+        {
+          "tx": "0xca3e2efd4251502177112eb8e5845c58c2430130b4ba3f7e04d6062e65ee4ff4",
+          "block": 134743048,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x7a7ad9aa93cd0a2d0255326e5fb145cec14997ff",
+          "to": "0x4620f5c127a6055fbebb1f71327d60ff079c9060",
+          "amount_raw": "3500000000000000000000"
+        },
+        {
+          "tx": "0xa7cf83937bcdaed2cc4db391f32fd8738a0eca894a9fc23e9aaa69ece906d644",
+          "block": 134742780,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x4620f5c127a6055fbebb1f71327d60ff079c9060",
+          "to": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
+          "amount_raw": "2575704072748213972775"
+        }
+      ],
+      "wallet_accumulation_candidates": [],
+      "wallet_observations_not_corrobated": [
+        {
+          "address": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
+          "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
+          "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+          "identity_confidence": "onchain_code_zero_owner_unknown",
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "32869.93590596178091612",
+          "balance_after": "33293.895907049401137814",
+          "balance_increase": "423.960001087620221694",
+          "relative_increase_pct": "1.29",
+          "history_hours": 27.94,
           "full_24h_baseline": true,
-          "dynamically_discovered": false,
+          "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "619434.582617654378026459"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "423.960001087620221694"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "-774023.803960680715787182"
+              "actual_observed_hours": 130.471,
+              "balance_delta": "10450.37504136259684774"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "-774023.803960680715787182"
+              "actual_observed_hours": 130.471,
+              "balance_delta": "10450.37504136259684774"
             }
           },
-          "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
-        },
+          "chain_interval_verified": false,
+          "transfer_net_reconciled": false,
+          "incoming_transactions": 0,
+          "net_transfer_amount": null,
+          "inbound_provenance": {
+            "unique_inflow_sources": 0,
+            "unique_inflow_blocks": 0,
+            "known_dex_inflow_transactions": 0,
+            "known_dex_inflow_share_of_amount": null,
+            "source_breadth_for_research": false,
+            "dex_dominated": false,
+            "origin_ownership_still_unverified": true
+          },
+          "evidence_txs": [],
+          "status": "NOT_CORROBORATED",
+          "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
+        }
+      ],
+      "other_holder_increases_excluded": [
         {
           "address": "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db",
           "wallet_kind": "CONTRACT_OR_PROXY_NOT_INDEPENDENT",
           "label": "Binance Wallet Proxy",
           "identity_confidence": "third_party_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "19316374.570317048193214135",
-          "balance_after": "19833742.081213784209614656",
-          "balance_increase": "517367.510896736016400521",
-          "relative_increase_pct": "2.68",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "19368083.590717157759530251",
+          "balance_after": "19863070.387219109776489378",
+          "balance_increase": "494986.796501952016959127",
+          "relative_increase_pct": "2.56",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "517367.510896736016400521"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "494986.796501952016959127"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "522543.114610035714265299"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "551871.420615361281140021"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "522543.114610035714265299"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "551871.420615361281140021"
+            }
+          },
+          "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
+        },
+        {
+          "address": "0xc882b111a75c0c657fc507c04fbfcd2cc984f071",
+          "wallet_kind": "EXCHANGE_TAG_UNVERIFIED",
+          "label": "Gate.io 5 / cold",
+          "identity_confidence": "radar_label_or_external_tag",
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "5294344.908327020293323977",
+          "balance_after": "14229835.703378524785030445",
+          "balance_increase": "8935490.795051504491706468",
+          "relative_increase_pct": "168.77",
+          "history_hours": 27.951,
+          "full_24h_baseline": true,
+          "dynamically_discovered": false,
+          "ownership_verified": false,
+          "windows": {
+            "24h": {
+              "baseline_complete": true,
+              "actual_observed_hours": 27.951,
+              "balance_delta": "8935490.795051504491706468"
+            },
+            "168h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 133.173,
+              "balance_delta": "399174.70471927033870662"
+            },
+            "720h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 133.173,
+              "balance_delta": "399174.70471927033870662"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -113,59 +208,59 @@
       "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
       "strong_signal": false,
       "buy_signal": false,
-      "chain_cursor": 134732300,
+      "chain_cursor": 134744300,
       "latest_chain_status": "PARTIAL",
-      "chain_head": 135039554,
+      "chain_head": 135105043,
       "chain_currently_complete": false,
       "verified_cex_wallet_count": 0,
       "exchange_tag_unverified_count": 4,
       "dynamically_monitored_eoa_addresses": 6,
-      "observed_events_last_5000_blocks": 53,
+      "observed_events_last_5000_blocks": 69,
       "flow_event_type_counts": {
-        "DEX_SWAP_OR_LP_UNRESOLVED": 50,
-        "CONTRACT_OR_PROXY_UNRESOLVED": 1,
-        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 2
+        "DEX_SWAP_OR_LP_UNRESOLVED": 61,
+        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 7,
+        "CONTRACT_OR_PROXY_UNRESOLVED": 1
       },
       "largest_movements": [
         {
-          "tx": "0x1b2a65c22fc445d8f255952a1954a3bfcf52c4912c69681538c46ae02c30ec39",
-          "block": 134729255,
-          "kind": "CONTRACT_OR_PROXY_UNRESOLVED",
-          "from": "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db",
-          "to": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
-          "amount_raw": "10713061000000000000000"
-        },
-        {
-          "tx": "0xe289cf615d07fc7bb3cef443a987d0a5003b8741e55f7eea141c3c9d14ab9071",
-          "block": 134729441,
+          "tx": "0xc63f354cdca49499ef0bc6d3ad2aee81d9598c6af63fc5425f5bf1136061d877",
+          "block": 134742809,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
           "from": "0xcbeaad783ffd2cea125e9d9b2ec21e639d20fa59",
-          "to": "0x13b207677d77853614ce78a0dc0658e8ca9061e0",
-          "amount_raw": "2990282245948441985810"
+          "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+          "amount_raw": "4420518726835365740020"
         },
         {
-          "tx": "0xb96a3414f2a2e264f8a5efe7750a1a70fe71575bb3a7ffd30e7423e3d6389ccd",
-          "block": 134729469,
+          "tx": "0x783c847c56c27f38a2f7e3433fd21c66e694b6ef64a2f13b991b1935aa34c1b6",
+          "block": 134742791,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
           "from": "0xcbeaad783ffd2cea125e9d9b2ec21e639d20fa59",
-          "to": "0x7e59e1fb5cb8c809227c65d546ec0881e3e2d2b5",
-          "amount_raw": "2144362538033631226653"
+          "to": "0xa2349c76cb0806103e913d0f1c5786fb5c60d3ca",
+          "amount_raw": "3857546259080322474577"
         },
         {
-          "tx": "0xd69be3d2d0b5df11e1ce430f1c6ae2230a04473b26c050fa1594bb8c91ffd552",
-          "block": 134729120,
+          "tx": "0x65c279d2bada419a8abdcdcdab61e98117e952d34c4181554e5f647f6063ee5f",
+          "block": 134742885,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
+          "from": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
           "to": "0xcbeaad783ffd2cea125e9d9b2ec21e639d20fa59",
-          "amount_raw": "1743800000000000000000"
+          "amount_raw": "3131750205572621394348"
         },
         {
-          "tx": "0xdc80a4bd8f5a2d4f86dc2f72df42568c536924f71dca327bf9f345832c7ced28",
-          "block": 134729125,
+          "tx": "0x6239198d23817e974ba98ef1c44a3379e165d48ed9aabdc9464b273f75b2437f",
+          "block": 134743078,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
           "from": "0xcbeaad783ffd2cea125e9d9b2ec21e639d20fa59",
-          "to": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
-          "amount_raw": "1629990976695113694888"
+          "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+          "amount_raw": "3088029152373338567051"
+        },
+        {
+          "tx": "0x107e72b850e4f08ef85bfdb08cdd0386ba8118bebf3b8bca82e6114a58a290dc",
+          "block": 134742788,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0xcbeaad783ffd2cea125e9d9b2ec21e639d20fa59",
+          "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+          "amount_raw": "3029399158869005882463"
         }
       ],
       "wallet_accumulation_candidates": [],
@@ -175,80 +270,31 @@
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "30845.565380000009579412",
-          "balance_after": "32574.37434406170421453",
-          "balance_increase": "1728.808964061694635118",
-          "relative_increase_pct": "5.60",
-          "history_hours": 28.672,
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "27694.528104013261664739",
+          "balance_after": "28577.207319447155828913",
+          "balance_increase": "882.679215433894164174",
+          "relative_increase_pct": "3.19",
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "1728.808964061694635118"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "882.679215433894164174"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 121.548,
-              "balance_delta": "2270.089526699695030763"
+              "actual_observed_hours": 129.75,
+              "balance_delta": "-1727.077497914853354854"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 121.548,
-              "balance_delta": "2270.089526699695030763"
-            }
-          },
-          "chain_interval_verified": false,
-          "transfer_net_reconciled": false,
-          "incoming_transactions": 0,
-          "net_transfer_amount": null,
-          "inbound_provenance": {
-            "unique_inflow_sources": 0,
-            "unique_inflow_blocks": 0,
-            "known_dex_inflow_transactions": 0,
-            "known_dex_inflow_share_of_amount": null,
-            "source_breadth_for_research": false,
-            "dex_dominated": false,
-            "origin_ownership_still_unverified": true
-          },
-          "evidence_txs": [],
-          "status": "NOT_CORROBORATED",
-          "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
-        },
-        {
-          "address": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
-          "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
-          "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
-          "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "151133.253893937980442254",
-          "balance_after": "152741.773013985891680059",
-          "balance_increase": "1608.519120047911237805",
-          "relative_increase_pct": "1.06",
-          "history_hours": 28.672,
-          "full_24h_baseline": true,
-          "dynamically_discovered": true,
-          "ownership_verified": false,
-          "windows": {
-            "24h": {
-              "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "1608.519120047911237805"
-            },
-            "168h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 43.837,
-              "balance_delta": "5984.175252509598505244"
-            },
-            "720h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 43.837,
-              "balance_delta": "5984.175252509598505244"
+              "actual_observed_hours": 129.75,
+              "balance_delta": "-1727.077497914853354854"
             }
           },
           "chain_interval_verified": false,
@@ -273,31 +319,31 @@
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "974.859511545811441415",
-          "balance_after": "995.766798954046661291",
-          "balance_increase": "20.907287408235219876",
-          "relative_increase_pct": "2.14",
-          "history_hours": 28.672,
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "975.703952288622586117",
+          "balance_after": "995.885543613451923605",
+          "balance_increase": "20.181591324829337488",
+          "relative_increase_pct": "2.07",
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "20.907287408235219876"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "20.181591324829337488"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 32.124,
-              "balance_delta": "20.907287408235219876"
+              "actual_observed_hours": 40.325,
+              "balance_delta": "21.02603206764048219"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 32.124,
-              "balance_delta": "20.907287408235219876"
+              "actual_observed_hours": 40.325,
+              "balance_delta": "21.02603206764048219"
             }
           },
           "chain_interval_verified": false,
@@ -324,31 +370,31 @@
           "wallet_kind": "DEX_OR_POOL_UNVERIFIED",
           "label": "v3 pool locator",
           "identity_confidence": "source_mapping",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "2723683.02100896676441201",
-          "balance_after": "3320186.117053705400204624",
-          "balance_increase": "596503.096044738635792614",
-          "relative_increase_pct": "21.90",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "3176212.597072157040068472",
+          "balance_after": "3275468.26808728659657512",
+          "balance_increase": "99255.671015129556506648",
+          "relative_increase_pct": "3.12",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "596503.096044738635792614"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "99255.671015129556506648"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "143765.58622696725748679"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "99047.737260548453857286"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "143765.58622696725748679"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "99047.737260548453857286"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -371,48 +417,239 @@
       "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
       "strong_signal": false,
       "buy_signal": false,
-      "chain_cursor": 134732300,
+      "chain_cursor": 134744300,
       "latest_chain_status": "PARTIAL",
-      "chain_head": 135039554,
+      "chain_head": 135105043,
       "chain_currently_complete": false,
       "verified_cex_wallet_count": 0,
       "exchange_tag_unverified_count": 4,
       "dynamically_monitored_eoa_addresses": 8,
-      "observed_events_last_5000_blocks": 0,
-      "flow_event_type_counts": {},
-      "largest_movements": [],
+      "observed_events_last_5000_blocks": 23,
+      "flow_event_type_counts": {
+        "DEX_SWAP_OR_LP_UNRESOLVED": 20,
+        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 3
+      },
+      "largest_movements": [
+        {
+          "tx": "0x05a6705340df7f0cc9f4d0b598654309234661107020ea76a4d41eda1f3d3da9",
+          "block": 134742501,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0xd21bc2291c1aef340f5265e257b18aa5dafed759",
+          "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+          "amount_raw": "37737400387880204340049"
+        },
+        {
+          "tx": "0xaa8a1f040a1e2300eb2fa54e9784a958e66002cdc07ba8e4a7487619c0325fea",
+          "block": 134742902,
+          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
+          "from": "0x055a3b37957bfbd3345bed9968e7e8dd56d67066",
+          "to": "0xda987e749ac9d7abf78c2eb58ff6e817bc335e08",
+          "amount_raw": "28514152673299619977537"
+        },
+        {
+          "tx": "0xaa8a1f040a1e2300eb2fa54e9784a958e66002cdc07ba8e4a7487619c0325fea",
+          "block": 134742902,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0xda987e749ac9d7abf78c2eb58ff6e817bc335e08",
+          "to": "0xd21bc2291c1aef340f5265e257b18aa5dafed759",
+          "amount_raw": "28514152673299619977537"
+        },
+        {
+          "tx": "0xef481ec10bba33ba79fc6d708df4128eb866a6eb67778f5e67cab248f0c79e4a",
+          "block": 134742902,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0xd21bc2291c1aef340f5265e257b18aa5dafed759",
+          "to": "0x7eb8317c77de6fb2e6e3495cffaaa29fee0af69a",
+          "amount_raw": "21480632679619713716921"
+        },
+        {
+          "tx": "0xb5fa2c3c39dc73ced9c44b1b7cfef1d0a153a099afae83c568501a3358747dae",
+          "block": 134742668,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0xd21bc2291c1aef340f5265e257b18aa5dafed759",
+          "to": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
+          "amount_raw": "18206613203941719965590"
+        }
+      ],
       "wallet_accumulation_candidates": [],
       "wallet_observations_not_corrobated": [
         {
-          "address": "0xcf90dc7b365bf0714abfb8bfcd5fda6ba02bd21f",
+          "address": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134783824,
-          "last_block": 135040717,
-          "balance_before": "79781.851509232285174305",
-          "balance_after": "81881.689375132708649134",
-          "balance_increase": "2099.837865900423474829",
-          "relative_increase_pct": "2.63",
-          "history_hours": 32.124,
+          "first_block": 134811424,
+          "last_block": 135106304,
+          "balance_before": "230996.807236453860343038",
+          "balance_after": "395498.455779452548043456",
+          "balance_increase": "164501.648542998687700418",
+          "relative_increase_pct": "71.21",
+          "history_hours": 36.874,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 32.124,
-              "balance_delta": "2099.837865900423474829"
+              "actual_observed_hours": 36.874,
+              "balance_delta": "164501.648542998687700418"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 121.723,
-              "balance_delta": "-5935.402882957280339013"
+              "actual_observed_hours": 129.609,
+              "balance_delta": "353956.67711752424771369"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 121.723,
-              "balance_delta": "-5935.402882957280339013"
+              "actual_observed_hours": 129.609,
+              "balance_delta": "353956.67711752424771369"
+            }
+          },
+          "chain_interval_verified": false,
+          "transfer_net_reconciled": false,
+          "incoming_transactions": 0,
+          "net_transfer_amount": null,
+          "inbound_provenance": {
+            "unique_inflow_sources": 0,
+            "unique_inflow_blocks": 0,
+            "known_dex_inflow_transactions": 0,
+            "known_dex_inflow_share_of_amount": null,
+            "source_breadth_for_research": false,
+            "dex_dominated": false,
+            "origin_ownership_still_unverified": true
+          },
+          "evidence_txs": [],
+          "status": "NOT_CORROBORATED",
+          "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
+        },
+        {
+          "address": "0xcf90dc7b365bf0714abfb8bfcd5fda6ba02bd21f",
+          "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
+          "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+          "identity_confidence": "onchain_code_zero_owner_unknown",
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "72536.262046014408153836",
+          "balance_after": "110642.527343034727195602",
+          "balance_increase": "38106.265297020319041766",
+          "relative_increase_pct": "52.53",
+          "history_hours": 27.94,
+          "full_24h_baseline": true,
+          "dynamically_discovered": true,
+          "ownership_verified": false,
+          "windows": {
+            "24h": {
+              "baseline_complete": true,
+              "actual_observed_hours": 27.94,
+              "balance_delta": "38106.265297020319041766"
+            },
+            "168h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 129.925,
+              "balance_delta": "22825.435084944738207455"
+            },
+            "720h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 129.925,
+              "balance_delta": "22825.435084944738207455"
+            }
+          },
+          "chain_interval_verified": false,
+          "transfer_net_reconciled": false,
+          "incoming_transactions": 0,
+          "net_transfer_amount": null,
+          "inbound_provenance": {
+            "unique_inflow_sources": 0,
+            "unique_inflow_blocks": 0,
+            "known_dex_inflow_transactions": 0,
+            "known_dex_inflow_share_of_amount": null,
+            "source_breadth_for_research": false,
+            "dex_dominated": false,
+            "origin_ownership_still_unverified": true
+          },
+          "evidence_txs": [],
+          "status": "NOT_CORROBORATED",
+          "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
+        },
+        {
+          "address": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
+          "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
+          "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+          "identity_confidence": "onchain_code_zero_owner_unknown",
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "126467.171085015269054449",
+          "balance_after": "150302.701075015257534781",
+          "balance_increase": "23835.529989999988480332",
+          "relative_increase_pct": "18.85",
+          "history_hours": 27.94,
+          "full_24h_baseline": true,
+          "dynamically_discovered": true,
+          "ownership_verified": false,
+          "windows": {
+            "24h": {
+              "baseline_complete": true,
+              "actual_observed_hours": 27.94,
+              "balance_delta": "23835.529989999988480332"
+            },
+            "168h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 129.925,
+              "balance_delta": "8700.526321258255515956"
+            },
+            "720h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 129.925,
+              "balance_delta": "8700.526321258255515956"
+            }
+          },
+          "chain_interval_verified": false,
+          "transfer_net_reconciled": false,
+          "incoming_transactions": 0,
+          "net_transfer_amount": null,
+          "inbound_provenance": {
+            "unique_inflow_sources": 0,
+            "unique_inflow_blocks": 0,
+            "known_dex_inflow_transactions": 0,
+            "known_dex_inflow_share_of_amount": null,
+            "source_breadth_for_research": false,
+            "dex_dominated": false,
+            "origin_ownership_still_unverified": true
+          },
+          "evidence_txs": [],
+          "status": "NOT_CORROBORATED",
+          "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
+        },
+        {
+          "address": "0x32f99cca706c320fc35d242635218e96d30437de",
+          "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
+          "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+          "identity_confidence": "onchain_code_zero_owner_unknown",
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "4345.919997962342675635",
+          "balance_after": "4399.967057642537259157",
+          "balance_increase": "54.047059680194583522",
+          "relative_increase_pct": "1.24",
+          "history_hours": 27.94,
+          "full_24h_baseline": true,
+          "dynamically_discovered": true,
+          "ownership_verified": false,
+          "windows": {
+            "24h": {
+              "baseline_complete": true,
+              "actual_observed_hours": 27.94,
+              "balance_delta": "54.047059680194583522"
+            },
+            "168h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 46.409,
+              "balance_delta": "0.367108898307337513"
+            },
+            "720h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 46.409,
+              "balance_delta": "0.367108898307337513"
             }
           },
           "chain_interval_verified": false,
@@ -438,29 +675,29 @@
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
           "first_block": 134811424,
-          "last_block": 135040717,
+          "last_block": 135106304,
           "balance_before": "3.950637886468438765",
           "balance_after": "5.820188127820179404",
           "balance_increase": "1.869550241351740639",
           "relative_increase_pct": "47.32",
-          "history_hours": 28.672,
+          "history_hours": 36.874,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
+              "actual_observed_hours": 36.874,
               "balance_delta": "1.869550241351740639"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 37.202,
+              "actual_observed_hours": 45.404,
               "balance_delta": "1.869550241351740639"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 37.202,
+              "actual_observed_hours": 45.404,
               "balance_delta": "1.869550241351740639"
             }
           },
@@ -488,31 +725,31 @@
           "wallet_kind": "EXCHANGE_TAG_UNVERIFIED",
           "label": "Gate.io hot",
           "identity_confidence": "radar_label_or_external_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "6746834.507294421158206455",
-          "balance_after": "7806490.818495129073359289",
-          "balance_increase": "1059656.311200707915152834",
-          "relative_increase_pct": "15.71",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "7634294.184019500229428311",
+          "balance_after": "7889719.548495130074932153",
+          "balance_increase": "255425.364475629845503842",
+          "relative_increase_pct": "3.35",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "1059656.311200707915152834"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "255425.364475629845503842"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "3227543.962518764225591018"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "3310772.692518765227163882"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "3227543.962518764225591018"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "3310772.692518765227163882"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -522,31 +759,31 @@
           "wallet_kind": "CONTRACT_OR_PROXY_NOT_INDEPENDENT",
           "label": "Binance Wallet Proxy",
           "identity_confidence": "third_party_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "279474871.19728977041087049",
-          "balance_after": "280192974.465673311161011537",
-          "balance_increase": "718103.268383540750141047",
-          "relative_increase_pct": "0.26",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "279675895.621131090901366065",
+          "balance_after": "280089720.914706048425830809",
+          "balance_increase": "413825.293574957524464744",
+          "relative_increase_pct": "0.15",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "718103.268383540750141047"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "413825.293574957524464744"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "2411492.520971028429703161"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "2308238.970003765694522433"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "2411492.520971028429703161"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "2308238.970003765694522433"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -556,31 +793,31 @@
           "wallet_kind": "DEX_OR_POOL_UNVERIFIED",
           "label": "v3 pool locator",
           "identity_confidence": "source_mapping",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "40939874.833134601142255433",
-          "balance_after": "41012902.17948750390150944",
-          "balance_increase": "73027.346352902759254007",
-          "relative_increase_pct": "0.18",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "40387880.294755151037272022",
+          "balance_after": "40623235.085061616084139097",
+          "balance_increase": "235354.790306465046867075",
+          "relative_increase_pct": "0.58",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "73027.346352902759254007"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "235354.790306465046867075"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "3391210.455953075133768796"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "3001543.361527187316398453"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "3391210.455953075133768796"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "3001543.361527187316398453"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -603,58 +840,58 @@
       "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
       "strong_signal": false,
       "buy_signal": false,
-      "chain_cursor": 134732300,
+      "chain_cursor": 134744300,
       "latest_chain_status": "PARTIAL",
-      "chain_head": 135039554,
+      "chain_head": 135105043,
       "chain_currently_complete": false,
       "verified_cex_wallet_count": 0,
       "exchange_tag_unverified_count": 6,
       "dynamically_monitored_eoa_addresses": 8,
-      "observed_events_last_5000_blocks": 85,
+      "observed_events_last_5000_blocks": 37,
       "flow_event_type_counts": {
-        "DEX_SWAP_OR_LP_UNRESOLVED": 80,
-        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 5
+        "DEX_SWAP_OR_LP_UNRESOLVED": 31,
+        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 6
       },
       "largest_movements": [
         {
-          "tx": "0xac22e82cbbc7177493a348f2add4c791ffd18ae71793ee40fd34858f49f50dc4",
-          "block": 134731778,
-          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
-          "from": "0x4e7ed91e702ef2ff0c58e251c6e20d1dc1e31a5f",
-          "to": "0x4a4915a02ebfd6e05132ff9f622646d157b719bb",
-          "amount_raw": "87941698809755510000000"
+          "tx": "0x84f02fd73f691fe2221d66c66c451b881cf2757a4d16076293d496e65add41fe",
+          "block": 134743041,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x238a358808379702088667322f80ac48bad5e6c4",
+          "to": "0x000000000a01ea06f8b3a01319bbaa2cb2453a3c",
+          "amount_raw": "9491999999999998951424"
         },
         {
-          "tx": "0x72ac36dd8794345b98dd17d4da001f4f94c5980978fbd454b69ef870bb3965c5",
-          "block": 134731779,
+          "tx": "0x84f02fd73f691fe2221d66c66c451b881cf2757a4d16076293d496e65add41fe",
+          "block": 134743041,
           "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
-          "from": "0x4a4915a02ebfd6e05132ff9f622646d157b719bb",
-          "to": "0xce2213f43ad773fb53f135f188e173bcce2feafc",
-          "amount_raw": "87941698809755510000000"
+          "from": "0x000000000a01ea06f8b3a01319bbaa2cb2453a3c",
+          "to": "0x57fd714755dbe55798501e1b4b2bcc355c06bf6a",
+          "amount_raw": "9491999999999998951424"
         },
         {
-          "tx": "0x861b09139525b3d29919aa2da31260fe2aaeca3fa386425439044aa60ce3823d",
-          "block": 134731854,
+          "tx": "0x329911ad54febcdab9db0b9f27869c44a2840aab6e34c2eb690542eaebc14b25",
+          "block": 134742989,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
           "from": "0xe94753d6e067d25e0dbe90ed782b7ea21475fc48",
           "to": "0x238a358808379702088667322f80ac48bad5e6c4",
-          "amount_raw": "12340533763422250737697"
+          "amount_raw": "7152845535235355495569"
         },
         {
-          "tx": "0x2071f87781aab44f97960c480ac6a32fe8b0ad571a70254297dbcff92f838783",
-          "block": 134731583,
-          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0xe94753d6e067d25e0dbe90ed782b7ea21475fc48",
-          "to": "0x238a358808379702088667322f80ac48bad5e6c4",
-          "amount_raw": "12155500222005576874981"
-        },
-        {
-          "tx": "0x1805eb1323e1c6e612b3ea1757c0c33eb8a3fe4df5530d86158e1fc1c81bbe4a",
-          "block": 134727440,
+          "tx": "0x4533e90f3ff2a1964d1dc1634d06285904b927d089bc7fd0ba08aa6542e7c22a",
+          "block": 134742851,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
           "from": "0x238a358808379702088667322f80ac48bad5e6c4",
           "to": "0x11eacd2bedd700a5e21ff70dea4086305100e5e0",
-          "amount_raw": "11345250487005419675376"
+          "amount_raw": "6733379716413970396956"
+        },
+        {
+          "tx": "0xdee25314738e6dede66557e2959ee28379c1a745bb51923ae2e465dca6f4ae83",
+          "block": 134742513,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0xb3e17d2ebbd710be53ecd8e8727337a8dd792811",
+          "to": "0x238a358808379702088667322f80ac48bad5e6c4",
+          "amount_raw": "6437895648760651915587"
         }
       ],
       "wallet_accumulation_candidates": [],
@@ -665,128 +902,30 @@
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
           "first_block": 134986496,
-          "last_block": 135040717,
+          "last_block": 135106304,
           "balance_before": "191393.646986673472077283",
-          "balance_after": "605415.562564819583884707",
-          "balance_increase": "414021.915578146111807424",
-          "relative_increase_pct": "216.32",
-          "history_hours": 6.78,
+          "balance_after": "1514495.836683472249488774",
+          "balance_increase": "1323102.189696798777411491",
+          "relative_increase_pct": "691.30",
+          "history_hours": 14.981,
           "full_24h_baseline": false,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": false,
-              "actual_observed_hours": 6.78,
-              "balance_delta": "414021.915578146111807424"
+              "actual_observed_hours": 14.981,
+              "balance_delta": "1323102.189696798777411491"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 6.78,
-              "balance_delta": "414021.915578146111807424"
+              "actual_observed_hours": 14.981,
+              "balance_delta": "1323102.189696798777411491"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 6.78,
-              "balance_delta": "414021.915578146111807424"
-            }
-          },
-          "chain_interval_verified": false,
-          "transfer_net_reconciled": false,
-          "incoming_transactions": 0,
-          "net_transfer_amount": null,
-          "inbound_provenance": {
-            "unique_inflow_sources": 0,
-            "unique_inflow_blocks": 0,
-            "known_dex_inflow_transactions": 0,
-            "known_dex_inflow_share_of_amount": null,
-            "source_breadth_for_research": false,
-            "dex_dominated": false,
-            "origin_ownership_still_unverified": true
-          },
-          "evidence_txs": [],
-          "status": "NOT_CORROBORATED",
-          "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
-        },
-        {
-          "address": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
-          "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
-          "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
-          "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "342235.433275368066744246",
-          "balance_after": "487267.856311413200793702",
-          "balance_increase": "145032.423036045134049456",
-          "relative_increase_pct": "42.38",
-          "history_hours": 28.672,
-          "full_24h_baseline": true,
-          "dynamically_discovered": true,
-          "ownership_verified": false,
-          "windows": {
-            "24h": {
-              "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "145032.423036045134049456"
-            },
-            "168h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 119.374,
-              "balance_delta": "249863.108948723789509566"
-            },
-            "720h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 119.374,
-              "balance_delta": "249863.108948723789509566"
-            }
-          },
-          "chain_interval_verified": false,
-          "transfer_net_reconciled": false,
-          "incoming_transactions": 0,
-          "net_transfer_amount": null,
-          "inbound_provenance": {
-            "unique_inflow_sources": 0,
-            "unique_inflow_blocks": 0,
-            "known_dex_inflow_transactions": 0,
-            "known_dex_inflow_share_of_amount": null,
-            "source_breadth_for_research": false,
-            "dex_dominated": false,
-            "origin_ownership_still_unverified": true
-          },
-          "evidence_txs": [],
-          "status": "NOT_CORROBORATED",
-          "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
-        },
-        {
-          "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
-          "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
-          "label": "Monitored EOA (unknown owner)",
-          "identity_confidence": "onchain_EOA_candidate_owner_unknown",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "1346120.999999999971323714",
-          "balance_after": "1431124.99999999996376473",
-          "balance_increase": "85003.999999999992441016",
-          "relative_increase_pct": "6.31",
-          "history_hours": 28.678,
-          "full_24h_baseline": true,
-          "dynamically_discovered": false,
-          "ownership_verified": false,
-          "windows": {
-            "24h": {
-              "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "85003.999999999992441016"
-            },
-            "168h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "98123.829348962021499933"
-            },
-            "720h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "98123.829348962021499933"
+              "actual_observed_hours": 14.981,
+              "balance_delta": "1323102.189696798777411491"
             }
           },
           "chain_interval_verified": false,
@@ -811,31 +950,80 @@
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "899.705658536614927877",
-          "balance_after": "920.488089159637267813",
-          "balance_increase": "20.782430623022339936",
-          "relative_increase_pct": "2.31",
-          "history_hours": 28.672,
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "899.707239001525258456",
+          "balance_after": "975.456500034485803002",
+          "balance_increase": "75.749261032960544546",
+          "relative_increase_pct": "8.42",
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "20.782430623022339936"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "75.749261032960544546"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "20.782430623022339936"
+              "actual_observed_hours": 36.874,
+              "balance_delta": "75.750841497870875125"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "20.782430623022339936"
+              "actual_observed_hours": 36.874,
+              "balance_delta": "75.750841497870875125"
+            }
+          },
+          "chain_interval_verified": false,
+          "transfer_net_reconciled": false,
+          "incoming_transactions": 0,
+          "net_transfer_amount": null,
+          "inbound_provenance": {
+            "unique_inflow_sources": 0,
+            "unique_inflow_blocks": 0,
+            "known_dex_inflow_transactions": 0,
+            "known_dex_inflow_share_of_amount": null,
+            "source_breadth_for_research": false,
+            "dex_dominated": false,
+            "origin_ownership_still_unverified": true
+          },
+          "evidence_txs": [],
+          "status": "NOT_CORROBORATED",
+          "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
+        },
+        {
+          "address": "0xf5c4f3dc02c3fb9279495a8fef7b0741da956157",
+          "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
+          "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+          "identity_confidence": "onchain_code_zero_owner_unknown",
+          "first_block": 134946895,
+          "last_block": 135106304,
+          "balance_before": "1087.281624947479722074",
+          "balance_after": "1087.50824892931588302",
+          "balance_increase": "0.226623981836160946",
+          "relative_increase_pct": "0.02",
+          "history_hours": 19.933,
+          "full_24h_baseline": false,
+          "dynamically_discovered": true,
+          "ownership_verified": false,
+          "windows": {
+            "24h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 19.933,
+              "balance_delta": "0.226623981836160946"
+            },
+            "168h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 19.933,
+              "balance_delta": "0.226623981836160946"
+            },
+            "720h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 19.933,
+              "balance_delta": "0.226623981836160946"
             }
           },
           "chain_interval_verified": false,
@@ -862,31 +1050,31 @@
           "wallet_kind": "CONTRACT_OR_PROXY_NOT_INDEPENDENT",
           "label": "Binance Wallet Proxy",
           "identity_confidence": "third_party_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "97508914.113501000008216293",
-          "balance_after": "100972263.940296591426287662",
-          "balance_increase": "3463349.826795591418071369",
-          "relative_increase_pct": "3.55",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "97350348.164081340042342906",
+          "balance_after": "103080183.750943007499220786",
+          "balance_increase": "5729835.58686166745687788",
+          "relative_increase_pct": "5.89",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "3463349.826795591418071369"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "5729835.58686166745687788"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "4956670.685679786745341128"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "7064590.496326202818274252"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "4956670.685679786745341128"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "7064590.496326202818274252"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -896,31 +1084,31 @@
           "wallet_kind": "DEX_OR_POOL_UNVERIFIED",
           "label": "PancakeSwap Infinity Vault",
           "identity_confidence": "third_party_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "40946939.502943274878611031",
-          "balance_after": "41076964.385624805143348296",
-          "balance_increase": "130024.882681530264737265",
-          "relative_increase_pct": "0.32",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "40128327.17184532035158122",
+          "balance_after": "41174920.121126921058673652",
+          "balance_increase": "1046592.949281600707092432",
+          "relative_increase_pct": "2.61",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "130024.882681530264737265"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "1046592.949281600707092432"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "-3754823.52630685976832237"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "-3656867.790804743852997014"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "-3754823.52630685976832237"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "-3656867.790804743852997014"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -930,31 +1118,31 @@
           "wallet_kind": "EXCHANGE_TAG_UNVERIFIED",
           "label": "Bitget hot (radar attribution)",
           "identity_confidence": "radar_label_or_external_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "4205214.46593776434",
-          "balance_after": "4235987.34181112411",
-          "balance_increase": "30772.87587335977",
-          "relative_increase_pct": "0.73",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "3822472.436779880839",
+          "balance_after": "5384646.851518773891",
+          "balance_increase": "1562174.414738893052",
+          "relative_increase_pct": "40.87",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "30772.87587335977"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "1562174.414738893052"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "954774.114291255075"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "2103433.623998904856"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "954774.114291255075"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "2103433.623998904856"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -977,16 +1165,60 @@
       "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
       "strong_signal": false,
       "buy_signal": false,
-      "chain_cursor": 134732300,
+      "chain_cursor": 134744300,
       "latest_chain_status": "PARTIAL",
-      "chain_head": 135039554,
+      "chain_head": 135105043,
       "chain_currently_complete": false,
       "verified_cex_wallet_count": 0,
       "exchange_tag_unverified_count": 5,
-      "dynamically_monitored_eoa_addresses": 10,
-      "observed_events_last_5000_blocks": 0,
-      "flow_event_type_counts": {},
-      "largest_movements": [],
+      "dynamically_monitored_eoa_addresses": 11,
+      "observed_events_last_5000_blocks": 40,
+      "flow_event_type_counts": {
+        "DEX_SWAP_OR_LP_UNRESOLVED": 36,
+        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 4
+      },
+      "largest_movements": [
+        {
+          "tx": "0xfbd3cd7ebfaabb50b57449ede2ff498a1d6b69f656bb23ddb4646c41503d7844",
+          "block": 134743472,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0xae02717e94c9b5bae817601a49b4584f58324015",
+          "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+          "amount_raw": "2506671453"
+        },
+        {
+          "tx": "0x8c87c020ae9d823a9005066b432eeb13446fca8e4d48401f0e2bb54bc4ab824a",
+          "block": 134743135,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0xae02717e94c9b5bae817601a49b4584f58324015",
+          "to": "0x2b214a662a7cd2bd5c8d4115eb54f0576b8dbd46",
+          "amount_raw": "2493991910"
+        },
+        {
+          "tx": "0x86dee82751e953390314d12ad02ff4d206a3f0dbcfe2ab7ed274185c359eb791",
+          "block": 134743471,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x2b214a662a7cd2bd5c8d4115eb54f0576b8dbd46",
+          "to": "0xae02717e94c9b5bae817601a49b4584f58324015",
+          "amount_raw": "2493991910"
+        },
+        {
+          "tx": "0x3402a91d83ba2c1e63b17dfce6ff4fcc882555ce2d06de1be2b3c31265689ffc",
+          "block": 134743150,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x11eacd2bedd700a5e21ff70dea4086305100e5e0",
+          "to": "0xae02717e94c9b5bae817601a49b4584f58324015",
+          "amount_raw": "1974264124"
+        },
+        {
+          "tx": "0x7d58ada1484c691e6b62fc234a14b21e426cf33e1f951891cc4e56f2d1235da4",
+          "block": 134742510,
+          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
+          "from": "0x00362864ade3b149fed8cc0d4ccc3ebcaae866f0",
+          "to": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+          "amount_raw": "1778348110"
+        }
+      ],
       "wallet_accumulation_candidates": [],
       "wallet_observations_not_corrobated": [
         {
@@ -1043,31 +1275,31 @@
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "4531.502694",
-          "balance_after": "5381.169116",
-          "balance_increase": "849.666422",
-          "relative_increase_pct": "18.75",
-          "history_hours": 28.672,
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "4748.538422",
+          "balance_after": "5484.804598",
+          "balance_increase": "736.266176",
+          "relative_increase_pct": "15.51",
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "849.666422"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "736.266176"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 116.228,
-              "balance_delta": "2667.08805"
+              "actual_observed_hours": 124.429,
+              "balance_delta": "2770.723532"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 116.228,
-              "balance_delta": "2667.08805"
+              "actual_observed_hours": 124.429,
+              "balance_delta": "2770.723532"
             }
           },
           "chain_interval_verified": false,
@@ -1139,69 +1371,35 @@
       ],
       "other_holder_increases_excluded": [
         {
-          "address": "0xae02717e94c9b5bae817601a49b4584f58324015",
-          "wallet_kind": "DEX_OR_POOL_UNVERIFIED",
-          "label": "v3 pool locator",
-          "identity_confidence": "source_mapping",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "5232699.533953",
-          "balance_after": "5294932.957227",
-          "balance_increase": "62233.423274",
-          "relative_increase_pct": "1.19",
-          "history_hours": 28.678,
-          "full_24h_baseline": true,
-          "dynamically_discovered": false,
-          "ownership_verified": false,
-          "windows": {
-            "24h": {
-              "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "62233.423274"
-            },
-            "168h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "397696.502297"
-            },
-            "720h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "397696.502297"
-            }
-          },
-          "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
-        },
-        {
           "address": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
           "wallet_kind": "EXCHANGE_TAG_UNVERIFIED",
           "label": "Gate.io hot",
           "identity_confidence": "radar_label_or_external_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "610792.589328",
-          "balance_after": "640638.311952",
-          "balance_increase": "29845.722624",
-          "relative_increase_pct": "4.89",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "590204.649328",
+          "balance_after": "652632.782406",
+          "balance_increase": "62428.133078",
+          "relative_increase_pct": "10.58",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "29845.722624"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "62428.133078"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "64994.405488"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "76988.875942"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "64994.405488"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "76988.875942"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -1224,93 +1422,141 @@
       "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
       "strong_signal": false,
       "buy_signal": false,
-      "chain_cursor": 134732300,
+      "chain_cursor": 134744300,
       "latest_chain_status": "PARTIAL",
-      "chain_head": 135039554,
+      "chain_head": 135105043,
       "chain_currently_complete": false,
       "verified_cex_wallet_count": 0,
       "exchange_tag_unverified_count": 5,
       "dynamically_monitored_eoa_addresses": 6,
-      "observed_events_last_5000_blocks": 55,
+      "observed_events_last_5000_blocks": 31,
       "flow_event_type_counts": {
-        "DEX_SWAP_OR_LP_UNRESOLVED": 43,
-        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 11,
-        "CONTRACT_OR_PROXY_UNRESOLVED": 1
+        "DEX_SWAP_OR_LP_UNRESOLVED": 28,
+        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 3
       },
       "largest_movements": [
         {
-          "tx": "0xc750997705a68d1e5d35e3f18e896f2461a9b2b320eacf5324475a115c33f8a7",
-          "block": 134731662,
-          "kind": "CONTRACT_OR_PROXY_UNRESOLVED",
-          "from": "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db",
-          "to": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
-          "amount_raw": "45886077380000000000000"
-        },
-        {
-          "tx": "0x860f1fce86af9e4cb07a06018af5b9abd872d90cd2dd4c7a4e2abaa9c54f6032",
-          "block": 134729405,
-          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0x238a358808379702088667322f80ac48bad5e6c4",
-          "to": "0x1125124106fdeb8bbe751c1fbe73424ac060298e",
-          "amount_raw": "3361897470759606984269"
-        },
-        {
-          "tx": "0x7f86cdc7134f670512133e8550931c8dfc2220db03e67443d3b1e64ee3318650",
-          "block": 134731666,
-          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0x238a358808379702088667322f80ac48bad5e6c4",
-          "to": "0x13b207677d77853614ce78a0dc0658e8ca9061e0",
-          "amount_raw": "2106381683762932071695"
-        },
-        {
-          "tx": "0xb1f8da140bd563666f26effeb2cc3db86c517bf3e5e0682a5fcfdd99ee6de8dd",
-          "block": 134731542,
+          "tx": "0xd4d56d5a4e7b962552dbfec14eb1489198fece2f210382c1c9a5958aa10f839b",
+          "block": 134741916,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
           "from": "0x278d858f05b94576c1e6f73285886876ff6ef8d2",
           "to": "0x238a358808379702088667322f80ac48bad5e6c4",
-          "amount_raw": "2035868899733913186300"
+          "amount_raw": "2214241918702344577167"
         },
         {
-          "tx": "0x8f39f1058973f551a27bf927975883c0fe8ca6df860bfce2db47b888cb63a71e",
-          "block": 134731515,
+          "tx": "0xc1bcbefd8af9ed1bb7ebdea691ff9c99dd088f06c52559a59897dbb3632a0165",
+          "block": 134741988,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0xe94753d6e067d25e0dbe90ed782b7ea21475fc48",
+          "from": "0x238a358808379702088667322f80ac48bad5e6c4",
+          "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+          "amount_raw": "2115633003838208054836"
+        },
+        {
+          "tx": "0x05f17ae9d48f52b7a281cde00a757d65a542c3b93444328fa284da021a1ab151",
+          "block": 134742244,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x278d858f05b94576c1e6f73285886876ff6ef8d2",
           "to": "0x238a358808379702088667322f80ac48bad5e6c4",
-          "amount_raw": "1531968818297448971789"
+          "amount_raw": "1546886646801297107952"
+        },
+        {
+          "tx": "0xfd68c71fa53fca9b1837bf91cab82db560e5b72a49621ae88b0633057cb64c03",
+          "block": 134741953,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x278d858f05b94576c1e6f73285886876ff6ef8d2",
+          "to": "0x238a358808379702088667322f80ac48bad5e6c4",
+          "amount_raw": "1496177143096498497725"
+        },
+        {
+          "tx": "0x929d6ed8f0834e17ad26af9a1275ed976deb4084df90e206a7ff8f357432d43e",
+          "block": 134741954,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
+          "to": "0x238a358808379702088667322f80ac48bad5e6c4",
+          "amount_raw": "1453700000000000000000"
         }
       ],
       "wallet_accumulation_candidates": [],
       "wallet_observations_not_corrobated": [
         {
-          "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
+          "address": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "974.329069693016193807",
-          "balance_after": "3578.590233198893551325",
-          "balance_increase": "2604.261163505877357518",
-          "relative_increase_pct": "267.29",
-          "history_hours": 28.672,
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "135701.756458724395623805",
+          "balance_after": "169189.827314504942256045",
+          "balance_increase": "33488.07085578054663224",
+          "relative_increase_pct": "24.68",
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "2604.261163505877357518"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "33488.07085578054663224"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 121.723,
-              "balance_delta": "-6802.884816965687936764"
+              "actual_observed_hours": 129.925,
+              "balance_delta": "-27393.90652988416249511"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 121.723,
-              "balance_delta": "-6802.884816965687936764"
+              "actual_observed_hours": 129.925,
+              "balance_delta": "-27393.90652988416249511"
+            }
+          },
+          "chain_interval_verified": false,
+          "transfer_net_reconciled": false,
+          "incoming_transactions": 0,
+          "net_transfer_amount": null,
+          "inbound_provenance": {
+            "unique_inflow_sources": 0,
+            "unique_inflow_blocks": 0,
+            "known_dex_inflow_transactions": 0,
+            "known_dex_inflow_share_of_amount": null,
+            "source_breadth_for_research": false,
+            "dex_dominated": false,
+            "origin_ownership_still_unverified": true
+          },
+          "evidence_txs": [],
+          "status": "NOT_CORROBORATED",
+          "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
+        },
+        {
+          "address": "0xc06ebbefd94032b85424d51906e2a335efae264b",
+          "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
+          "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+          "identity_confidence": "onchain_code_zero_owner_unknown",
+          "first_block": 134986496,
+          "last_block": 135106304,
+          "balance_before": "80.736017087637436225",
+          "balance_after": "87.3406146418646821",
+          "balance_increase": "6.604597554227245875",
+          "relative_increase_pct": "8.18",
+          "history_hours": 14.981,
+          "full_24h_baseline": false,
+          "dynamically_discovered": true,
+          "ownership_verified": false,
+          "windows": {
+            "24h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 14.981,
+              "balance_delta": "6.604597554227245875"
+            },
+            "168h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 14.981,
+              "balance_delta": "6.604597554227245875"
+            },
+            "720h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 14.981,
+              "balance_delta": "6.604597554227245875"
             }
           },
           "chain_interval_verified": false,
@@ -1335,31 +1581,31 @@
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "15944.054353249740169333",
-          "balance_after": "15948.061969086738755107",
-          "balance_increase": "4.007615836998585774",
-          "relative_increase_pct": "0.03",
-          "history_hours": 28.672,
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "15944.106937937360501991",
+          "balance_after": "15950.324832628510391282",
+          "balance_increase": "6.217894691149889291",
+          "relative_increase_pct": "0.04",
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "4.007615836998585774"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "6.217894691149889291"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 121.548,
-              "balance_delta": "15.610735986056606535"
+              "actual_observed_hours": 129.75,
+              "balance_delta": "17.87359952782824271"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 121.548,
-              "balance_delta": "15.610735986056606535"
+              "actual_observed_hours": 129.75,
+              "balance_delta": "17.87359952782824271"
             }
           },
           "chain_interval_verified": false,
@@ -1382,68 +1628,34 @@
       ],
       "other_holder_increases_excluded": [
         {
-          "address": "0x238a358808379702088667322f80ac48bad5e6c4",
-          "wallet_kind": "DEX_OR_POOL_UNVERIFIED",
-          "label": "PancakeSwap Infinity Vault",
-          "identity_confidence": "third_party_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "4320374.820676674005393066",
-          "balance_after": "4321570.436753395935568035",
-          "balance_increase": "1195.616076721930174969",
-          "relative_increase_pct": "0.03",
-          "history_hours": 28.678,
-          "full_24h_baseline": true,
-          "dynamically_discovered": false,
-          "ownership_verified": false,
-          "windows": {
-            "24h": {
-              "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "1195.616076721930174969"
-            },
-            "168h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "86529.986631157873683776"
-            },
-            "720h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "86529.986631157873683776"
-            }
-          },
-          "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
-        },
-        {
           "address": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
           "wallet_kind": "EXCHANGE_TAG_UNVERIFIED",
           "label": "MEXC hot",
           "identity_confidence": "third_party_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "2417177.851394687038844135",
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "2493265.35439468703893464",
           "balance_after": "2495507.816076485230934639",
-          "balance_increase": "78329.964681798192090504",
-          "relative_increase_pct": "3.24",
-          "history_hours": 28.678,
+          "balance_increase": "2242.461681798191999999",
+          "relative_increase_pct": "0.09",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "78329.964681798192090504"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "2242.461681798191999999"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
+              "actual_observed_hours": 133.173,
               "balance_delta": "13770.345477673032270606"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
+              "actual_observed_hours": 133.173,
               "balance_delta": "13770.345477673032270606"
             }
           },
@@ -1467,233 +1679,93 @@
       "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
       "strong_signal": false,
       "buy_signal": false,
-      "chain_cursor": 134732300,
+      "chain_cursor": 134744300,
       "latest_chain_status": "PARTIAL",
-      "chain_head": 135039554,
+      "chain_head": 135105043,
       "chain_currently_complete": false,
       "verified_cex_wallet_count": 0,
       "exchange_tag_unverified_count": 5,
-      "dynamically_monitored_eoa_addresses": 4,
-      "observed_events_last_5000_blocks": 54,
+      "dynamically_monitored_eoa_addresses": 5,
+      "observed_events_last_5000_blocks": 77,
       "flow_event_type_counts": {
-        "DEX_SWAP_OR_LP_UNRESOLVED": 49,
-        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 5
+        "DEX_SWAP_OR_LP_UNRESOLVED": 68,
+        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 8,
+        "CONTRACT_OR_PROXY_UNRESOLVED": 1
       },
       "largest_movements": [
         {
-          "tx": "0x44bb620d57ede6f25e11baa7d43f8b0a783af6c9c770b14d7331f7a256bc7866",
-          "block": 134729005,
-          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0x5bd808ab85c124f99080da5f864edcb39950ede5",
-          "to": "0x13b207677d77853614ce78a0dc0658e8ca9061e0",
-          "amount_raw": "10810754649436120517211"
+          "tx": "0x712618f12b7c56135945e3c2d01bb172a374260f4a08ee979b128a775f8ac13f",
+          "block": 134740958,
+          "kind": "CONTRACT_OR_PROXY_UNRESOLVED",
+          "from": "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db",
+          "to": "0x6aba0315493b7e6989041c91181337b662fb1b90",
+          "amount_raw": "13211950512140000000000"
         },
         {
-          "tx": "0x328625f17a4e864f8f1918c21f49a1f0bb1d5995eec807a9d7684f6b22125b02",
-          "block": 134728362,
-          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0x5bd808ab85c124f99080da5f864edcb39950ede5",
-          "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
-          "amount_raw": "8531362749188204727306"
+          "tx": "0x712618f12b7c56135945e3c2d01bb172a374260f4a08ee979b128a775f8ac13f",
+          "block": 134740958,
+          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
+          "from": "0x6aba0315493b7e6989041c91181337b662fb1b90",
+          "to": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
+          "amount_raw": "13211950512140000000000"
         },
         {
-          "tx": "0x40a19071d81f5d79eeec8e74f6a67079254a4b8494bd6ef2d4c576dd03e494d1",
-          "block": 134731191,
+          "tx": "0x712618f12b7c56135945e3c2d01bb172a374260f4a08ee979b128a775f8ac13f",
+          "block": 134740958,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0x5bd808ab85c124f99080da5f864edcb39950ede5",
-          "to": "0x13b207677d77853614ce78a0dc0658e8ca9061e0",
-          "amount_raw": "8497158109276163439018"
-        },
-        {
-          "tx": "0x1c22e087f7d437d974eb0a4289616f054967f820d107f6abf9d8d73a9962edb6",
-          "block": 134728338,
-          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0x5bd808ab85c124f99080da5f864edcb39950ede5",
-          "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
-          "amount_raw": "7715601544667302039611"
-        },
-        {
-          "tx": "0x4c93a7bf9f369e4260a226601626d44bb84d80efecae5f2c6ed8174e67379028",
-          "block": 134728770,
-          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0x278d858f05b94576c1e6f73285886876ff6ef8d2",
+          "from": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
           "to": "0x5bd808ab85c124f99080da5f864edcb39950ede5",
-          "amount_raw": "6853893033908280333582"
+          "amount_raw": "12863327105439727636531"
+        },
+        {
+          "tx": "0x7bc6843b83c0a7e41b374e4c84b132f84213c97631684f06254e7e1b1a4042f4",
+          "block": 134740959,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x5bd808ab85c124f99080da5f864edcb39950ede5",
+          "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+          "amount_raw": "11264419984416164551630"
+        },
+        {
+          "tx": "0xc7b338c8fe713f04d5b8d60cefa62904ff4de08effc6bce724950f67fa7d7494",
+          "block": 134742669,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x5bd808ab85c124f99080da5f864edcb39950ede5",
+          "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+          "amount_raw": "7777110344522076912396"
         }
       ],
-      "wallet_accumulation_candidates": [],
-      "wallet_observations_not_corrobated": [],
-      "other_holder_increases_excluded": [],
-      "missing_evidence": [
-        "CHAIN_LATEST_SCAN_PARTIAL_OR_UNKNOWN",
-        "NO_VERIFIED_EXCHANGE_OWNERSHIP",
-        "DEX_LP_EVENTS_NOT_CLASSIFIED",
-        "SPOT_TAKER_DIRECTION_NOT_CAPTURED",
-        "ORDERBOOK_DEPTH_NOT_CAPTURED",
-        "CEX_INTERNAL_EXTERNAL_CLUSTER_NOT_PROVEN"
-      ],
-      "note": "Transfer logs are not market purchases; EOA and CEX ownership are not proven."
-    },
-    {
-      "coin": "TRUST",
-      "chain": "base",
-      "contract": "0x6cd905df2ed214b22e0d48ff17cd4200c1c6d8a3",
-      "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
-      "strong_signal": false,
-      "buy_signal": false,
-      "chain_cursor": 58707885,
-      "latest_chain_status": "PARTIAL",
-      "chain_head": 60712428,
-      "chain_currently_complete": false,
-      "verified_cex_wallet_count": 0,
-      "exchange_tag_unverified_count": 2,
-      "dynamically_monitored_eoa_addresses": 19,
-      "observed_events_last_5000_blocks": 46,
-      "flow_event_type_counts": {
-        "DEX_SWAP_OR_LP_UNRESOLVED": 17,
-        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 27,
-        "CONTRACT_OR_PROXY_UNRESOLVED": 1,
-        "SAME_ADDRESS_TRANSFER": 1
-      },
-      "largest_movements": [
-        {
-          "tx": "0x14e557f7d096fe0592caef360a7b5ec407c7d53b63a7a4c65cd2b371dae6fe5e",
-          "block": 58705244,
-          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
-          "from": "0xe92e65049b3c2ca12806e9567b08895118c5a03f",
-          "to": "0xecd3b4b7fd0bc9f52335f29a3e007453de07d2b9",
-          "amount_raw": "771992320000000000000000"
-        },
-        {
-          "tx": "0xf0d1c511d1ca54acbf78a8ab5b5215ea3a3e66e11dc8ab206026b018c4f326b5",
-          "block": 58705244,
-          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
-          "from": "0xe92e65049b3c2ca12806e9567b08895118c5a03f",
-          "to": "0x5f26e69bf9d74118cfb36de28dd38d86e5672035",
-          "amount_raw": "373855270000000000000000"
-        },
-        {
-          "tx": "0x05ad96307c9e17f9a4e15de0989eab1ac4990a9a5ce5f90931fd7dd48b4a2344",
-          "block": 58706795,
-          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
-          "from": "0x5f26e69bf9d74118cfb36de28dd38d86e5672035",
-          "to": "0x20fe51a9229eef2cf8ad9e89d91cab9312cf3b7a",
-          "amount_raw": "373855270000000000000000"
-        },
-        {
-          "tx": "0x487d37a6842969c0fc1948adda68c3e5c136d11067a0b777d38b4cc857b99154",
-          "block": 58704436,
-          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
-          "from": "0x2b0e29f2dad15aa5b7613f1f4457b0435630cb8d",
-          "to": "0xca14284607e470054f185ba14a33f095b0fdf881",
-          "amount_raw": "52199491265600000000000"
-        },
-        {
-          "tx": "0x0a43976b359ededfbf5b3e8607643b435ca9c37f501bf6adcf2ed0ab5e77303e",
-          "block": 58703196,
-          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
-          "from": "0xab782bc7d4a2b306825de5a7730034f8f63ee1bc",
-          "to": "0xfed2399b20011af1fc985d5354f12cbc57ed48f9",
-          "amount_raw": "31564000000000000000000"
-        }
-      ],
-      "wallet_accumulation_candidates": [],
-      "wallet_observations_not_corrobated": [],
-      "other_holder_increases_excluded": [
-        {
-          "address": "0xca14284607e470054f185ba14a33f095b0fdf881",
-          "wallet_kind": "HOLDER_OWNER_UNVERIFIED",
-          "label": null,
-          "identity_confidence": "holder_only",
-          "first_block": 60195411,
-          "last_block": 60711581,
-          "balance_before": "70524782.984750426810438249",
-          "balance_after": "70530202.476770691810438249",
-          "balance_increase": "5419.492020265",
-          "relative_increase_pct": "0.01",
-          "history_hours": 28.678,
-          "full_24h_baseline": true,
-          "dynamically_discovered": false,
-          "ownership_verified": false,
-          "windows": {
-            "24h": {
-              "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "5419.492020265"
-            },
-            "168h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.571,
-              "balance_delta": "-122906.942987005201699006"
-            },
-            "720h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.571,
-              "balance_delta": "-122906.942987005201699006"
-            }
-          },
-          "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
-        }
-      ],
-      "missing_evidence": [
-        "CHAIN_LATEST_SCAN_PARTIAL_OR_UNKNOWN",
-        "NO_VERIFIED_EXCHANGE_OWNERSHIP",
-        "DEX_LP_EVENTS_NOT_CLASSIFIED",
-        "SPOT_TAKER_DIRECTION_NOT_CAPTURED",
-        "ORDERBOOK_DEPTH_NOT_CAPTURED",
-        "CEX_INTERNAL_EXTERNAL_CLUSTER_NOT_PROVEN"
-      ],
-      "note": "Transfer logs are not market purchases; EOA and CEX ownership are not proven."
-    },
-    {
-      "coin": "B2",
-      "chain": "bsc",
-      "contract": "0x783c3f003f172c6ac5ac700218a357d2d66ee2a2",
-      "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
-      "strong_signal": false,
-      "buy_signal": false,
-      "chain_cursor": 134732300,
-      "latest_chain_status": "PARTIAL",
-      "chain_head": 135039554,
-      "chain_currently_complete": false,
-      "verified_cex_wallet_count": 0,
-      "exchange_tag_unverified_count": 5,
-      "dynamically_monitored_eoa_addresses": 4,
-      "observed_events_last_5000_blocks": 0,
-      "flow_event_type_counts": {},
-      "largest_movements": [],
       "wallet_accumulation_candidates": [],
       "wallet_observations_not_corrobated": [
         {
-          "address": "0xb743d3f5e241b842a92cd16ded1344ba8749453e",
+          "address": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
-          "label": "Monitored EOA (unknown owner)",
-          "identity_confidence": "onchain_EOA_candidate_owner_unknown",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "33810.098628306544349293",
-          "balance_after": "34929.50493955784558587",
-          "balance_increase": "1119.406311251301236577",
-          "relative_increase_pct": "3.31",
-          "history_hours": 28.678,
+          "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+          "identity_confidence": "onchain_code_zero_owner_unknown",
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "173280.367938714821561698",
+          "balance_after": "327494.160344516799044692",
+          "balance_increase": "154213.792405801977482994",
+          "relative_increase_pct": "89.00",
+          "history_hours": 27.94,
           "full_24h_baseline": true,
-          "dynamically_discovered": false,
+          "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "1119.406311251301236577"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "154213.792405801977482994"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "88.410552029028144554"
+              "actual_observed_hours": 121.489,
+              "balance_delta": "-113359.10521124980576246"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "88.410552029028144554"
+              "actual_observed_hours": 121.489,
+              "balance_delta": "-113359.10521124980576246"
             }
           },
           "chain_interval_verified": false,
@@ -1714,35 +1786,283 @@
           "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
         },
         {
-          "address": "0x53f78a071d04224b8e254e243fffc6d9f2f3fa23",
+          "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "437956.482271786333551054",
-          "balance_after": "437957.472271786333551054",
-          "balance_increase": "0.99",
-          "relative_increase_pct": "0.00",
-          "history_hours": 28.672,
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "0.000000000000000001",
+          "balance_after": "2613.216102996508431329",
+          "balance_increase": "2613.216102996508431328",
+          "relative_increase_pct": "261321610299650843132800.00",
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "0.99"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "2613.216102996508431328"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "0.99"
+              "actual_observed_hours": 46.409,
+              "balance_delta": "-26974.479926627799690441"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "0.99"
+              "actual_observed_hours": 46.409,
+              "balance_delta": "-26974.479926627799690441"
+            }
+          },
+          "chain_interval_verified": false,
+          "transfer_net_reconciled": false,
+          "incoming_transactions": 0,
+          "net_transfer_amount": null,
+          "inbound_provenance": {
+            "unique_inflow_sources": 0,
+            "unique_inflow_blocks": 0,
+            "known_dex_inflow_transactions": 0,
+            "known_dex_inflow_share_of_amount": null,
+            "source_breadth_for_research": false,
+            "dex_dominated": false,
+            "origin_ownership_still_unverified": true
+          },
+          "evidence_txs": [],
+          "status": "NOT_CORROBORATED",
+          "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
+        }
+      ],
+      "other_holder_increases_excluded": [],
+      "missing_evidence": [
+        "CHAIN_LATEST_SCAN_PARTIAL_OR_UNKNOWN",
+        "NO_VERIFIED_EXCHANGE_OWNERSHIP",
+        "DEX_LP_EVENTS_NOT_CLASSIFIED",
+        "SPOT_TAKER_DIRECTION_NOT_CAPTURED",
+        "ORDERBOOK_DEPTH_NOT_CAPTURED",
+        "CEX_INTERNAL_EXTERNAL_CLUSTER_NOT_PROVEN"
+      ],
+      "note": "Transfer logs are not market purchases; EOA and CEX ownership are not proven."
+    },
+    {
+      "coin": "TRUST",
+      "chain": "base",
+      "contract": "0x6cd905df2ed214b22e0d48ff17cd4200c1c6d8a3",
+      "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
+      "strong_signal": false,
+      "buy_signal": false,
+      "chain_cursor": 58712885,
+      "latest_chain_status": "PARTIAL",
+      "chain_head": 60859837,
+      "chain_currently_complete": false,
+      "verified_cex_wallet_count": 0,
+      "exchange_tag_unverified_count": 2,
+      "dynamically_monitored_eoa_addresses": 19,
+      "observed_events_last_5000_blocks": 25,
+      "flow_event_type_counts": {
+        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 19,
+        "CONTRACT_OR_PROXY_UNRESOLVED": 4,
+        "DEX_SWAP_OR_LP_UNRESOLVED": 2
+      },
+      "largest_movements": [
+        {
+          "tx": "0x2d5cd5ef5b7ae1ea223dfe115cb6966f8ea4cd65d4eaa6c5bef11f44a5055a2f",
+          "block": 58711608,
+          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
+          "from": "0xe92e65049b3c2ca12806e9567b08895118c5a03f",
+          "to": "0x5845951d59036bcd012be6ddc53e92f377b8bca6",
+          "amount_raw": "388657050000000000000000"
+        },
+        {
+          "tx": "0xacbaad8e49dd02eff790f164710b62b6959e9f3d6b76fcc24954f44ee45a60b3",
+          "block": 58712239,
+          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
+          "from": "0xb7333d779c6ecdfc4507a53706b0e173bd086a18",
+          "to": "0x242e2d70d3adc00a9ef23ced6e88811fcefca788",
+          "amount_raw": "53295000000000000000000"
+        },
+        {
+          "tx": "0x4a44fa79c3792465d0d284dcc11303784611ea356ea5829570ab7afeb0cdb33d",
+          "block": 58711311,
+          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
+          "from": "0x5c29b4e68a54ab093084aa6bcd376abcc8029b7b",
+          "to": "0xfed2399b20011af1fc985d5354f12cbc57ed48f9",
+          "amount_raw": "26870000000000000000000"
+        },
+        {
+          "tx": "0x19fc05d35ee3cf8d8a842f047d306230eaa8f31fae0814680eaf1ca476b4254b",
+          "block": 58712246,
+          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
+          "from": "0xfed2399b20011af1fc985d5354f12cbc57ed48f9",
+          "to": "0xed9ab5bc05a0152b9dc2f7902e8369af7bc18771",
+          "amount_raw": "26870000000000000000000"
+        },
+        {
+          "tx": "0x5cd834c07a92ad9023d0da648ec291fe88c229808160952ff4ad61fc4dfae1aa",
+          "block": 58709604,
+          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
+          "from": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
+          "to": "0x5d44654e55b9ac1c078addb3b54efe6a41b7d5f5",
+          "amount_raw": "25367940000000000000000"
+        }
+      ],
+      "wallet_accumulation_candidates": [],
+      "wallet_observations_not_corrobated": [],
+      "other_holder_increases_excluded": [],
+      "missing_evidence": [
+        "CHAIN_LATEST_SCAN_PARTIAL_OR_UNKNOWN",
+        "NO_VERIFIED_EXCHANGE_OWNERSHIP",
+        "DEX_LP_EVENTS_NOT_CLASSIFIED",
+        "SPOT_TAKER_DIRECTION_NOT_CAPTURED",
+        "ORDERBOOK_DEPTH_NOT_CAPTURED",
+        "CEX_INTERNAL_EXTERNAL_CLUSTER_NOT_PROVEN"
+      ],
+      "note": "Transfer logs are not market purchases; EOA and CEX ownership are not proven."
+    },
+    {
+      "coin": "B2",
+      "chain": "bsc",
+      "contract": "0x783c3f003f172c6ac5ac700218a357d2d66ee2a2",
+      "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
+      "strong_signal": false,
+      "buy_signal": false,
+      "chain_cursor": 134744300,
+      "latest_chain_status": "PARTIAL",
+      "chain_head": 135105043,
+      "chain_currently_complete": false,
+      "verified_cex_wallet_count": 0,
+      "exchange_tag_unverified_count": 5,
+      "dynamically_monitored_eoa_addresses": 4,
+      "observed_events_last_5000_blocks": 83,
+      "flow_event_type_counts": {
+        "DEX_SWAP_OR_LP_UNRESOLVED": 75,
+        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 8
+      },
+      "largest_movements": [
+        {
+          "tx": "0xac27d1e4765f55a6e39f14a09c8bf9f6a764f7675458ba4dacc22452828baa7d",
+          "block": 134742211,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0xc1a780989734a0e5df875cebe410748562e1c5e6",
+          "to": "0x35f9c573ce5ec99a5c373f8b9cd9f6691826fb8b",
+          "amount_raw": "1570595850845783131852"
+        },
+        {
+          "tx": "0xa845402678443fcd3640f6e2dacc47b8b3c120664c0230cd5a5159c4a1b02398",
+          "block": 134742269,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0xc1a780989734a0e5df875cebe410748562e1c5e6",
+          "to": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
+          "amount_raw": "985081839541455784584"
+        },
+        {
+          "tx": "0x9609cb24f39716feab0cb4597698b3b15b90ab784a3116f80121323b1a9d2577",
+          "block": 134743044,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0xc1a780989734a0e5df875cebe410748562e1c5e6",
+          "to": "0x7c4c7ac39f3db79b10400b17a2f67dd6a4e9fec3",
+          "amount_raw": "840953928693788170103"
+        },
+        {
+          "tx": "0x7aaeec6ebd98dbecbdca9419b4c72eee45a4b9aeff4ded0e2b366834f7df6b07",
+          "block": 134742799,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
+          "to": "0xc1a780989734a0e5df875cebe410748562e1c5e6",
+          "amount_raw": "768164394151474695898"
+        },
+        {
+          "tx": "0x6a9aa90633c7047446d8980db05ad44d13876c8fa599b883445548ce2a17f649",
+          "block": 134742852,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0xc1a780989734a0e5df875cebe410748562e1c5e6",
+          "to": "0xb3e17d2ebbd710be53ecd8e8727337a8dd792811",
+          "amount_raw": "663813027119679158807"
+        }
+      ],
+      "wallet_accumulation_candidates": [],
+      "wallet_observations_not_corrobated": [
+        {
+          "address": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
+          "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
+          "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+          "identity_confidence": "onchain_code_zero_owner_unknown",
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "15980.723760748216282581",
+          "balance_after": "17334.724752284391982633",
+          "balance_increase": "1354.000991536175700052",
+          "relative_increase_pct": "8.47",
+          "history_hours": 27.94,
+          "full_24h_baseline": true,
+          "dynamically_discovered": true,
+          "ownership_verified": false,
+          "windows": {
+            "24h": {
+              "baseline_complete": true,
+              "actual_observed_hours": 27.94,
+              "balance_delta": "1354.000991536175700052"
+            },
+            "168h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 130.332,
+              "balance_delta": "4497.527342891455053733"
+            },
+            "720h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 130.332,
+              "balance_delta": "4497.527342891455053733"
+            }
+          },
+          "chain_interval_verified": false,
+          "transfer_net_reconciled": false,
+          "incoming_transactions": 0,
+          "net_transfer_amount": null,
+          "inbound_provenance": {
+            "unique_inflow_sources": 0,
+            "unique_inflow_blocks": 0,
+            "known_dex_inflow_transactions": 0,
+            "known_dex_inflow_share_of_amount": null,
+            "source_breadth_for_research": false,
+            "dex_dominated": false,
+            "origin_ownership_still_unverified": true
+          },
+          "evidence_txs": [],
+          "status": "NOT_CORROBORATED",
+          "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
+        },
+        {
+          "address": "0xb743d3f5e241b842a92cd16ded1344ba8749453e",
+          "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
+          "label": "Monitored EOA (unknown owner)",
+          "identity_confidence": "onchain_EOA_candidate_owner_unknown",
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "34449.856324699034537119",
+          "balance_after": "34929.50493955784558587",
+          "balance_increase": "479.648614858811048751",
+          "relative_increase_pct": "1.39",
+          "history_hours": 27.951,
+          "full_24h_baseline": true,
+          "dynamically_discovered": false,
+          "ownership_verified": false,
+          "windows": {
+            "24h": {
+              "baseline_complete": true,
+              "actual_observed_hours": 27.951,
+              "balance_delta": "479.648614858811048751"
+            },
+            "168h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 133.173,
+              "balance_delta": "88.410552029028144554"
+            },
+            "720h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 133.173,
+              "balance_delta": "88.410552029028144554"
             }
           },
           "chain_interval_verified": false,
@@ -1769,31 +2089,31 @@
           "wallet_kind": "CONTRACT_OR_PROXY_NOT_INDEPENDENT",
           "label": "Binance Wallet Proxy",
           "identity_confidence": "third_party_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "33726914.807707170886794607",
-          "balance_after": "34755500.07923261131598633",
-          "balance_increase": "1028585.271525440429191723",
-          "relative_increase_pct": "3.05",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "34417738.764438291331165004",
+          "balance_after": "34783023.212870386315465044",
+          "balance_increase": "365284.44843209498430004",
+          "relative_increase_pct": "1.06",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "1028585.271525440429191723"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "365284.44843209498430004"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "1245509.346674831713890448"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "1273032.480312606713369162"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "1245509.346674831713890448"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "1273032.480312606713369162"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -1803,31 +2123,65 @@
           "wallet_kind": "EXCHANGE_TAG_UNVERIFIED",
           "label": "Gate.io hot",
           "identity_confidence": "radar_label_or_external_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "904954.413643891399990314",
-          "balance_after": "3003853.556930314966532797",
-          "balance_increase": "2098899.143286423566542483",
-          "relative_increase_pct": "231.93",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "497854.02557824",
+          "balance_after": "2859672.564218514966532797",
+          "balance_increase": "2361818.538640274966532797",
+          "relative_increase_pct": "474.40",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "2098899.143286423566542483"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "2361818.538640274966532797"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "631314.797410591016035355"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "487133.804698791016035355"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "631314.797410591016035355"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "487133.804698791016035355"
+            }
+          },
+          "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
+        },
+        {
+          "address": "0xc1a780989734a0e5df875cebe410748562e1c5e6",
+          "wallet_kind": "DEX_OR_POOL_UNVERIFIED",
+          "label": "v3 pool locator",
+          "identity_confidence": "source_mapping",
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "912747.946498743278487817",
+          "balance_after": "939177.086136971441242826",
+          "balance_increase": "26429.139638228162755009",
+          "relative_increase_pct": "2.90",
+          "history_hours": 27.951,
+          "full_24h_baseline": true,
+          "dynamically_discovered": false,
+          "ownership_verified": false,
+          "windows": {
+            "24h": {
+              "baseline_complete": true,
+              "actual_observed_hours": 27.951,
+              "balance_delta": "26429.139638228162755009"
+            },
+            "168h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 133.173,
+              "balance_delta": "-46802.359366862712836758"
+            },
+            "720h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 133.173,
+              "balance_delta": "-46802.359366862712836758"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -1850,58 +2204,59 @@
       "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
       "strong_signal": false,
       "buy_signal": false,
-      "chain_cursor": 134732300,
+      "chain_cursor": 134744300,
       "latest_chain_status": "PARTIAL",
-      "chain_head": 135039554,
+      "chain_head": 135105043,
       "chain_currently_complete": false,
       "verified_cex_wallet_count": 0,
       "exchange_tag_unverified_count": 5,
       "dynamically_monitored_eoa_addresses": 6,
-      "observed_events_last_5000_blocks": 39,
+      "observed_events_last_5000_blocks": 199,
       "flow_event_type_counts": {
-        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 36,
-        "CONTRACT_OR_PROXY_UNRESOLVED": 3
+        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 197,
+        "CONTRACT_OR_PROXY_UNRESOLVED": 1,
+        "UNVERIFIED_EXCHANGE_TAG_MOVEMENT": 1
       },
       "largest_movements": [
         {
-          "tx": "0x1fbd3fde9b77ae3a64765f2c7d8261223408e3ced9c7b84360d321d7c6caec5d",
-          "block": 134732163,
+          "tx": "0x1ce9ce8bb7b33e237a0be59fd8ca440fd49015027ca4ef027183d5bb55c32c2d",
+          "block": 134742781,
+          "kind": "CONTRACT_OR_PROXY_UNRESOLVED",
+          "from": "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db",
+          "to": "0xa7e8a551656239465d9579fa783ad83858bc039c",
+          "amount_raw": "354802660000000000000000"
+        },
+        {
+          "tx": "0x1b69e2ed7816df10f78a214f3062686a48381073d2255c98bc078be900745328",
+          "block": 134743054,
+          "kind": "UNVERIFIED_EXCHANGE_TAG_MOVEMENT",
+          "from": "0xa7e8a551656239465d9579fa783ad83858bc039c",
+          "to": "0xed9ab5bc05a0152b9dc2f7902e8369af7bc18771",
+          "amount_raw": "354802660000000000000000"
+        },
+        {
+          "tx": "0xecca636eb6872c06e7b4df12f84bbd1b77740d99b88c06a19470a436cd9ba53c",
+          "block": 134742942,
           "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
-          "from": "0x238a358808379702088667322f80ac48bad5e6c4",
-          "to": "0x5836abdf71efa0e5dd5a590aba36ed5ae75730ac",
-          "amount_raw": "4560198108090272934000"
+          "from": "0x7b53b8607ad489a1a2e3249984cb63b7080f2bbb",
+          "to": "0x17516b91bfcce77ede028e875cde37a8a4b113cd",
+          "amount_raw": "10000000000000000000000"
         },
         {
-          "tx": "0xb2e26a59593cc4bdbde2588299d0cc2400e24bfea5f5661d006217639310e758",
-          "block": 134731913,
+          "tx": "0xecca636eb6872c06e7b4df12f84bbd1b77740d99b88c06a19470a436cd9ba53c",
+          "block": 134742942,
           "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
-          "from": "0x238a358808379702088667322f80ac48bad5e6c4",
-          "to": "0xee381ac03d1b2147e394f5812e9aa60e18d6ae80",
-          "amount_raw": "2727277415118826945850"
+          "from": "0x17516b91bfcce77ede028e875cde37a8a4b113cd",
+          "to": "0x238a358808379702088667322f80ac48bad5e6c4",
+          "amount_raw": "10000000000000000000000"
         },
         {
-          "tx": "0xdd196c7f975f194651aca924eefede5dd43879b6e1472b55fb54466ef1b45c4d",
-          "block": 134732188,
-          "kind": "CONTRACT_OR_PROXY_UNRESOLVED",
-          "from": "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db",
-          "to": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
-          "amount_raw": "2381610320000000000000"
-        },
-        {
-          "tx": "0xad9d686a98242aa5e5d98719738ef922a8a5787920c8d0697314a9b4819eaef5",
-          "block": 134732111,
-          "kind": "CONTRACT_OR_PROXY_UNRESOLVED",
-          "from": "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db",
-          "to": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
-          "amount_raw": "2381610310000000000000"
-        },
-        {
-          "tx": "0xf1887c441d9dd5ffee1e43679a429eff7f8f69b2ef7bcba75eaaffcf07d41b4a",
-          "block": 134732244,
-          "kind": "CONTRACT_OR_PROXY_UNRESOLVED",
-          "from": "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db",
-          "to": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
-          "amount_raw": "2381528710000000000000"
+          "tx": "0x263554753224d0c522d39b808956c20acc02f835e7934b0976fd22b196ed120d",
+          "block": 134742954,
+          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
+          "from": "0x7b53b8607ad489a1a2e3249984cb63b7080f2bbb",
+          "to": "0x17516b91bfcce77ede028e875cde37a8a4b113cd",
+          "amount_raw": "10000000000000000000000"
         }
       ],
       "wallet_accumulation_candidates": [],
@@ -1911,31 +2266,80 @@
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "202074.331451742284329997",
-          "balance_after": "311573.889725806384907193",
-          "balance_increase": "109499.558274064100577196",
-          "relative_increase_pct": "54.19",
-          "history_hours": 28.672,
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "276109.568682915386540409",
+          "balance_after": "338122.640677706749733142",
+          "balance_increase": "62013.071994791363192733",
+          "relative_increase_pct": "22.46",
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "109499.558274064100577196"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "62013.071994791363192733"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 116.228,
-              "balance_delta": "309319.807594853336360118"
+              "actual_observed_hours": 124.429,
+              "balance_delta": "335868.558546753701186067"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 116.228,
-              "balance_delta": "309319.807594853336360118"
+              "actual_observed_hours": 124.429,
+              "balance_delta": "335868.558546753701186067"
+            }
+          },
+          "chain_interval_verified": false,
+          "transfer_net_reconciled": false,
+          "incoming_transactions": 0,
+          "net_transfer_amount": null,
+          "inbound_provenance": {
+            "unique_inflow_sources": 0,
+            "unique_inflow_blocks": 0,
+            "known_dex_inflow_transactions": 0,
+            "known_dex_inflow_share_of_amount": null,
+            "source_breadth_for_research": false,
+            "dex_dominated": false,
+            "origin_ownership_still_unverified": true
+          },
+          "evidence_txs": [],
+          "status": "NOT_CORROBORATED",
+          "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
+        },
+        {
+          "address": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
+          "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
+          "label": "Monitored EOA (unknown owner)",
+          "identity_confidence": "onchain_EOA_candidate_owner_unknown",
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "199982.639945364358822334",
+          "balance_after": "211079.181414889303645333",
+          "balance_increase": "11096.541469524944822999",
+          "relative_increase_pct": "5.55",
+          "history_hours": 27.951,
+          "full_24h_baseline": true,
+          "dynamically_discovered": false,
+          "ownership_verified": false,
+          "windows": {
+            "24h": {
+              "baseline_complete": true,
+              "actual_observed_hours": 27.951,
+              "balance_delta": "11096.541469524944822999"
+            },
+            "168h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 133.173,
+              "balance_delta": "-2328.095559825176552726"
+            },
+            "720h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 133.173,
+              "balance_delta": "-2328.095559825176552726"
             }
           },
           "chain_interval_verified": false,
@@ -1962,31 +2366,31 @@
           "wallet_kind": "HOLDER_OWNER_UNVERIFIED",
           "label": null,
           "identity_confidence": "holder_only",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "58559420.005274395830013534",
-          "balance_after": "63345507.000072502625092727",
-          "balance_increase": "4786086.994798106795079193",
-          "relative_increase_pct": "8.17",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "60226985.483179595830013534",
+          "balance_after": "64322818.920337962625092727",
+          "balance_increase": "4095833.437158366795079193",
+          "relative_increase_pct": "6.80",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "4786086.994798106795079193"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "4095833.437158366795079193"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "7586687.170357982050222349"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "8563999.090623442050222349"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "7586687.170357982050222349"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "8563999.090623442050222349"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -1996,65 +2400,31 @@
           "wallet_kind": "EXCHANGE_TAG_UNVERIFIED",
           "label": "Bitget-tagged large wallet",
           "identity_confidence": "third_party_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "15862647.24906503",
-          "balance_after": "16923842.77820245",
-          "balance_increase": "1061195.52913742",
-          "relative_increase_pct": "6.69",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "16447992.06130031",
+          "balance_after": "17532296.95644102",
+          "balance_increase": "1084304.89514071",
+          "relative_increase_pct": "6.59",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "1061195.52913742"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "1084304.89514071"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "-1547710.4547864"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "-939256.27654783"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "-1547710.4547864"
-            }
-          },
-          "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
-        },
-        {
-          "address": "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db",
-          "wallet_kind": "CONTRACT_OR_PROXY_NOT_INDEPENDENT",
-          "label": "Binance Wallet Proxy",
-          "identity_confidence": "third_party_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "17350035.894819440648317389",
-          "balance_after": "20604455.709031923851269213",
-          "balance_increase": "3254419.814212483202951824",
-          "relative_increase_pct": "18.76",
-          "history_hours": 28.678,
-          "full_24h_baseline": true,
-          "dynamically_discovered": false,
-          "ownership_verified": false,
-          "windows": {
-            "24h": {
-              "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "3254419.814212483202951824"
-            },
-            "168h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "8657884.879091152347030421"
-            },
-            "720h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "8657884.879091152347030421"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "-939256.27654783"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -2064,31 +2434,65 @@
           "wallet_kind": "EXCHANGE_TAG_UNVERIFIED",
           "label": "Gate.io hot",
           "identity_confidence": "radar_label_or_external_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "2887060.70702736650314921",
-          "balance_after": "3823949.19144494301184921",
-          "balance_increase": "936888.4844175765087",
-          "relative_increase_pct": "32.45",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "3147455.16095723126314921",
+          "balance_after": "4647263.202404395865591333",
+          "balance_increase": "1499808.041447164602442123",
+          "relative_increase_pct": "47.65",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "936888.4844175765087"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "1499808.041447164602442123"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "2719347.66649812877402"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "3542661.677457581627762123"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "2719347.66649812877402"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "3542661.677457581627762123"
+            }
+          },
+          "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
+        },
+        {
+          "address": "0xed9ab5bc05a0152b9dc2f7902e8369af7bc18771",
+          "wallet_kind": "EXCHANGE_TAG_UNVERIFIED",
+          "label": "Bitget hot (radar attribution)",
+          "identity_confidence": "radar_label_or_external_tag",
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "1884620.644911127476",
+          "balance_after": "2552741.395211819141",
+          "balance_increase": "668120.750300691665",
+          "relative_increase_pct": "35.45",
+          "history_hours": 27.951,
+          "full_24h_baseline": true,
+          "dynamically_discovered": false,
+          "ownership_verified": false,
+          "windows": {
+            "24h": {
+              "baseline_complete": true,
+              "actual_observed_hours": 27.951,
+              "balance_delta": "668120.750300691665"
+            },
+            "168h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 133.173,
+              "balance_delta": "2357590.74421205412"
+            },
+            "720h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 133.173,
+              "balance_delta": "2357590.74421205412"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -2111,59 +2515,58 @@
       "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
       "strong_signal": false,
       "buy_signal": false,
-      "chain_cursor": 134732300,
+      "chain_cursor": 134744300,
       "latest_chain_status": "PARTIAL",
-      "chain_head": 135039554,
+      "chain_head": 135105043,
       "chain_currently_complete": false,
       "verified_cex_wallet_count": 0,
       "exchange_tag_unverified_count": 6,
       "dynamically_monitored_eoa_addresses": 5,
-      "observed_events_last_5000_blocks": 75,
+      "observed_events_last_5000_blocks": 29,
       "flow_event_type_counts": {
-        "DEX_SWAP_OR_LP_UNRESOLVED": 64,
-        "CONTRACT_OR_PROXY_UNRESOLVED": 3,
-        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 8
+        "DEX_SWAP_OR_LP_UNRESOLVED": 26,
+        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 3
       },
       "largest_movements": [
         {
-          "tx": "0xab6867d1eddaf10df86f35d31657edb060c8cd59bf20282be504de974b651d95",
-          "block": 134729595,
+          "tx": "0x1590f39dd3f5406495904b49fe552ec317c8673e46f29856783b18fd072742dd",
+          "block": 134742934,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x76801132a22801640284cd67f7dd41fed2926b6a",
+          "to": "0x90166b5795250fe7f0831e844121cc91799787e9",
+          "amount_raw": "14917626536413169188864"
+        },
+        {
+          "tx": "0xdd568bd8f28a7a45d659926e4f1e055071730d4b4b70d4ec90e1f746cc512ac8",
+          "block": 134742660,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
           "from": "0x90166b5795250fe7f0831e844121cc91799787e9",
           "to": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
-          "amount_raw": "30748865647061313676400"
+          "amount_raw": "11708443858997410831321"
         },
         {
-          "tx": "0xbf9f4e0d08144682bb84adbce27aca58e5893fed14d5668f04a4ea3ddaa92428",
-          "block": 134730098,
-          "kind": "CONTRACT_OR_PROXY_UNRESOLVED",
-          "from": "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db",
-          "to": "0x6aba0315493b7e6989041c91181337b662fb1b90",
-          "amount_raw": "29893240377000000000000"
-        },
-        {
-          "tx": "0xbf9f4e0d08144682bb84adbce27aca58e5893fed14d5668f04a4ea3ddaa92428",
-          "block": 134730098,
-          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
-          "from": "0x6aba0315493b7e6989041c91181337b662fb1b90",
-          "to": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
-          "amount_raw": "29893240377000000000000"
-        },
-        {
-          "tx": "0xbf9f4e0d08144682bb84adbce27aca58e5893fed14d5668f04a4ea3ddaa92428",
-          "block": 134730098,
-          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
-          "from": "0xb300000b72deaeb607a12d5f54773d1c19c7028d",
-          "to": "0x5e2dc2eeab4f1ab9ea12abcf1321d2a8b34f584a",
-          "amount_raw": "29893240377000000000000"
-        },
-        {
-          "tx": "0xbf9f4e0d08144682bb84adbce27aca58e5893fed14d5668f04a4ea3ddaa92428",
-          "block": 134730098,
+          "tx": "0x6f345b9e59b79067f255e2fdcca534a4c95e1e65cc626f48600a8966bf460a66",
+          "block": 134743058,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0x5e2dc2eeab4f1ab9ea12abcf1321d2a8b34f584a",
+          "from": "0x90166b5795250fe7f0831e844121cc91799787e9",
+          "to": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
+          "amount_raw": "11258939151833041270178"
+        },
+        {
+          "tx": "0xb7be5b282710a368b781511ed5323904b4aeff3ad1e68b16ac1847bd2ef3b809",
+          "block": 134742839,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x90166b5795250fe7f0831e844121cc91799787e9",
+          "to": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
+          "amount_raw": "9736295318564824166016"
+        },
+        {
+          "tx": "0x3bb4e1566e4e28eca730a0c1403b67f8f99f68f2320d01c858fba852010f386c",
+          "block": 134743007,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
           "to": "0x90166b5795250fe7f0831e844121cc91799787e9",
-          "amount_raw": "29893240377000000000000"
+          "amount_raw": "9543521116894702621754"
         }
       ],
       "wallet_accumulation_candidates": [],
@@ -2173,80 +2576,31 @@
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
+          "first_block": 134882872,
+          "last_block": 135106304,
           "balance_before": "175468.64766927855",
-          "balance_after": "183558.47321211855",
-          "balance_increase": "8089.82554284",
-          "relative_increase_pct": "4.61",
-          "history_hours": 28.672,
+          "balance_after": "188064.64502937855",
+          "balance_increase": "12595.9973601",
+          "relative_increase_pct": "7.18",
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "8089.82554284"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "12595.9973601"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 38.207,
-              "balance_delta": "8089.82554284"
+              "actual_observed_hours": 46.409,
+              "balance_delta": "12595.9973601"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 38.207,
-              "balance_delta": "8089.82554284"
-            }
-          },
-          "chain_interval_verified": false,
-          "transfer_net_reconciled": false,
-          "incoming_transactions": 0,
-          "net_transfer_amount": null,
-          "inbound_provenance": {
-            "unique_inflow_sources": 0,
-            "unique_inflow_blocks": 0,
-            "known_dex_inflow_transactions": 0,
-            "known_dex_inflow_share_of_amount": null,
-            "source_breadth_for_research": false,
-            "dex_dominated": false,
-            "origin_ownership_still_unverified": true
-          },
-          "evidence_txs": [],
-          "status": "NOT_CORROBORATED",
-          "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
-        },
-        {
-          "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
-          "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
-          "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
-          "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "0.004181093069794168",
-          "balance_after": "4850.894166069345354218",
-          "balance_increase": "4850.88998497627556005",
-          "relative_increase_pct": "116019660.51",
-          "history_hours": 28.672,
-          "full_24h_baseline": true,
-          "dynamically_discovered": true,
-          "ownership_verified": false,
-          "windows": {
-            "24h": {
-              "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "4850.88998497627556005"
-            },
-            "168h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 113.288,
-              "balance_delta": "-28396.148583883435734163"
-            },
-            "720h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 113.288,
-              "balance_delta": "-28396.148583883435734163"
+              "actual_observed_hours": 46.409,
+              "balance_delta": "12595.9973601"
             }
           },
           "chain_interval_verified": false,
@@ -2272,30 +2626,79 @@
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
           "first_block": 134986496,
-          "last_block": 135040717,
+          "last_block": 135106304,
           "balance_before": "161796.141491291076132669",
-          "balance_after": "163255.937873105585517264",
-          "balance_increase": "1459.796381814509384595",
-          "relative_increase_pct": "0.90",
-          "history_hours": 6.78,
+          "balance_after": "170218.890271291080476075",
+          "balance_increase": "8422.748780000004343406",
+          "relative_increase_pct": "5.21",
+          "history_hours": 14.981,
           "full_24h_baseline": false,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": false,
-              "actual_observed_hours": 6.78,
-              "balance_delta": "1459.796381814509384595"
+              "actual_observed_hours": 14.981,
+              "balance_delta": "8422.748780000004343406"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 6.78,
-              "balance_delta": "1459.796381814509384595"
+              "actual_observed_hours": 14.981,
+              "balance_delta": "8422.748780000004343406"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 6.78,
-              "balance_delta": "1459.796381814509384595"
+              "actual_observed_hours": 14.981,
+              "balance_delta": "8422.748780000004343406"
+            }
+          },
+          "chain_interval_verified": false,
+          "transfer_net_reconciled": false,
+          "incoming_transactions": 0,
+          "net_transfer_amount": null,
+          "inbound_provenance": {
+            "unique_inflow_sources": 0,
+            "unique_inflow_blocks": 0,
+            "known_dex_inflow_transactions": 0,
+            "known_dex_inflow_share_of_amount": null,
+            "source_breadth_for_research": false,
+            "dex_dominated": false,
+            "origin_ownership_still_unverified": true
+          },
+          "evidence_txs": [],
+          "status": "NOT_CORROBORATED",
+          "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
+        },
+        {
+          "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
+          "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
+          "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+          "identity_confidence": "onchain_code_zero_owner_unknown",
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "0.000000000000000001",
+          "balance_after": "3.458062994310100243",
+          "balance_increase": "3.458062994310100242",
+          "relative_increase_pct": "345806299431010024200.00",
+          "history_hours": 27.94,
+          "full_24h_baseline": true,
+          "dynamically_discovered": true,
+          "ownership_verified": false,
+          "windows": {
+            "24h": {
+              "baseline_complete": true,
+              "actual_observed_hours": 27.94,
+              "balance_delta": "3.458062994310100242"
+            },
+            "168h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 121.489,
+              "balance_delta": "-33243.584686958470988138"
+            },
+            "720h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 121.489,
+              "balance_delta": "-33243.584686958470988138"
             }
           },
           "chain_interval_verified": false,
@@ -2322,99 +2725,31 @@
           "wallet_kind": "EXCHANGE_TAG_UNVERIFIED",
           "label": "Gate.io 5 / cold",
           "identity_confidence": "radar_label_or_external_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
+          "first_block": 134881518,
+          "last_block": 135105011,
           "balance_before": "112646667.898538877141181172",
           "balance_after": "119636654.600993836130500239",
           "balance_increase": "6989986.702454958989319067",
           "relative_increase_pct": "6.21",
-          "history_hours": 28.678,
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
+              "actual_observed_hours": 27.951,
               "balance_delta": "6989986.702454958989319067"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
+              "actual_observed_hours": 133.173,
               "balance_delta": "6989986.702454958989319067"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
+              "actual_observed_hours": 133.173,
               "balance_delta": "6989986.702454958989319067"
-            }
-          },
-          "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
-        },
-        {
-          "address": "0xafa3b16f6587e5f1938a28ab5ab1560c3c9f3536",
-          "wallet_kind": "CONTRACT_OR_PROXY_NOT_INDEPENDENT",
-          "label": null,
-          "identity_confidence": "contract_type_only",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "73497482.514761094930305549",
-          "balance_after": "73949262.310571592532417295",
-          "balance_increase": "451779.795810497602111746",
-          "relative_increase_pct": "0.61",
-          "history_hours": 28.678,
-          "full_24h_baseline": true,
-          "dynamically_discovered": false,
-          "ownership_verified": false,
-          "windows": {
-            "24h": {
-              "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "451779.795810497602111746"
-            },
-            "168h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "-395602.42740244616591697"
-            },
-            "720h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "-395602.42740244616591697"
-            }
-          },
-          "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
-        },
-        {
-          "address": "0x90166b5795250fe7f0831e844121cc91799787e9",
-          "wallet_kind": "DEX_OR_POOL_UNVERIFIED",
-          "label": "v3 pool locator",
-          "identity_confidence": "source_mapping",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "45989390.878970312388427168",
-          "balance_after": "46909579.568561677818798491",
-          "balance_increase": "920188.689591365430371323",
-          "relative_increase_pct": "2.00",
-          "history_hours": 28.678,
-          "full_24h_baseline": true,
-          "dynamically_discovered": false,
-          "ownership_verified": false,
-          "windows": {
-            "24h": {
-              "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "920188.689591365430371323"
-            },
-            "168h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "6068192.278693250474938933"
-            },
-            "720h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "6068192.278693250474938933"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -2437,16 +2772,60 @@
       "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
       "strong_signal": false,
       "buy_signal": false,
-      "chain_cursor": 134732300,
+      "chain_cursor": 134744300,
       "latest_chain_status": "PARTIAL",
-      "chain_head": 135039554,
+      "chain_head": 135105043,
       "chain_currently_complete": false,
       "verified_cex_wallet_count": 0,
       "exchange_tag_unverified_count": 5,
       "dynamically_monitored_eoa_addresses": 4,
-      "observed_events_last_5000_blocks": 0,
-      "flow_event_type_counts": {},
-      "largest_movements": [],
+      "observed_events_last_5000_blocks": 62,
+      "flow_event_type_counts": {
+        "DEX_SWAP_OR_LP_UNRESOLVED": 53,
+        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 9
+      },
+      "largest_movements": [
+        {
+          "tx": "0x4f54f8cf7fc46929beec946a39cf7e00a36afb19382887a2996d0785db1b09ad",
+          "block": 134742659,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x238a358808379702088667322f80ac48bad5e6c4",
+          "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+          "amount_raw": "15280242641443589154386"
+        },
+        {
+          "tx": "0x4e32c382b0affebf457b7d69a9f456c3217dd45021a879ff80f6e98e9b9c3213",
+          "block": 134742866,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x238a358808379702088667322f80ac48bad5e6c4",
+          "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+          "amount_raw": "13226260140315488881779"
+        },
+        {
+          "tx": "0x5e0fa762fa53ab14b5d95ff3a4ea63449ec7d7a967e119db0d5c175a45cb04dd",
+          "block": 134742726,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+          "to": "0x238a358808379702088667322f80ac48bad5e6c4",
+          "amount_raw": "6188403848487097700081"
+        },
+        {
+          "tx": "0x3d203e491b776d34ccf1205ac78fd761ebe1d5f2cbc1609910e1848410c8293d",
+          "block": 134742778,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+          "to": "0x238a358808379702088667322f80ac48bad5e6c4",
+          "amount_raw": "6154463569258801413794"
+        },
+        {
+          "tx": "0x39f01bd0674fff4d544fb22b1e3cae29e297dc7b13a04030aa925aca1131f462",
+          "block": 134742913,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+          "to": "0x238a358808379702088667322f80ac48bad5e6c4",
+          "amount_raw": "6006537664937289792091"
+        }
+      ],
       "wallet_accumulation_candidates": [],
       "wallet_observations_not_corrobated": [
         {
@@ -2454,80 +2833,31 @@
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "1611.424948778536774543",
-          "balance_after": "29453.828200637847263058",
-          "balance_increase": "27842.403251859310488515",
-          "relative_increase_pct": "1727.81",
-          "history_hours": 28.672,
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "5586.722990987377946608",
+          "balance_after": "13287.438879909992271576",
+          "balance_increase": "7700.715888922614324968",
+          "relative_increase_pct": "137.84",
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "27842.403251859310488515"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "7700.715888922614324968"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 116.228,
-              "balance_delta": "-16102.850926416856597831"
+              "actual_observed_hours": 124.429,
+              "balance_delta": "-32269.240247144711589313"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 116.228,
-              "balance_delta": "-16102.850926416856597831"
-            }
-          },
-          "chain_interval_verified": false,
-          "transfer_net_reconciled": false,
-          "incoming_transactions": 0,
-          "net_transfer_amount": null,
-          "inbound_provenance": {
-            "unique_inflow_sources": 0,
-            "unique_inflow_blocks": 0,
-            "known_dex_inflow_transactions": 0,
-            "known_dex_inflow_share_of_amount": null,
-            "source_breadth_for_research": false,
-            "dex_dominated": false,
-            "origin_ownership_still_unverified": true
-          },
-          "evidence_txs": [],
-          "status": "NOT_CORROBORATED",
-          "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
-        },
-        {
-          "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
-          "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
-          "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
-          "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "0.000000000000000001",
-          "balance_after": "56.208068527051284695",
-          "balance_increase": "56.208068527051284694",
-          "relative_increase_pct": "5620806852705128469400.00",
-          "history_hours": 28.672,
-          "full_24h_baseline": true,
-          "dynamically_discovered": true,
-          "ownership_verified": false,
-          "windows": {
-            "24h": {
-              "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "56.208068527051284694"
-            },
-            "168h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 122.722,
-              "balance_delta": "-168722.856861970067478385"
-            },
-            "720h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 122.722,
-              "balance_delta": "-168722.856861970067478385"
+              "actual_observed_hours": 124.429,
+              "balance_delta": "-32269.240247144711589313"
             }
           },
           "chain_interval_verified": false,
@@ -2552,30 +2882,30 @@
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
+          "first_block": 134882872,
+          "last_block": 135106304,
           "balance_before": "156.593789577548674185",
           "balance_after": "156.752869830616527069",
           "balance_increase": "0.159080253067852884",
           "relative_increase_pct": "0.10",
-          "history_hours": 28.672,
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
+              "actual_observed_hours": 27.94,
               "balance_delta": "0.159080253067852884"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 122.617,
+              "actual_observed_hours": 130.818,
               "balance_delta": "14.227337816974783537"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 122.617,
+              "actual_observed_hours": 130.818,
               "balance_delta": "14.227337816974783537"
             }
           },
@@ -2603,31 +2933,31 @@
           "wallet_kind": "EXCHANGE_TAG_UNVERIFIED",
           "label": "MEXC hot",
           "identity_confidence": "third_party_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "899.693379281135042768",
-          "balance_after": "77648.769011151135042768",
-          "balance_increase": "76749.07563187",
-          "relative_increase_pct": "8530.58",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "18133.069011151135042768",
+          "balance_after": "77525.709011151135042768",
+          "balance_increase": "59392.64",
+          "relative_increase_pct": "327.54",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "76749.07563187"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "59392.64"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "76155.950000007256295797"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "76032.890000007256295797"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "76155.950000007256295797"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "76032.890000007256295797"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -2637,65 +2967,31 @@
           "wallet_kind": "CONTRACT_OR_PROXY_NOT_INDEPENDENT",
           "label": "Binance Wallet Proxy",
           "identity_confidence": "third_party_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "28467622.507616777524162301",
-          "balance_after": "28975777.176917432627573666",
-          "balance_increase": "508154.669300655103411365",
-          "relative_increase_pct": "1.79",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "28239601.308213005990397128",
+          "balance_after": "29030509.786277745906333608",
+          "balance_increase": "790908.47806473991593648",
+          "relative_increase_pct": "2.80",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "508154.669300655103411365"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "790908.47806473991593648"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "78055.288170166423543618"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "132787.89753047970230356"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "78055.288170166423543618"
-            }
-          },
-          "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
-        },
-        {
-          "address": "0x537f572e9502bd2ec5d46c7ae917992cac96474f",
-          "wallet_kind": "HOLDER_OWNER_UNVERIFIED",
-          "label": "owner unknown",
-          "identity_confidence": "holder_address_verified_role_unverified",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "184.986654030761892752",
-          "balance_after": "311.944888696307850128",
-          "balance_increase": "126.958234665545957376",
-          "relative_increase_pct": "68.63",
-          "history_hours": 28.678,
-          "full_24h_baseline": true,
-          "dynamically_discovered": false,
-          "ownership_verified": false,
-          "windows": {
-            "24h": {
-              "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "126.958234665545957376"
-            },
-            "168h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "197.558974949505138688"
-            },
-            "720h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "197.558974949505138688"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "132787.89753047970230356"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -2718,58 +3014,58 @@
       "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
       "strong_signal": false,
       "buy_signal": false,
-      "chain_cursor": 134732300,
+      "chain_cursor": 134744300,
       "latest_chain_status": "PARTIAL",
-      "chain_head": 135039554,
+      "chain_head": 135105043,
       "chain_currently_complete": false,
       "verified_cex_wallet_count": 0,
       "exchange_tag_unverified_count": 5,
       "dynamically_monitored_eoa_addresses": 2,
-      "observed_events_last_5000_blocks": 32,
+      "observed_events_last_5000_blocks": 7,
       "flow_event_type_counts": {
-        "DEX_SWAP_OR_LP_UNRESOLVED": 17,
-        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 15
+        "DEX_SWAP_OR_LP_UNRESOLVED": 5,
+        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 2
       },
       "largest_movements": [
         {
-          "tx": "0x77a20274c508edebdac1d8c590461cac8118487f8d87b42b56f8be7aca432100",
-          "block": 134729649,
+          "tx": "0x2430bf3fa39c7a37e657dffef2c665931857569ae7b75538d4efde4c284b3e34",
+          "block": 134742872,
           "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
           "from": "0xfafdd70cd35ef9eeb46032a59cfe1433a8356ca2",
-          "to": "0xfbf990fe8328355427f87727aa27ab6604fde013",
-          "amount_raw": "32415354870011025160170"
+          "to": "0x537f572e9502bd2ec5d46c7ae917992cac96474f",
+          "amount_raw": "1660206250742942269440"
         },
         {
-          "tx": "0x1845ec6aac52c06db19f3bdf92fac37d25f6cb32586d4b2546308b0c44981890",
-          "block": 134729744,
+          "tx": "0x8eea58f88e58e1be32665d413a3b96d8687d9ce5ec7fa2e719a73e24d2e6cc08",
+          "block": 134742669,
           "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
-          "from": "0xfbf990fe8328355427f87727aa27ab6604fde013",
-          "to": "0x111116056ad60f0f4fb52d60852f9acd2fafca11",
-          "amount_raw": "3000000000000000000000"
+          "from": "0xfafdd70cd35ef9eeb46032a59cfe1433a8356ca2",
+          "to": "0x278d858f05b94576c1e6f73285886876ff6ef8d2",
+          "amount_raw": "838923377854808834630"
         },
         {
-          "tx": "0x64597a7e1d492e4b77de51344784c0818054a181c5c33203a26337a151fb0a22",
-          "block": 134729793,
-          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
-          "from": "0xfbf990fe8328355427f87727aa27ab6604fde013",
-          "to": "0x111116056ad60f0f4fb52d60852f9acd2fafca11",
-          "amount_raw": "3000000000000000000000"
-        },
-        {
-          "tx": "0x6cdf85f40bbc993a3717105dcf69c529c76efe991f497ee6359744ef14753a4b",
-          "block": 134729832,
-          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
-          "from": "0xfbf990fe8328355427f87727aa27ab6604fde013",
-          "to": "0x111116056ad60f0f4fb52d60852f9acd2fafca11",
-          "amount_raw": "3000000000000000000000"
-        },
-        {
-          "tx": "0x6cdf85f40bbc993a3717105dcf69c529c76efe991f497ee6359744ef14753a4b",
-          "block": 134729832,
+          "tx": "0x0c667720cb9c6867f21a386727569e77af8c81ac90c2f0031e3258a3796da31f",
+          "block": 134742942,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0x111116056ad60f0f4fb52d60852f9acd2fafca11",
+          "from": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
           "to": "0x97620e003c03381eacbde7135f28d94303bb5672",
-          "amount_raw": "2751720000000000000000"
+          "amount_raw": "483588262013937979549"
+        },
+        {
+          "tx": "0x584e3e4f8b1f50b92b1be44112f97133e11ff00978e3db3adf022b87f45a83bc",
+          "block": 134742669,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x97620e003c03381eacbde7135f28d94303bb5672",
+          "to": "0x278d858f05b94576c1e6f73285886876ff6ef8d2",
+          "amount_raw": "435536238133229262833"
+        },
+        {
+          "tx": "0xe226bec35fe51bc611a13c7913bc099a0289b26b897cea39722d13b95f86368e",
+          "block": 134742872,
+          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
+          "from": "0x97620e003c03381eacbde7135f28d94303bb5672",
+          "to": "0x278d858f05b94576c1e6f73285886876ff6ef8d2",
+          "amount_raw": "364411375523753668055"
         }
       ],
       "wallet_accumulation_candidates": [],
@@ -2779,31 +3075,80 @@
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "413700.491143319747243116",
-          "balance_after": "427407.516238113805081906",
-          "balance_increase": "13707.02509479405783879",
-          "relative_increase_pct": "3.31",
-          "history_hours": 28.672,
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "421841.94766076105493573",
+          "balance_after": "460810.622299398044536306",
+          "balance_increase": "38968.674638636989600576",
+          "relative_increase_pct": "9.24",
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "13707.02509479405783879"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "38968.674638636989600576"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 120.098,
-              "balance_delta": "52022.392101474875732869"
+              "actual_observed_hours": 128.3,
+              "balance_delta": "85425.498162759115187269"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 120.098,
-              "balance_delta": "52022.392101474875732869"
+              "actual_observed_hours": 128.3,
+              "balance_delta": "85425.498162759115187269"
+            }
+          },
+          "chain_interval_verified": false,
+          "transfer_net_reconciled": false,
+          "incoming_transactions": 0,
+          "net_transfer_amount": null,
+          "inbound_provenance": {
+            "unique_inflow_sources": 0,
+            "unique_inflow_blocks": 0,
+            "known_dex_inflow_transactions": 0,
+            "known_dex_inflow_share_of_amount": null,
+            "source_breadth_for_research": false,
+            "dex_dominated": false,
+            "origin_ownership_still_unverified": true
+          },
+          "evidence_txs": [],
+          "status": "NOT_CORROBORATED",
+          "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
+        },
+        {
+          "address": "0x0f0067cd819cb8f20bda62046daff7a2b5c88280",
+          "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
+          "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
+          "identity_confidence": "onchain_code_zero_owner_unknown",
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "146.265270554511011052",
+          "balance_after": "4613.554584151599508846",
+          "balance_increase": "4467.289313597088497794",
+          "relative_increase_pct": "3054.24",
+          "history_hours": 27.94,
+          "full_24h_baseline": true,
+          "dynamically_discovered": true,
+          "ownership_verified": false,
+          "windows": {
+            "24h": {
+              "baseline_complete": true,
+              "actual_observed_hours": 27.94,
+              "balance_delta": "4467.289313597088497794"
+            },
+            "168h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 111.754,
+              "balance_delta": "-4167.982053960180074307"
+            },
+            "720h": {
+              "baseline_complete": false,
+              "actual_observed_hours": 111.754,
+              "balance_delta": "-4167.982053960180074307"
             }
           },
           "chain_interval_verified": false,
@@ -2824,42 +3169,7 @@
           "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
         }
       ],
-      "other_holder_increases_excluded": [
-        {
-          "address": "0x97620e003c03381eacbde7135f28d94303bb5672",
-          "wallet_kind": "DEX_OR_POOL_UNVERIFIED",
-          "label": "v3 pool locator",
-          "identity_confidence": "source_mapping",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "288858.914082540748283104",
-          "balance_after": "305552.060385142429062098",
-          "balance_increase": "16693.146302601680778994",
-          "relative_increase_pct": "5.78",
-          "history_hours": 28.678,
-          "full_24h_baseline": true,
-          "dynamically_discovered": false,
-          "ownership_verified": false,
-          "windows": {
-            "24h": {
-              "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "16693.146302601680778994"
-            },
-            "168h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "46994.501923331815436605"
-            },
-            "720h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "46994.501923331815436605"
-            }
-          },
-          "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
-        }
-      ],
+      "other_holder_increases_excluded": [],
       "missing_evidence": [
         "CHAIN_LATEST_SCAN_PARTIAL_OR_UNKNOWN",
         "NO_VERIFIED_EXCHANGE_OWNERSHIP",
@@ -2877,91 +3187,94 @@
       "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
       "strong_signal": false,
       "buy_signal": false,
-      "chain_cursor": 134732300,
+      "chain_cursor": 134744300,
       "latest_chain_status": "PARTIAL",
-      "chain_head": 135039554,
+      "chain_head": 135105043,
       "chain_currently_complete": false,
       "verified_cex_wallet_count": 0,
       "exchange_tag_unverified_count": 5,
       "dynamically_monitored_eoa_addresses": 6,
-      "observed_events_last_5000_blocks": 34,
+      "observed_events_last_5000_blocks": 134,
       "flow_event_type_counts": {
-        "DEX_SWAP_OR_LP_UNRESOLVED": 34
+        "DEX_SWAP_OR_LP_UNRESOLVED": 101,
+        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 31,
+        "CONTRACT_OR_PROXY_UNRESOLVED": 1,
+        "UNVERIFIED_EXCHANGE_TAG_MOVEMENT": 1
       },
       "largest_movements": [
         {
-          "tx": "0x3cb0d295dea51655ea128e605cdf4701f3b53899efcff5d62bb032c584105f92",
-          "block": 134728059,
+          "tx": "0x7c373c761fa5bd87fa9ebe0bf5a9255946d8d8930e48972a609f64f064df3408",
+          "block": 134742924,
+          "kind": "UNKNOWN_OWNER_TO_UNKNOWN_OWNER",
+          "from": "0x12d2b8ac38c59758a062a9f757f2740461779439",
+          "to": "0x772e17f4d05d68bca82428c29708a08a691195a0",
+          "amount_raw": "27748052036107710000000"
+        },
+        {
+          "tx": "0xe3f90a8b6362c61e3e2e5ad2f5e2c96de71a9525f167ed42fc15a3ce539557af",
+          "block": 134743065,
+          "kind": "UNVERIFIED_EXCHANGE_TAG_MOVEMENT",
+          "from": "0x772e17f4d05d68bca82428c29708a08a691195a0",
+          "to": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+          "amount_raw": "27748052036107710000000"
+        },
+        {
+          "tx": "0x045583d13c88f23083c09490879bae999e2568b3d173c4b536acbfdbbe55d3d4",
+          "block": 134742514,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
           "from": "0xb4db9fcda97fd7b02eaf1e8317e6ddb04bacc1af",
-          "to": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
-          "amount_raw": "9997623258904897076806"
+          "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+          "amount_raw": "17835440964738880154655"
         },
         {
-          "tx": "0xf1c69fb2ac717a32450cbfafe3ca4b855b2dec1f4bfdc9ee65be89a5465c9286",
-          "block": 134728135,
-          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
-          "to": "0xb4db9fcda97fd7b02eaf1e8317e6ddb04bacc1af",
-          "amount_raw": "7331333315388473590487"
-        },
-        {
-          "tx": "0x46825477b7957429f58245f6a1898a0d30dd654658595874cb9cea5bb0f2a9ef",
-          "block": 134728017,
+          "tx": "0x246a27f3cfa995e7738ae56c8ee448960b697c8276e6119edefc01078a039ec1",
+          "block": 134741513,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
           "from": "0xb4db9fcda97fd7b02eaf1e8317e6ddb04bacc1af",
-          "to": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
-          "amount_raw": "5763357666642228717370"
+          "to": "0xee381ac03d1b2147e394f5812e9aa60e18d6ae80",
+          "amount_raw": "16318130884768691552465"
         },
         {
-          "tx": "0xee9ecc0e05c6a53a760fccf368bd9b704d1ac89b9ad1b29ca3b668d5cc0d30ab",
-          "block": 134728049,
+          "tx": "0xb4aaa3e5bc4512253ec90c831a3c8c12349eb74b52947f82c0f5a09d259a275a",
+          "block": 134742217,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
-          "to": "0xb4db9fcda97fd7b02eaf1e8317e6ddb04bacc1af",
-          "amount_raw": "5705819884408796236352"
-        },
-        {
-          "tx": "0x79bfdba1b135fb72c1f20a24e8d43fbe97c9777adf99f5face3a86217739329c",
-          "block": 134727970,
-          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
-          "to": "0xb4db9fcda97fd7b02eaf1e8317e6ddb04bacc1af",
-          "amount_raw": "5271919610167918757691"
+          "from": "0xb4db9fcda97fd7b02eaf1e8317e6ddb04bacc1af",
+          "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+          "amount_raw": "10794528245837159111719"
         }
       ],
       "wallet_accumulation_candidates": [],
       "wallet_observations_not_corrobated": [
         {
-          "address": "0xf975e7e240c59146e67971e2aa5497f0f22441ff",
+          "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
-          "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
-          "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "90174.998058944913728846",
-          "balance_after": "110092.705483973266689177",
-          "balance_increase": "19917.707425028352960331",
-          "relative_increase_pct": "22.09",
-          "history_hours": 28.672,
+          "label": "Monitored EOA (unknown owner)",
+          "identity_confidence": "onchain_EOA_candidate_owner_unknown",
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "0.000000000000000001",
+          "balance_after": "235608.482576792979565358",
+          "balance_increase": "235608.482576792979565357",
+          "relative_increase_pct": "23560848257679297956535700.00",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
-          "dynamically_discovered": true,
+          "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "19917.707425028352960331"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "235608.482576792979565357"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 120.098,
-              "balance_delta": "-28380.084988180657691925"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "-245151.090426237589196607"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 120.098,
-              "balance_delta": "-28380.084988180657691925"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "-245151.090426237589196607"
             }
           },
           "chain_interval_verified": false,
@@ -2987,29 +3300,29 @@
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
           "first_block": 134986496,
-          "last_block": 135040717,
+          "last_block": 135106304,
           "balance_before": "48988.189491074124918824",
           "balance_after": "49388.053929720207571823",
           "balance_increase": "399.864438646082652999",
           "relative_increase_pct": "0.82",
-          "history_hours": 6.78,
+          "history_hours": 14.981,
           "full_24h_baseline": false,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": false,
-              "actual_observed_hours": 6.78,
+              "actual_observed_hours": 14.981,
               "balance_delta": "399.864438646082652999"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 6.78,
+              "actual_observed_hours": 14.981,
               "balance_delta": "399.864438646082652999"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 6.78,
+              "actual_observed_hours": 14.981,
               "balance_delta": "399.864438646082652999"
             }
           },
@@ -3035,30 +3348,30 @@
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "129.221009858951870621",
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "130.472177055684691525",
           "balance_after": "147.161889193008036083",
-          "balance_increase": "17.940879334056165462",
-          "relative_increase_pct": "13.88",
-          "history_hours": 28.672,
+          "balance_increase": "16.689712137323344558",
+          "relative_increase_pct": "12.79",
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "17.940879334056165462"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "16.689712137323344558"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 110.497,
+              "actual_observed_hours": 118.699,
               "balance_delta": "-9.483392563532168871"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 110.497,
+              "actual_observed_hours": 118.699,
               "balance_delta": "-9.483392563532168871"
             }
           },
@@ -3082,69 +3395,35 @@
       ],
       "other_holder_increases_excluded": [
         {
-          "address": "0xb4db9fcda97fd7b02eaf1e8317e6ddb04bacc1af",
-          "wallet_kind": "DEX_OR_POOL_UNVERIFIED",
-          "label": "v3 pool locator",
-          "identity_confidence": "source_mapping",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "14718290.5919586191756077",
-          "balance_after": "15413727.164792587418832857",
-          "balance_increase": "695436.572833968243225157",
-          "relative_increase_pct": "4.72",
-          "history_hours": 28.678,
-          "full_24h_baseline": true,
-          "dynamically_discovered": false,
-          "ownership_verified": false,
-          "windows": {
-            "24h": {
-              "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "695436.572833968243225157"
-            },
-            "168h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "1395826.660131330297793135"
-            },
-            "720h": {
-              "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "1395826.660131330297793135"
-            }
-          },
-          "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
-        },
-        {
           "address": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
           "wallet_kind": "EXCHANGE_TAG_UNVERIFIED",
           "label": "MEXC hot",
           "identity_confidence": "third_party_tag",
-          "first_block": 134810204,
-          "last_block": 135039523,
-          "balance_before": "2258876.16194566862538527",
-          "balance_after": "2310197.3164526870301885",
-          "balance_increase": "51321.15450701840480323",
-          "relative_increase_pct": "2.27",
-          "history_hours": 28.678,
+          "first_block": 134881518,
+          "last_block": 135105011,
+          "balance_before": "2238208.712431568625475267",
+          "balance_after": "2615742.9396704650201885",
+          "balance_increase": "377534.227238896394713233",
+          "relative_increase_pct": "16.87",
+          "history_hours": 27.951,
           "full_24h_baseline": true,
           "dynamically_discovered": false,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.678,
-              "balance_delta": "51321.15450701840480323"
+              "actual_observed_hours": 27.951,
+              "balance_delta": "377534.227238896394713233"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "-1074077.606973557775892335"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "-768531.983755779785892335"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 124.981,
-              "balance_delta": "-1074077.606973557775892335"
+              "actual_observed_hours": 133.173,
+              "balance_delta": "-768531.983755779785892335"
             }
           },
           "exclusion": "NOT_VERIFIED_INDEPENDENT_EOA"
@@ -3167,93 +3446,75 @@
       "classification": "INSUFFICIENT_EVIDENCE_NOT_NO_PREPARATION",
       "strong_signal": false,
       "buy_signal": false,
-      "chain_cursor": 134732300,
+      "chain_cursor": 134744300,
       "latest_chain_status": "PARTIAL",
-      "chain_head": 135039554,
+      "chain_head": 135105043,
       "chain_currently_complete": false,
       "verified_cex_wallet_count": 0,
       "exchange_tag_unverified_count": 5,
       "dynamically_monitored_eoa_addresses": 6,
-      "observed_events_last_5000_blocks": 20,
+      "observed_events_last_5000_blocks": 3,
       "flow_event_type_counts": {
-        "UNVERIFIED_EXCHANGE_TAG_MOVEMENT": 1,
-        "DEX_SWAP_OR_LP_UNRESOLVED": 14,
-        "UNKNOWN_OWNER_TO_UNKNOWN_OWNER": 5
+        "DEX_SWAP_OR_LP_UNRESOLVED": 3
       },
       "largest_movements": [
         {
-          "tx": "0x95caa62f9e856f5f7713b8747b02e3dc5ef58ecc4e8a64bfafe9e721f6815522",
-          "block": 134731562,
+          "tx": "0x880e90660886ac0073399652873b37b1e0e4f7fde2e6eb049ac60df71833f5a0",
+          "block": 134742871,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0x7eb8317c77de6fb2e6e3495cffaaa29fee0af69a",
-          "to": "0x302642976506d247c7017b85ddc89e3956f96ba1",
-          "amount_raw": "6047508215944603784714"
+          "from": "0x302642976506d247c7017b85ddc89e3956f96ba1",
+          "to": "0x92240be371374e0be68cd529088bbf27632ef17a",
+          "amount_raw": "3102246338902955951501"
         },
         {
-          "tx": "0xf1d062323aaacb3b45519f5940cdb7f201c64a8c2bd066167888fe0c3012cccd",
-          "block": 134731565,
+          "tx": "0x0a4c07887c0f736cb1e4d80ac919714526289cb26956ae1d4de9c288d2485ee5",
+          "block": 134742828,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0x92240be371374e0be68cd529088bbf27632ef17a",
-          "to": "0x302642976506d247c7017b85ddc89e3956f96ba1",
-          "amount_raw": "3236340508401872739328"
+          "from": "0x302642976506d247c7017b85ddc89e3956f96ba1",
+          "to": "0x278d858f05b94576c1e6f73285886876ff6ef8d2",
+          "amount_raw": "1808592448643775716270"
         },
         {
-          "tx": "0x6896e00c5191a121998d6f1464d0bc981b90e282184bd7ab6efefe94c7b76040",
-          "block": 134728776,
-          "kind": "UNVERIFIED_EXCHANGE_TAG_MOVEMENT",
-          "from": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
-          "to": "0x789f0cd9ea6fd81c9bdc10b4c5cad643189cc23c",
-          "amount_raw": "2000994304520000200000"
-        },
-        {
-          "tx": "0xc15c9d0441a2273317fdc980db77dc26c85ba90a78c05356a9059c84ee14ad61",
-          "block": 134731713,
+          "tx": "0xfda43d56ca37e533d5abdb29d3b0230b19ebda7f7a4325dfdebf850e07d8a793",
+          "block": 134742859,
           "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
-          "to": "0x302642976506d247c7017b85ddc89e3956f96ba1",
-          "amount_raw": "1812448162501263651317"
-        },
-        {
-          "tx": "0x864ea3941c9361c19d61c58ace76ed385399138e81e6011056d97772e5244901",
-          "block": 134731845,
-          "kind": "DEX_SWAP_OR_LP_UNRESOLVED",
-          "from": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
-          "to": "0x302642976506d247c7017b85ddc89e3956f96ba1",
-          "amount_raw": "1643267211999440911773"
+          "from": "0x302642976506d247c7017b85ddc89e3956f96ba1",
+          "to": "0x278d858f05b94576c1e6f73285886876ff6ef8d2",
+          "amount_raw": "987628093327254404966"
         }
       ],
       "wallet_accumulation_candidates": [],
       "wallet_observations_not_corrobated": [
         {
-          "address": "0xc037a180b8e0355d31ae342c23e39daea82a013e",
+          "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "836028.974691528245829584",
-          "balance_after": "936006.14843104097710027",
-          "balance_increase": "99977.173739512731270686",
-          "relative_increase_pct": "11.96",
-          "history_hours": 28.672,
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "338423.359505711951134333",
+          "balance_after": "436741.597295547936077752",
+          "balance_increase": "98318.237789835984943419",
+          "relative_increase_pct": "29.05",
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "99977.173739512731270686"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "98318.237789835984943419"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 122.13,
-              "balance_delta": "107978.777904164655387137"
+              "actual_observed_hours": 119.46,
+              "balance_delta": "424716.616890748933077003"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 122.13,
-              "balance_delta": "107978.777904164655387137"
+              "actual_observed_hours": 119.46,
+              "balance_delta": "424716.616890748933077003"
             }
           },
           "chain_interval_verified": false,
@@ -3274,35 +3535,35 @@
           "reason": "SINGLE_SOURCE_OR_SINGLE_BLOCK_OR_INSUFFICIENT_CORROBORATION"
         },
         {
-          "address": "0x7817dbf38e9d1c95671625f0052c147864692fe0",
+          "address": "0xc037a180b8e0355d31ae342c23e39daea82a013e",
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "341517.585275143016252442",
-          "balance_after": "372161.44917564055056103",
-          "balance_increase": "30643.863900497534308588",
-          "relative_increase_pct": "8.97",
-          "history_hours": 28.672,
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "876014.85428974770278807",
+          "balance_after": "936006.14843104097710027",
+          "balance_increase": "59991.2941412932743122",
+          "relative_increase_pct": "6.85",
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "30643.863900497534308588"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "59991.2941412932743122"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 111.258,
-              "balance_delta": "360136.468770841547560281"
+              "actual_observed_hours": 130.332,
+              "balance_delta": "107978.777904164655387137"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 111.258,
-              "balance_delta": "360136.468770841547560281"
+              "actual_observed_hours": 130.332,
+              "balance_delta": "107978.777904164655387137"
             }
           },
           "chain_interval_verified": false,
@@ -3327,31 +3588,31 @@
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "0.041148099671979328",
-          "balance_after": "217.586451580498088123",
-          "balance_increase": "217.545303480826108795",
-          "relative_increase_pct": "528688.58",
-          "history_hours": 28.672,
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "0",
+          "balance_after": "37.761555586873069442",
+          "balance_increase": "37.761555586873069442",
+          "relative_increase_pct": null,
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "217.545303480826108795"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "37.761555586873069442"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 32.124,
-              "balance_delta": "217.545303480826108795"
+              "actual_observed_hours": 40.325,
+              "balance_delta": "37.720407487201090114"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 32.124,
-              "balance_delta": "217.545303480826108795"
+              "actual_observed_hours": 40.325,
+              "balance_delta": "37.720407487201090114"
             }
           },
           "chain_interval_verified": false,
@@ -3376,30 +3637,30 @@
           "wallet_kind": "EOA_CANDIDATE_OWNER_UNVERIFIED",
           "label": "DYNAMIC_EOA_CODE_VERIFIED_OWNER_UNKNOWN",
           "identity_confidence": "onchain_code_zero_owner_unknown",
-          "first_block": 134811424,
-          "last_block": 135040717,
-          "balance_before": "43989.042038884038141338",
+          "first_block": 134882872,
+          "last_block": 135106304,
+          "balance_before": "43989.89231277372484626",
           "balance_after": "43990.216417510235249141",
-          "balance_increase": "1.174378626197107803",
+          "balance_increase": "0.324104736510402881",
           "relative_increase_pct": "0.00",
-          "history_hours": 28.672,
+          "history_hours": 27.94,
           "full_24h_baseline": true,
           "dynamically_discovered": true,
           "ownership_verified": false,
           "windows": {
             "24h": {
               "baseline_complete": true,
-              "actual_observed_hours": 28.672,
-              "balance_delta": "1.174378626197107803"
+              "actual_observed_hours": 27.94,
+              "balance_delta": "0.324104736510402881"
             },
             "168h": {
               "baseline_complete": false,
-              "actual_observed_hours": 122.13,
+              "actual_observed_hours": 130.332,
               "balance_delta": "42.506084593602745248"
             },
             "720h": {
               "baseline_complete": false,
-              "actual_observed_hours": 122.13,
+              "actual_observed_hours": 130.332,
               "balance_delta": "42.506084593602745248"
             }
           },
