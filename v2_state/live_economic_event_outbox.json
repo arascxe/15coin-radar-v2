@@ -1,6 +1,6 @@
 {
   "schema": "radar-v2-live-evidence-events-1",
-  "asof_ms": 1795479441008,
+  "asof_ms": 1795486319181,
   "events": [
     {
       "coin": "STAR",
@@ -3157,6 +3157,100 @@
       "packet_path": "v2_state/evidence_packets/c0169af862f6fd6b3f6859.json",
       "evidence_only_not_future_10x_prediction": true,
       "only_review_candidate": false
+    },
+    {
+      "coin": "CYS",
+      "first_seen_ms": 1795486159055,
+      "evidence_state": "SPOT_MARKET_IDENTITY_REVIEW_URGENT",
+      "spot_markets": [
+        {
+          "venue": "mexc",
+          "pair": "CYSUSDT",
+          "phase": "early_90s",
+          "buy_quote": "174.802149",
+          "sell_quote": "61.789678",
+          "window_start_ms": 1795486069055,
+          "window_end_ms": 1795486159055,
+          "ask_depleted_fraction": "0.3965704857699397017713625272",
+          "book_from_ms": 1795486068403,
+          "book_to_ms": 1795486153903,
+          "book_from_seq": 1193274188,
+          "book_to_seq": 1193277389,
+          "book_observed": {
+            "status": "VERIFIED_SEQUENCED_BOOK_INTERVAL",
+            "from_ms": 1795486068403,
+            "to_ms": 1795486153903,
+            "from_seq": 1193274188,
+            "to_seq": 1193277389,
+            "reference_price": "0.05495",
+            "ask_before_quote": "745.693713",
+            "ask_after_quote": "449.973595",
+            "ask_before_token_qty": "13502.86",
+            "ask_after_token_qty": "8155.00",
+            "depth_reference": "FIXED_PRE_EVENT_MID_2PCT_VERIFIED_BOOK_COVERAGE",
+            "fraction_depleted": "0.3965704857699397017713625272",
+            "visible_slippage_cost_at_before": "5.5100"
+          },
+          "tape_observed": {
+            "status": "LIVE_TRANSPORT_CONTINUOUS_NOT_EXCHANGE_AUDITED",
+            "buy_quote": "174.802149",
+            "sell_quote": "61.789678",
+            "quote_total": "236.591827",
+            "buy_fraction": "0.7388342666629815576849998288",
+            "trades": 6,
+            "window_start_ms": 1795486069055,
+            "window_end_ms": 1795486159055,
+            "strict_sequence_supported": false
+          },
+          "identity_verified": false,
+          "blockers": [
+            "SYMBOL_TO_CONTRACT_IDENTITY_UNVERIFIED"
+          ]
+        }
+      ],
+      "preparation_proved": false,
+      "dex_active_quote": {
+        "status": "POOL_TYPE_NOT_YET_SUPPORTED"
+      },
+      "onchain_economics": {},
+      "unified_economic_evidence": {
+        "phase": "DATA_INSUFFICIENT_UNKNOWN",
+        "preparation_present": false,
+        "historical_wallet_report_status": "FRESH_PUBLISHED_MULTI_DAY_REPORT",
+        "observed_multiday_wallet_count_unknown_owners": 0,
+        "multiday_wallet_evidence": [],
+        "wallet_3d_7d_30d_net_retained_delta_token": "0",
+        "full_period_transfer_reconciled_wallets": 0,
+        "existing_verified_cex_inventory_preparation": false,
+        "onchain_short_window_cluster_unknown_owner": false,
+        "spot_ignition_observed": false,
+        "spot_windows": [],
+        "preparation_before_spot_proved_in_observation_time": false,
+        "dex_scope": {
+          "status": "NO_FRESH_SUPPORTED_V3_POOL"
+        },
+        "visible_ask_token_qty_across_observed_independent_venues_and_one_pool": null,
+        "relative_retained_balance_change_to_partial_observed_ask_depth": null,
+        "sellable_supply_denominator_complete": false,
+        "orders_cancelled_vs_consumed_exactly_known": false,
+        "price_pump_predicted_or_buy_recommended": false,
+        "evidence_uncertainty": [
+          "NO_FULL_CEX_OR_DEX_GLOBAL_SELLABLE_SUPPLY",
+          "UNKNOWN_BENEFICIAL_OWNER_AND_POSSIBLE_INTERNAL_HOPS",
+          "L2_ASK_REMOVAL_MAY_BE_CANCELS_OR_TAKER_CONSUMPTION",
+          "HISTORICAL_TX_IDS_NOT_AVAILABLE_WHEN_ARCHIVE_COVERAGE_MISSING",
+          "NO_BACKTESTED_FALSE_ALARM_RATE"
+        ]
+      },
+      "buy_signal": false,
+      "validated_future_10x": false,
+      "evidence_packet_id": "bd86bb276e0daf7f2b8cce",
+      "evidence_packet_sha256": "0603ec023ed9dfcc6b1b0eb47bab6f226b0cfd43c0d5e799ae1de3de1309b0db",
+      "evidence_packet_schema": "radar-v2-alarm-evidence-packet-1",
+      "evidence_packet_scope": "BOUND_REAL_OBSERVATIONS_MAY_BE_PARTIAL",
+      "packet_path": "v2_state/evidence_packets/bd86bb276e0daf7f2b8cce.json",
+      "evidence_only_not_future_10x_prediction": true,
+      "only_review_candidate": true
     }
   ],
   "last_state": {
