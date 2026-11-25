@@ -1,8 +1,8 @@
 {
   "schema": "radar-v2-preparation-research-1",
-  "generated_utc": "2026-11-25T03:26:38.858730+00:00",
+  "generated_utc": "2026-11-25T05:30:58.326981+00:00",
   "source": "PERSISTED_SQLITE_NOT_EXTERNAL_MARKET_QUERY",
-  "last_run_id": "e700a7e75307d62bd7",
+  "last_run_id": "4f922e06bc6528a93e",
   "last_run_status": "PARTIAL_OR_FAILED_SOURCE_OBSERVATIONS",
   "note": "Block-based counts only. Seen time reflects collection, not necessarily event time. No buy recommendation.",
   "coins": [
@@ -14,42 +14,70 @@
       "verified_exchange_addresses": 0,
       "unverified_exchange_candidates": 5,
       "transfers": {
-        "events": 0,
-        "distinct_senders": 0,
-        "distinct_receivers": 0,
+        "events": 20,
+        "distinct_senders": 10,
+        "distinct_receivers": 9,
         "verified_cex_outflow_raw": "0",
         "verified_cex_inflow_raw": "0",
         "candidate_cex_outflow_raw_unverified": "0",
         "candidate_cex_inflow_raw_unverified": "0",
-        "largest_transfers": []
+        "largest_transfers": [
+          {
+            "amount_raw": "1638922595962452463967",
+            "tx": "0x19a299f1b617837c8c2d05106065a4c0e452790e0e46cd59c3b57883cc55d480",
+            "block": 134946207,
+            "from": "0x4620f5c127a6055fbebb1f71327d60ff079c9060",
+            "to": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
+            "from_type": "DEX_POOL_CANDIDATE",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "1460478077960250034398",
+            "tx": "0xdb1dc8a65a011f911ca927481cfd0f72eebb45e12289ad74c879b195a59eea02",
+            "block": 134946672,
+            "from": "0x4620f5c127a6055fbebb1f71327d60ff079c9060",
+            "to": "0x1125124106fdeb8bbe751c1fbe73424ac060298e",
+            "from_type": "DEX_POOL_CANDIDATE",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "1409927894244990797199",
+            "tx": "0xbb6f74e6091fa1a12ce938affcc839626b6d70bbccc331b56a2962896fd49290",
+            "block": 134946207,
+            "from": "0x4620f5c127a6055fbebb1f71327d60ff079c9060",
+            "to": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
+            "from_type": "DEX_POOL_CANDIDATE",
+            "to_type": "OTHER_UNVERIFIED"
+          }
+        ]
       },
       "coverage": {
         "chain_cursor_known": true,
-        "scan_end_block": 134936300,
-        "scan_start_block_window": 134931301,
-        "snapshot_rows": 1837,
+        "scan_end_block": 134948300,
+        "scan_start_block_window": 134943301,
+        "snapshot_rows": 1860,
         "snapshot_min_block": 134039758,
-        "snapshot_max_block": 135582546,
+        "snapshot_max_block": 135599113,
         "market_venues_checked": 4,
         "market_statuses": {
           "binance_alpha": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "gate": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "geckoterminal": {
-            "status": "PARTIAL",
-            "bars": 286,
-            "missing": 9
+            "status": "OK",
+            "bars": 125,
+            "missing": 0
           },
           "mexc": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           }
         }
@@ -69,52 +97,80 @@
       "verified_exchange_addresses": 0,
       "unverified_exchange_candidates": 4,
       "transfers": {
-        "events": 0,
-        "distinct_senders": 0,
-        "distinct_receivers": 0,
+        "events": 52,
+        "distinct_senders": 12,
+        "distinct_receivers": 12,
         "verified_cex_outflow_raw": "0",
         "verified_cex_inflow_raw": "0",
         "candidate_cex_outflow_raw_unverified": "0",
         "candidate_cex_inflow_raw_unverified": "0",
-        "largest_transfers": []
+        "largest_transfers": [
+          {
+            "amount_raw": "10002576200000000000000",
+            "tx": "0x35a6902ddbb5b2ff07128a4725ef0b9082bfd676acc279423856db36f7b65b97",
+            "block": 134946460,
+            "from": "0xe38f8dd897fade0532ea9a176abf788b7c67b327",
+            "to": "0x0000000000000000000000000000000000000000",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "2850656861452736232927",
+            "tx": "0xab7d4254690607a0f1f0e7fd38c8ad732e97e3d676b7a54734dd1d172f84ec52",
+            "block": 134946273,
+            "from": "0x7e59e1fb5cb8c809227c65d546ec0881e3e2d2b5",
+            "to": "0xcbeaad783ffd2cea125e9d9b2ec21e639d20fa59",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "DEX_POOL_CANDIDATE"
+          },
+          {
+            "amount_raw": "2473230722438091867330",
+            "tx": "0xd5365dca15fedde0e26f5057912133d338fa8e2d5e2780d41fe1625b08595f21",
+            "block": 134946285,
+            "from": "0xcbeaad783ffd2cea125e9d9b2ec21e639d20fa59",
+            "to": "0x8f10b468b06c6fd214b65f87778827f7d113f996",
+            "from_type": "DEX_POOL_CANDIDATE",
+            "to_type": "OTHER_UNVERIFIED"
+          }
+        ]
       },
       "coverage": {
         "chain_cursor_known": true,
-        "scan_end_block": 134936300,
-        "scan_start_block_window": 134931301,
-        "snapshot_rows": 1025,
+        "scan_end_block": 134948300,
+        "scan_start_block_window": 134943301,
+        "snapshot_rows": 1041,
         "snapshot_min_block": 134039758,
-        "snapshot_max_block": 135582546,
+        "snapshot_max_block": 135599113,
         "market_venues_checked": 7,
         "market_statuses": {
           "binance_alpha": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "bitget": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "gate": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "geckoterminal": {
-            "status": "OK",
-            "bars": 295,
-            "missing": 0
+            "status": "PARTIAL",
+            "bars": 123,
+            "missing": 2
           },
           "kucoin": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "mexc": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "okx": {
@@ -139,47 +195,75 @@
       "verified_exchange_addresses": 0,
       "unverified_exchange_candidates": 4,
       "transfers": {
-        "events": 0,
-        "distinct_senders": 0,
-        "distinct_receivers": 0,
+        "events": 6,
+        "distinct_senders": 5,
+        "distinct_receivers": 2,
         "verified_cex_outflow_raw": "0",
         "verified_cex_inflow_raw": "0",
         "candidate_cex_outflow_raw_unverified": "0",
         "candidate_cex_inflow_raw_unverified": "0",
-        "largest_transfers": []
+        "largest_transfers": [
+          {
+            "amount_raw": "13041467834482500729423",
+            "tx": "0xacd640fa471bbc91439068d22cd27260662ab8544cc0ee7db45544ee86bff2dc",
+            "block": 134946687,
+            "from": "0x7e59e1fb5cb8c809227c65d546ec0881e3e2d2b5",
+            "to": "0xd21bc2291c1aef340f5265e257b18aa5dafed759",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "DEX_POOL_CANDIDATE"
+          },
+          {
+            "amount_raw": "5857933440978059500334",
+            "tx": "0x50c4a21b69d12a12050e54f4ad701ee37a0dd884747545d61ac2504a8b0a72a1",
+            "block": 134946689,
+            "from": "0x1125124106fdeb8bbe751c1fbe73424ac060298e",
+            "to": "0xd21bc2291c1aef340f5265e257b18aa5dafed759",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "DEX_POOL_CANDIDATE"
+          },
+          {
+            "amount_raw": "5701000000000004318879",
+            "tx": "0xf9383081608765a3d579c2175da3ed7f37e645d5cab023bc1dcba1eacad689b9",
+            "block": 134946688,
+            "from": "0xd21bc2291c1aef340f5265e257b18aa5dafed759",
+            "to": "0x278d858f05b94576c1e6f73285886876ff6ef8d2",
+            "from_type": "DEX_POOL_CANDIDATE",
+            "to_type": "OTHER_UNVERIFIED"
+          }
+        ]
       },
       "coverage": {
         "chain_cursor_known": true,
-        "scan_end_block": 134936300,
-        "scan_start_block_window": 134931301,
-        "snapshot_rows": 1445,
+        "scan_end_block": 134948300,
+        "scan_start_block_window": 134943301,
+        "snapshot_rows": 1466,
         "snapshot_min_block": 134039758,
-        "snapshot_max_block": 135582546,
+        "snapshot_max_block": 135599113,
         "market_venues_checked": 5,
         "market_statuses": {
           "binance_alpha": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "gate": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "geckoterminal": {
             "status": "PARTIAL",
-            "bars": 278,
-            "missing": 17
+            "bars": 119,
+            "missing": 6
           },
           "kucoin": {
             "status": "PARTIAL",
-            "bars": 283,
+            "bars": 113,
             "missing": 12
           },
           "mexc": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           }
         }
@@ -199,38 +283,66 @@
       "verified_exchange_addresses": 0,
       "unverified_exchange_candidates": 6,
       "transfers": {
-        "events": 0,
-        "distinct_senders": 0,
-        "distinct_receivers": 0,
+        "events": 34,
+        "distinct_senders": 9,
+        "distinct_receivers": 14,
         "verified_cex_outflow_raw": "0",
         "verified_cex_inflow_raw": "0",
         "candidate_cex_outflow_raw_unverified": "0",
         "candidate_cex_inflow_raw_unverified": "0",
-        "largest_transfers": []
+        "largest_transfers": [
+          {
+            "amount_raw": "30201472161231405619624",
+            "tx": "0xf2958d9fd1d8494b04780fa9e2c8d1bdb64f70239d3fa8cb4e4b109d1e49bc62",
+            "block": 134946338,
+            "from": "0x238a358808379702088667322f80ac48bad5e6c4",
+            "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "13621564496329791769974",
+            "tx": "0x3d2358eea2ca64ee49b4c2dc1dd4b2e48747136858dcfd0fa08522faa54cb2ed",
+            "block": 134946341,
+            "from": "0xb44446b0c8e56988c34f7ff73ae904982b5fdda5",
+            "to": "0x28aee52c2dfd391fb5028615c930a9a7b43ca19b",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "12140801634507257966117",
+            "tx": "0x3a949a77f24ffb366b5ef7ecb873b3dabad25e874de35eeb616026288ee8dccf",
+            "block": 134946508,
+            "from": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+            "to": "0x238a358808379702088667322f80ac48bad5e6c4",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "OTHER_UNVERIFIED"
+          }
+        ]
       },
       "coverage": {
         "chain_cursor_known": true,
-        "scan_end_block": 134936300,
-        "scan_start_block_window": 134931301,
-        "snapshot_rows": 1797,
+        "scan_end_block": 134948300,
+        "scan_start_block_window": 134943301,
+        "snapshot_rows": 1822,
         "snapshot_min_block": 134039758,
-        "snapshot_max_block": 135582546,
+        "snapshot_max_block": 135599113,
         "market_venues_checked": 3,
         "market_statuses": {
           "binance_alpha": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "bitget": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "geckoterminal": {
             "status": "PARTIAL",
-            "bars": 230,
-            "missing": 65
+            "bars": 119,
+            "missing": 6
           }
         }
       },
@@ -249,52 +361,80 @@
       "verified_exchange_addresses": 0,
       "unverified_exchange_candidates": 5,
       "transfers": {
-        "events": 0,
-        "distinct_senders": 0,
-        "distinct_receivers": 0,
+        "events": 41,
+        "distinct_senders": 12,
+        "distinct_receivers": 11,
         "verified_cex_outflow_raw": "0",
         "verified_cex_inflow_raw": "0",
         "candidate_cex_outflow_raw_unverified": "0",
         "candidate_cex_inflow_raw_unverified": "0",
-        "largest_transfers": []
+        "largest_transfers": [
+          {
+            "amount_raw": "2550691076",
+            "tx": "0xda8f5572477fc6d9d14ad7b2b0d22c2b244a4134e0a83e040be97a83c63ee0c0",
+            "block": 134946357,
+            "from": "0xae02717e94c9b5bae817601a49b4584f58324015",
+            "to": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
+            "from_type": "DEX_POOL_CANDIDATE",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "2119980601",
+            "tx": "0xfa25c0fed14013ccc5ead004ef5bf36091070d90a4ed2ac8594d9b7e103b4cef",
+            "block": 134946225,
+            "from": "0xae02717e94c9b5bae817601a49b4584f58324015",
+            "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+            "from_type": "DEX_POOL_CANDIDATE",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "1627640193",
+            "tx": "0x60b15de173125eea2ee5f7dec512d7a1c27aee9e841d0704e7beb6b60107c0c5",
+            "block": 134946227,
+            "from": "0x9e229b12cc9081d6a510b29ccbd6311743e277ed",
+            "to": "0xae02717e94c9b5bae817601a49b4584f58324015",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "DEX_POOL_CANDIDATE"
+          }
+        ]
       },
       "coverage": {
         "chain_cursor_known": true,
-        "scan_end_block": 134936300,
-        "scan_start_block_window": 134931301,
-        "snapshot_rows": 1457,
+        "scan_end_block": 134948300,
+        "scan_start_block_window": 134943301,
+        "snapshot_rows": 1478,
         "snapshot_min_block": 134039758,
-        "snapshot_max_block": 135582546,
+        "snapshot_max_block": 135599113,
         "market_venues_checked": 6,
         "market_statuses": {
           "binance_alpha": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "bitget": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "gate": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "geckoterminal": {
             "status": "PARTIAL",
-            "bars": 261,
-            "missing": 34
+            "bars": 117,
+            "missing": 8
           },
           "kucoin": {
             "status": "PARTIAL",
-            "bars": 232,
-            "missing": 63
+            "bars": 119,
+            "missing": 6
           },
           "mexc": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           }
         }
@@ -314,42 +454,70 @@
       "verified_exchange_addresses": 0,
       "unverified_exchange_candidates": 5,
       "transfers": {
-        "events": 0,
-        "distinct_senders": 0,
-        "distinct_receivers": 0,
+        "events": 14,
+        "distinct_senders": 5,
+        "distinct_receivers": 3,
         "verified_cex_outflow_raw": "0",
         "verified_cex_inflow_raw": "0",
         "candidate_cex_outflow_raw_unverified": "0",
         "candidate_cex_inflow_raw_unverified": "0",
-        "largest_transfers": []
+        "largest_transfers": [
+          {
+            "amount_raw": "2569297351312969522636",
+            "tx": "0x99cedf96992bc98f2244b55dc8c3e98abe91809411b746250ef54f455bae0557",
+            "block": 134946275,
+            "from": "0x238a358808379702088667322f80ac48bad5e6c4",
+            "to": "0x7e59e1fb5cb8c809227c65d546ec0881e3e2d2b5",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "1483883187232713699414",
+            "tx": "0xd03cc6b4c2ec9a894101ee85ce42e9230daf8c3022ff5d61bfe2d09af762cd50",
+            "block": 134946725,
+            "from": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
+            "to": "0x238a358808379702088667322f80ac48bad5e6c4",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "1459586754739115760872",
+            "tx": "0x7259a9047da91052293cfc326ff53ced6836209a5350b07ba648a490327ecf11",
+            "block": 134946706,
+            "from": "0x238a358808379702088667322f80ac48bad5e6c4",
+            "to": "0x278d858f05b94576c1e6f73285886876ff6ef8d2",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "OTHER_UNVERIFIED"
+          }
+        ]
       },
       "coverage": {
         "chain_cursor_known": true,
-        "scan_end_block": 134936300,
-        "scan_start_block_window": 134931301,
-        "snapshot_rows": 1863,
+        "scan_end_block": 134948300,
+        "scan_start_block_window": 134943301,
+        "snapshot_rows": 1887,
         "snapshot_min_block": 134039758,
-        "snapshot_max_block": 135582546,
+        "snapshot_max_block": 135599113,
         "market_venues_checked": 4,
         "market_statuses": {
           "binance_alpha": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "bitget": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "geckoterminal": {
             "status": "PARTIAL",
-            "bars": 266,
-            "missing": 29
+            "bars": 123,
+            "missing": 2
           },
           "mexc": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           }
         }
@@ -369,52 +537,80 @@
       "verified_exchange_addresses": 0,
       "unverified_exchange_candidates": 5,
       "transfers": {
-        "events": 0,
-        "distinct_senders": 0,
-        "distinct_receivers": 0,
+        "events": 10,
+        "distinct_senders": 7,
+        "distinct_receivers": 5,
         "verified_cex_outflow_raw": "0",
         "verified_cex_inflow_raw": "0",
         "candidate_cex_outflow_raw_unverified": "0",
         "candidate_cex_inflow_raw_unverified": "0",
-        "largest_transfers": []
+        "largest_transfers": [
+          {
+            "amount_raw": "3928285351403532181709",
+            "tx": "0xa37ef946c34180075bb5b9ce21f50c7e43cf5c34102a2b073c723eceb59b24f5",
+            "block": 134946366,
+            "from": "0x5bd808ab85c124f99080da5f864edcb39950ede5",
+            "to": "0x11eacd2bedd700a5e21ff70dea4086305100e5e0",
+            "from_type": "DEX_POOL_CANDIDATE",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "3804939617791042464964",
+            "tx": "0x0d8491c87b21d71c27358c3d522affcc35b3d63013632c21f7469cc4c52b7b66",
+            "block": 134946225,
+            "from": "0x278d858f05b94576c1e6f73285886876ff6ef8d2",
+            "to": "0x5bd808ab85c124f99080da5f864edcb39950ede5",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "DEX_POOL_CANDIDATE"
+          },
+          {
+            "amount_raw": "3210181809804810849174",
+            "tx": "0x28ab3580ff0768245c8470ed0b115c396118debba10b82db4def855354cb56a3",
+            "block": 134946725,
+            "from": "0x7e59e1fb5cb8c809227c65d546ec0881e3e2d2b5",
+            "to": "0x5bd808ab85c124f99080da5f864edcb39950ede5",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "DEX_POOL_CANDIDATE"
+          }
+        ]
       },
       "coverage": {
         "chain_cursor_known": true,
-        "scan_end_block": 134936300,
-        "scan_start_block_window": 134931301,
-        "snapshot_rows": 1521,
+        "scan_end_block": 134948300,
+        "scan_start_block_window": 134943301,
+        "snapshot_rows": 1541,
         "snapshot_min_block": 134039758,
-        "snapshot_max_block": 135582546,
+        "snapshot_max_block": 135599113,
         "market_venues_checked": 6,
         "market_statuses": {
           "binance_alpha": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "bitget": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "gate": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "geckoterminal": {
             "status": "PARTIAL",
-            "bars": 240,
-            "missing": 55
+            "bars": 103,
+            "missing": 22
           },
           "kucoin": {
             "status": "PARTIAL",
-            "bars": 286,
-            "missing": 9
+            "bars": 93,
+            "missing": 32
           },
           "mexc": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           }
         }
@@ -434,29 +630,38 @@
       "verified_exchange_addresses": 0,
       "unverified_exchange_candidates": 0,
       "transfers": {
-        "events": 2,
-        "distinct_senders": 2,
-        "distinct_receivers": 2,
+        "events": 24,
+        "distinct_senders": 7,
+        "distinct_receivers": 7,
         "verified_cex_outflow_raw": "0",
         "verified_cex_inflow_raw": "0",
         "candidate_cex_outflow_raw_unverified": "0",
         "candidate_cex_inflow_raw_unverified": "0",
         "largest_transfers": [
           {
-            "amount_raw": "31166500000000000000000",
-            "tx": "0xd0d88e60dcb9f57ee0868d1ab5894bd93e6f23df2837281ce93ff7a879293b09",
-            "block": 58790258,
-            "from": "0x708e7bad92dcd97e0ff875864c90e7b63fc1f457",
-            "to": "0xed9ab5bc05a0152b9dc2f7902e8369af7bc18771",
+            "amount_raw": "289070090000000000000000",
+            "tx": "0x559b0f8c1753ad738a86d24e8a504848e2548b88332f47164f7fee0b81aefd2b",
+            "block": 58797716,
+            "from": "0xe92e65049b3c2ca12806e9567b08895118c5a03f",
+            "to": "0x1fac969ba7f60e0faeaa37a6d49625f528cb31bc",
             "from_type": "OTHER_UNVERIFIED",
             "to_type": "OTHER_UNVERIFIED"
           },
           {
-            "amount_raw": "31166500000000000000000",
-            "tx": "0x719199a6e80fc29ec1e5020098e8fe44014ed9662bac2ac51f2861ad0dd4bff3",
-            "block": 58789533,
-            "from": "0xd44f05427fab669e5180cf31365dc1b1f272164b",
-            "to": "0x708e7bad92dcd97e0ff875864c90e7b63fc1f457",
+            "amount_raw": "1336045359133882419609",
+            "tx": "0x9093237a98eccc167668514aad08f0b4c906cf95e4785a9b2f512a855dbd8324",
+            "block": 58793030,
+            "from": "0x6aba0315493b7e6989041c91181337b662fb1b90",
+            "to": "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "1336045359133882419609",
+            "tx": "0x9093237a98eccc167668514aad08f0b4c906cf95e4785a9b2f512a855dbd8324",
+            "block": 58793030,
+            "from": "0x4446adc0b8136ffc55ddb7a488ba5509ace2a5ef",
+            "to": "0x6aba0315493b7e6989041c91181337b662fb1b90",
             "from_type": "OTHER_UNVERIFIED",
             "to_type": "OTHER_UNVERIFIED"
           }
@@ -464,11 +669,11 @@
       },
       "coverage": {
         "chain_cursor_known": true,
-        "scan_end_block": 58792885,
-        "scan_start_block_window": 58787886,
-        "snapshot_rows": 1355,
+        "scan_end_block": 58797885,
+        "scan_start_block_window": 58792886,
+        "snapshot_rows": 1376,
         "snapshot_min_block": 58469034,
-        "snapshot_max_block": 61933938,
+        "snapshot_max_block": 61971232,
         "market_venues_checked": 6,
         "market_statuses": {
           "binance_alpha": {
@@ -478,27 +683,27 @@
           },
           "bitget": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "gate": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "geckoterminal": {
             "status": "PARTIAL",
-            "bars": 16,
-            "missing": 279
+            "bars": 2,
+            "missing": 123
           },
           "kucoin": {
-            "status": "PARTIAL",
-            "bars": 286,
-            "missing": 9
+            "status": "UNKNOWN",
+            "bars": 0,
+            "missing": 125
           },
           "mexc": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           }
         }
@@ -518,47 +723,75 @@
       "verified_exchange_addresses": 0,
       "unverified_exchange_candidates": 5,
       "transfers": {
-        "events": 0,
-        "distinct_senders": 0,
-        "distinct_receivers": 0,
+        "events": 28,
+        "distinct_senders": 8,
+        "distinct_receivers": 9,
         "verified_cex_outflow_raw": "0",
         "verified_cex_inflow_raw": "0",
         "candidate_cex_outflow_raw_unverified": "0",
         "candidate_cex_inflow_raw_unverified": "0",
-        "largest_transfers": []
+        "largest_transfers": [
+          {
+            "amount_raw": "1303161610651452232261",
+            "tx": "0xef8cefb7005bec79a3c3982c1d96da1d3a040c7a61adebfd4f8b9cf0239167f0",
+            "block": 134946364,
+            "from": "0xc1a780989734a0e5df875cebe410748562e1c5e6",
+            "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+            "from_type": "DEX_POOL_CANDIDATE",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "1122601697444389060646",
+            "tx": "0x5b0613d74950192351d5bf416109668b83151405c1f4abfe3ac553df22892b2a",
+            "block": 134946474,
+            "from": "0xc1a780989734a0e5df875cebe410748562e1c5e6",
+            "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+            "from_type": "DEX_POOL_CANDIDATE",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "611318500218287096176",
+            "tx": "0x225e8b57e347a4358babb032e035c552c1262f9cefeb0f546df488ec5c356c43",
+            "block": 134946630,
+            "from": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+            "to": "0xc1a780989734a0e5df875cebe410748562e1c5e6",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "DEX_POOL_CANDIDATE"
+          }
+        ]
       },
       "coverage": {
         "chain_cursor_known": true,
-        "scan_end_block": 134936300,
-        "scan_start_block_window": 134931301,
-        "snapshot_rows": 1515,
+        "scan_end_block": 134948300,
+        "scan_start_block_window": 134943301,
+        "snapshot_rows": 1534,
         "snapshot_min_block": 134039758,
-        "snapshot_max_block": 135582546,
+        "snapshot_max_block": 135599113,
         "market_venues_checked": 5,
         "market_statuses": {
           "bitget": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "gate": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "geckoterminal": {
             "status": "PARTIAL",
-            "bars": 231,
-            "missing": 64
+            "bars": 95,
+            "missing": 30
           },
           "kucoin": {
             "status": "PARTIAL",
-            "bars": 285,
-            "missing": 10
+            "bars": 13,
+            "missing": 112
           },
           "mexc": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           }
         }
@@ -578,52 +811,80 @@
       "verified_exchange_addresses": 0,
       "unverified_exchange_candidates": 5,
       "transfers": {
-        "events": 0,
-        "distinct_senders": 0,
-        "distinct_receivers": 0,
+        "events": 16,
+        "distinct_senders": 5,
+        "distinct_receivers": 3,
         "verified_cex_outflow_raw": "0",
         "verified_cex_inflow_raw": "0",
         "candidate_cex_outflow_raw_unverified": "0",
         "candidate_cex_inflow_raw_unverified": "0",
-        "largest_transfers": []
+        "largest_transfers": [
+          {
+            "amount_raw": "3700338230044648035043",
+            "tx": "0xf7ef7b5f2d6ca8af43bcf8f1ad7f3e82ebe13c69365d020009d37c97675d53e4",
+            "block": 134946568,
+            "from": "0x238a358808379702088667322f80ac48bad5e6c4",
+            "to": "0xb3e17d2ebbd710be53ecd8e8727337a8dd792811",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "3559060230820770537553",
+            "tx": "0xffa48df26c05d93e9b5e1bd47aaf382b82fd99994dc872fd9b5aee7e3cf25038",
+            "block": 134946397,
+            "from": "0x238a358808379702088667322f80ac48bad5e6c4",
+            "to": "0xb3e17d2ebbd710be53ecd8e8727337a8dd792811",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "3082536551491417395938",
+            "tx": "0xca67d63399ed7e10b728220bcb206ccce7129427551e03d137587a412b98dd9a",
+            "block": 134946318,
+            "from": "0x238a358808379702088667322f80ac48bad5e6c4",
+            "to": "0xb3e17d2ebbd710be53ecd8e8727337a8dd792811",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "OTHER_UNVERIFIED"
+          }
+        ]
       },
       "coverage": {
         "chain_cursor_known": true,
-        "scan_end_block": 134936300,
-        "scan_start_block_window": 134931301,
-        "snapshot_rows": 1473,
+        "scan_end_block": 134948300,
+        "scan_start_block_window": 134943301,
+        "snapshot_rows": 1495,
         "snapshot_min_block": 134039758,
-        "snapshot_max_block": 135582546,
+        "snapshot_max_block": 135599113,
         "market_venues_checked": 6,
         "market_statuses": {
           "binance_alpha": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "bitget": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "gate": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "geckoterminal": {
-            "status": "PARTIAL",
-            "bars": 293,
-            "missing": 2
+            "status": "OK",
+            "bars": 125,
+            "missing": 0
           },
           "kucoin": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "mexc": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           }
         }
@@ -643,47 +904,75 @@
       "verified_exchange_addresses": 0,
       "unverified_exchange_candidates": 6,
       "transfers": {
-        "events": 0,
-        "distinct_senders": 0,
-        "distinct_receivers": 0,
+        "events": 8,
+        "distinct_senders": 3,
+        "distinct_receivers": 3,
         "verified_cex_outflow_raw": "0",
         "verified_cex_inflow_raw": "0",
         "candidate_cex_outflow_raw_unverified": "0",
         "candidate_cex_inflow_raw_unverified": "0",
-        "largest_transfers": []
+        "largest_transfers": [
+          {
+            "amount_raw": "16867740066927338702113",
+            "tx": "0xa024448f216e0c6d8958536072df305ab597559505b5500649aea16310bee9c8",
+            "block": 134946366,
+            "from": "0x90166b5795250fe7f0831e844121cc91799787e9",
+            "to": "0x76801132a22801640284cd67f7dd41fed2926b6a",
+            "from_type": "DEX_POOL_CANDIDATE",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "9665360211543161031533",
+            "tx": "0x30761f30b351771ff7977af1655d836616ea763aee3a062ec9b4069eebe4106e",
+            "block": 134946704,
+            "from": "0x7e59e1fb5cb8c809227c65d546ec0881e3e2d2b5",
+            "to": "0x90166b5795250fe7f0831e844121cc91799787e9",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "DEX_POOL_CANDIDATE"
+          },
+          {
+            "amount_raw": "9208737428381064148681",
+            "tx": "0x2206c26ba344ebdbf68e0ddae5f481c97422919920d6a415cc00fe2e733ca13e",
+            "block": 134946215,
+            "from": "0x90166b5795250fe7f0831e844121cc91799787e9",
+            "to": "0x76801132a22801640284cd67f7dd41fed2926b6a",
+            "from_type": "DEX_POOL_CANDIDATE",
+            "to_type": "OTHER_UNVERIFIED"
+          }
+        ]
       },
       "coverage": {
         "chain_cursor_known": true,
-        "scan_end_block": 134936300,
-        "scan_start_block_window": 134931301,
-        "snapshot_rows": 1336,
+        "scan_end_block": 134948300,
+        "scan_start_block_window": 134943301,
+        "snapshot_rows": 1354,
         "snapshot_min_block": 134039758,
-        "snapshot_max_block": 135582546,
+        "snapshot_max_block": 135599113,
         "market_venues_checked": 5,
         "market_statuses": {
           "binance_alpha": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "gate": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "geckoterminal": {
             "status": "PARTIAL",
-            "bars": 253,
-            "missing": 42
+            "bars": 110,
+            "missing": 15
           },
           "kucoin": {
             "status": "PARTIAL",
-            "bars": 276,
-            "missing": 19
+            "bars": 93,
+            "missing": 32
           },
           "mexc": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           }
         }
@@ -703,32 +992,60 @@
       "verified_exchange_addresses": 0,
       "unverified_exchange_candidates": 5,
       "transfers": {
-        "events": 0,
-        "distinct_senders": 0,
-        "distinct_receivers": 0,
+        "events": 17,
+        "distinct_senders": 6,
+        "distinct_receivers": 7,
         "verified_cex_outflow_raw": "0",
         "verified_cex_inflow_raw": "0",
         "candidate_cex_outflow_raw_unverified": "0",
         "candidate_cex_inflow_raw_unverified": "0",
-        "largest_transfers": []
+        "largest_transfers": [
+          {
+            "amount_raw": "11788601882613602829946",
+            "tx": "0x6459b21a46ee3f2e21f58f49a30fb10d4064211b326d50ac1aea07db85d73b4c",
+            "block": 134946276,
+            "from": "0x238a358808379702088667322f80ac48bad5e6c4",
+            "to": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "5907296417971288198865",
+            "tx": "0x3881ec1e25605d114d7cb2c9f2e085789bd44d52ccd1f6134f71ecc9cef6fd48",
+            "block": 134946170,
+            "from": "0x238a358808379702088667322f80ac48bad5e6c4",
+            "to": "0x7e59e1fb5cb8c809227c65d546ec0881e3e2d2b5",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "5082686490179738848467",
+            "tx": "0xae439b18e72a86e6ecc6457b54539814805755c8f7c92eeb86cd88f95b77c307",
+            "block": 134946316,
+            "from": "0x1ef25b4b44627b1bf63293034156e8ddc308c8e9",
+            "to": "0x238a358808379702088667322f80ac48bad5e6c4",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "OTHER_UNVERIFIED"
+          }
+        ]
       },
       "coverage": {
         "chain_cursor_known": true,
-        "scan_end_block": 134936300,
-        "scan_start_block_window": 134931301,
-        "snapshot_rows": 2559,
+        "scan_end_block": 134948300,
+        "scan_start_block_window": 134943301,
+        "snapshot_rows": 2589,
         "snapshot_min_block": 134039758,
-        "snapshot_max_block": 135582546,
+        "snapshot_max_block": 135599113,
         "market_venues_checked": 5,
         "market_statuses": {
           "binance_alpha": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "bitget": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "bybit": {
@@ -738,12 +1055,12 @@
           },
           "geckoterminal": {
             "status": "PARTIAL",
-            "bars": 263,
-            "missing": 32
+            "bars": 122,
+            "missing": 3
           },
           "mexc": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           }
         }
@@ -763,47 +1080,57 @@
       "verified_exchange_addresses": 0,
       "unverified_exchange_candidates": 5,
       "transfers": {
-        "events": 0,
-        "distinct_senders": 0,
-        "distinct_receivers": 0,
+        "events": 1,
+        "distinct_senders": 1,
+        "distinct_receivers": 1,
         "verified_cex_outflow_raw": "0",
         "verified_cex_inflow_raw": "0",
         "candidate_cex_outflow_raw_unverified": "0",
         "candidate_cex_inflow_raw_unverified": "0",
-        "largest_transfers": []
+        "largest_transfers": [
+          {
+            "amount_raw": "294990000000000000000",
+            "tx": "0xdb1f9a973d60ea2636dbee44c2d1ffa7d3b08599a4cca60e8af33ec95e759b38",
+            "block": 134946657,
+            "from": "0x4e7ed91e702ef2ff0c58e251c6e20d1dc1e31a5f",
+            "to": "0x97620e003c03381eacbde7135f28d94303bb5672",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "DEX_POOL_CANDIDATE"
+          }
+        ]
       },
       "coverage": {
         "chain_cursor_known": true,
-        "scan_end_block": 134936300,
-        "scan_start_block_window": 134931301,
-        "snapshot_rows": 1376,
+        "scan_end_block": 134948300,
+        "scan_start_block_window": 134943301,
+        "snapshot_rows": 1393,
         "snapshot_min_block": 134039758,
-        "snapshot_max_block": 135582546,
+        "snapshot_max_block": 135599113,
         "market_venues_checked": 5,
         "market_statuses": {
           "bitget": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "gate": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "geckoterminal": {
             "status": "PARTIAL",
-            "bars": 136,
-            "missing": 159
+            "bars": 52,
+            "missing": 73
           },
           "kucoin": {
-            "status": "OK",
-            "bars": 295,
-            "missing": 0
+            "status": "PARTIAL",
+            "bars": 110,
+            "missing": 15
           },
           "mexc": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           }
         }
@@ -823,42 +1150,70 @@
       "verified_exchange_addresses": 0,
       "unverified_exchange_candidates": 5,
       "transfers": {
-        "events": 0,
-        "distinct_senders": 0,
-        "distinct_receivers": 0,
+        "events": 9,
+        "distinct_senders": 3,
+        "distinct_receivers": 4,
         "verified_cex_outflow_raw": "0",
         "verified_cex_inflow_raw": "0",
         "candidate_cex_outflow_raw_unverified": "0",
         "candidate_cex_inflow_raw_unverified": "0",
-        "largest_transfers": []
+        "largest_transfers": [
+          {
+            "amount_raw": "7063956767997927951325",
+            "tx": "0x558a438db5391c58cb9ee71b934c3368c840a05c9472b44b25025892f8c21150",
+            "block": 134946366,
+            "from": "0xb4db9fcda97fd7b02eaf1e8317e6ddb04bacc1af",
+            "to": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
+            "from_type": "DEX_POOL_CANDIDATE",
+            "to_type": "OTHER_UNVERIFIED"
+          },
+          {
+            "amount_raw": "4565890483531399823360",
+            "tx": "0x698f9cbd6d4a976240459c667d146b793543e3043b10c025b09ea75c575d7dfe",
+            "block": 134946729,
+            "from": "0x78c7d83156188cd1e8260036ba327fb03df278de",
+            "to": "0xb4db9fcda97fd7b02eaf1e8317e6ddb04bacc1af",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "DEX_POOL_CANDIDATE"
+          },
+          {
+            "amount_raw": "3581935957493840106281",
+            "tx": "0x4ff56142186297238d34a22a3764fcf1741e3cff65619f5a17085945f4568991",
+            "block": 134946684,
+            "from": "0xe7595821a5270b93b2bc9db2f51f7333699bafd3",
+            "to": "0xb4db9fcda97fd7b02eaf1e8317e6ddb04bacc1af",
+            "from_type": "OTHER_UNVERIFIED",
+            "to_type": "DEX_POOL_CANDIDATE"
+          }
+        ]
       },
       "coverage": {
         "chain_cursor_known": true,
-        "scan_end_block": 134936300,
-        "scan_start_block_window": 134931301,
-        "snapshot_rows": 1565,
+        "scan_end_block": 134948300,
+        "scan_start_block_window": 134943301,
+        "snapshot_rows": 1586,
         "snapshot_min_block": 134039758,
-        "snapshot_max_block": 135582546,
+        "snapshot_max_block": 135599113,
         "market_venues_checked": 4,
         "market_statuses": {
           "binance_alpha": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "geckoterminal": {
             "status": "PARTIAL",
-            "bars": 235,
-            "missing": 60
+            "bars": 114,
+            "missing": 11
           },
           "kucoin": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           },
           "mexc": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           }
         }
@@ -889,11 +1244,11 @@
       },
       "coverage": {
         "chain_cursor_known": true,
-        "scan_end_block": 134936300,
-        "scan_start_block_window": 134931301,
-        "snapshot_rows": 2616,
+        "scan_end_block": 134948300,
+        "scan_start_block_window": 134943301,
+        "snapshot_rows": 2648,
         "snapshot_min_block": 134039758,
-        "snapshot_max_block": 135582546,
+        "snapshot_max_block": 135599113,
         "market_venues_checked": 4,
         "market_statuses": {
           "binance_alpha": {
@@ -903,17 +1258,17 @@
           },
           "geckoterminal": {
             "status": "PARTIAL",
-            "bars": 35,
-            "missing": 260
+            "bars": 21,
+            "missing": 104
           },
           "kucoin": {
             "status": "PARTIAL",
-            "bars": 292,
-            "missing": 3
+            "bars": 110,
+            "missing": 15
           },
           "mexc": {
             "status": "OK",
-            "bars": 295,
+            "bars": 125,
             "missing": 0
           }
         }
